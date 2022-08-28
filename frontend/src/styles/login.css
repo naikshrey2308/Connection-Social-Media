@@ -1,0 +1,61 @@
+@import url("./base.css");
+
+#login-page {
+    background-image: linear-gradient(315deg, var(--primary), var(--secondary));
+}
+
+.logo {
+    font-family: "Earnest Harlley", "Times New Roman", Calibri;
+    font-size: 75px;
+}
+
+.right-form {
+    background-color: white;
+    border-radius: 5px;
+    border: 1px solid lightgrey;
+    padding: 15px;
+    z-index: 10;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+input[type=submit]:hover {
+    color: white;
+}
+
+input.form-control {
+    background-repeat: no-repeat;
+    background-size: 25px;
+    background-position: 10px 4px;
+    padding-left: 45px;
+}
+
+#username {
+    background-image: url("../media/icons/username.svg");
+}
+
+#password {
+    background-image: url("../media/icons/password.svg");
+}
+
+#email {
+    background-image: url("../media/icons/email.svg");
+}
+
+#name {
+    background-image: url("../media/icons/name.svg");
+}
+
+#confirm_password {
+    background-image: url("../media/icons/confirm-password.svg");
+}
+
+#location {
+    background-image: url("../media/icons/location.svg");
+}
+
+#mobile_number {
+    background-image: url("../media/icons/mobile.svg");
+}

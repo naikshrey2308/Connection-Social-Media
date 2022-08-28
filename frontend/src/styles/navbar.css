@@ -1,0 +1,28 @@
+@import url("./base.css");
+
+nav{
+    height: 60px;
+}
+
+.logonav {
+    font-family: "Earnest Harlley", "Times New Roman", Calibri;
+    font-size: 40px;
+}
+.nav_img{
+    height: 25px;
+}
+.notify{
+    background-color: grey;
+    color: white;
+    border-radius: 25px;
+}
+
+.searchbox{
+    border-radius: 0px;
+    height:5%;
+}
+
+.search{
+    border-radius: 0;
+    border-color: grey;
+}
