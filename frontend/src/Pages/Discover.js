@@ -1,4 +1,4 @@
-import { memo, useEffect } from "react";
+import { memo, useEffect, useState } from "react";
 import Navbar from "../Components/Navbar";
 import "../styles/discover.css";
 
@@ -149,11 +149,31 @@ function Finder() {
 }
 
 function Discover() {
+
+    const [temp, setTemp] = useState("Shrey");
+
+    useEffect(() => {
+        async function getData() {
+            try {
+                let resText = await fetch("http://localhost:4000/");
+                resText = await resText.json();
+                console.log(resText);
+                setTemp(resText);
+            } catch(err) {
+                console.log("error: ", err);
+            }
+        }
+        getData();
+    }, []);
+
     return (
         <>
             <Navbar />
             {/* Find friends that near you and match your vibes */}
             <Finder />
+            <div className="container">
+                <p>{temp.msg}</p>
+            </div>
         </>
     );
 }
