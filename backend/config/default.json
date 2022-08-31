@@ -1,0 +1,9 @@
+{
+    "App": {
+      "dbConfig": {
+        "host": "localhost",
+        "port": 5984,
+        "dbName": "mongodb+srv://shruti_shrey:Ku1CYbSjfeQskqFv@cluster0.sul6uu5.mongodb.net/?retryWrites=true&w=majority"
+      }
+    }
+  }
