@@ -1,22 +1,18 @@
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useState, useContext } from "react";
 import Login from "../Components/Forms/Login";
 import Register from "../Components/Forms/Register";
 import "../styles/login.css"
+import LoginContext from "../Contexts/loginContext";
 
 function LoginPage(props) {
-    const [isLoginFormEnabled, setIsLoginFormEnabled] = useState(true);
+    const { isLoginFormEnabled, setIsLoginFormEnabled } = useContext(LoginContext);
 
     function transitionForm() {
         setIsLoginFormEnabled(!isLoginFormEnabled);
     }
 
     useEffect(() => {
-        const r_changer = document.getElementById("changeForm");
-        r_changer.addEventListener("click", transitionForm);
-
-        return () => {
-            r_changer.removeEventListener("click", transitionForm);
-        }
+        
     }, [isLoginFormEnabled]);
 
     return (

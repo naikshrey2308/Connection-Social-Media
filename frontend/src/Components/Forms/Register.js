@@ -1,11 +1,18 @@
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useState, useContext } from "react";
 import "../../styles/login.css";
 import validate from "../Reusables/Validator";
+import LoginContext from "../../Contexts/loginContext";
 
 function Form(props) {
     let [curr, setCurr] = useState(1);
 
     const [user, setUser] = useState({});
+
+    const { isLoginFormEnabled, setIsLoginFormEnabled } = useContext(LoginContext);
+
+    const changeForm = () => {
+        setIsLoginFormEnabled(true);
+    }
 
     const checkName = () => {
         validate("name", /^[a-zA-Z ]+$/, "nameCorrector", "&cross; Invalid name", true);
@@ -123,7 +130,7 @@ function Form(props) {
                         
                         {(curr > 1) && <><input type="button" className="btn btn-secondary border btn-light float-end mx-1 mt-5 px-4 submit border" value="< Prev" onClick={prevPage} /></>}
 
-                        <button id="changeForm" type="button" className="btn text-primary mt-5 float-start border-0">Log in instead</button>
+                        <button onClick={changeForm} id="changeForm" type="button" className="btn text-primary mt-5 float-start border-0">Log in instead</button>
                     </form>
                 
                 </div>

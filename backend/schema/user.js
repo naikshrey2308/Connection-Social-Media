@@ -2,10 +2,6 @@ const mongoose = require("mongoose");
 const Types = mongoose.Schema.Types;
 
 const userSchema = new mongoose.Schema({
-    '_id': {
-        index: true,
-        unique: true
-    },
 
     'name': {
         'first':{
@@ -26,22 +22,18 @@ const userSchema = new mongoose.Schema({
 
     'mobileNumber': {
         type: Types.String,
-        required:true,
         match: /^d{10}$/
     },
 
     'location': {
         'country': {
             type: Types.String,
-            required:true,
         },
         'state': {
             type: Types.String,
-            required:true,
         },
         'city': {
             type: Types.String,
-            required:true,
         }
     },
 
@@ -58,6 +50,7 @@ const userSchema = new mongoose.Schema({
     'email': {
         type: Types.String,
         match: /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        required: true,
     },
 
     'profilePic': {
@@ -77,13 +70,16 @@ const userSchema = new mongoose.Schema({
 
     'followers':{
         type: Types.Number,
-        required:true
+        required: true,
+        default: 0,
     },
 
     'following':{
         type: Types.Number,
-        required:true
+        required: true,
+        default: 0,
     }
 });
 
 const User = mongoose.model('User', userSchema);
+module.exports = User;

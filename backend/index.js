@@ -21,7 +21,7 @@ app.use(express.urlencoded({extended: true}));
 //connect mongodb with node 
 //create connection
 mongoose.connect(dbConfig).then(
-    ()=>{
+    () => {
         console.log('Congo!! Database Connected Successfully');
     }).catch(
         (err)=>{

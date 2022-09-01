@@ -1,10 +1,13 @@
-import { memo, useEffect, useState, useRef } from "react";
+import { memo, useEffect, useState, useRef, useContext } from "react";
+import LoginContext from "../../Contexts/loginContext";
 import "../../styles/login.css";
 import validate from "../Reusables/Validator";
 
 function Form(props) {
     const [username, setUsername] = useState("");
-    const [loginMessage, setLoginMessage] = useState("null");
+    const [loginMessage, setLoginMessage] = useState(null);
+
+    const { isLoginFormEnabled, setIsLoginFormEnabled } = useContext(LoginContext);
 
     const usernameInput = useRef();
     const passwordInput = useRef();
@@ -14,13 +17,17 @@ function Form(props) {
         setUsername(document.getElementById("username").value);
     }
 
+    const changeForm = () => {
+        setIsLoginFormEnabled(false);
+    }
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         const loginParams = {
-            username: usernameInput.current.value,
-            password: passwordInput.current.value
+            username: usernameInput.current.value.toString().trim(),
+            password: passwordInput.current.value.toString().trim(),
         }
-        const req = await fetch("/user/create", {
+        const req = await fetch("/user/login", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -29,18 +36,20 @@ function Form(props) {
             body: JSON.stringify(loginParams),
         });
         const res = await req.json();
-        setLoginMessage(res.msg);
+        setLoginMessage((!res.isLoggedIn) ? res.data : null);
     }
 
     useEffect(() => {
-
+        
     }, []);
 
     return (
         <>
         <div className="main bg-light row g-0">
             <div className="col-12 mx-auto py-5 px-3 col-lg-5 col-md-6 col-sm-8 right-form">
-                <p>{loginMessage}</p>
+                {(loginMessage) &&
+                    <div className="alert alert-danger text-center">{loginMessage}</div>
+                }    
                 <div className="logo text-center mb-0 text-base"><span className="fs-4 text-dark">Login to</span> Connection</div>
                 <p className="text-center text-secondary mt-0 fs-6">You connect to us, we connect you to the world!</p>
                 <div className="form form-control mx-auto text-center border-0 mt-5">
@@ -54,7 +63,7 @@ function Form(props) {
                         
                         <input type="submit" className="btn btn-base float-end mx-3 mt-5 px-4 submit" value="Login" />
                         
-                        <button id="changeForm" type="button" className="btn btn-light mt-5 float-end">Sign up instead</button>
+                        <button onClick={changeForm} id="changeForm" type="button" className="btn btn-light mt-5 float-end">Sign up instead</button>
                     </form>
                
                 </div>
