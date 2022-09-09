@@ -78,3 +78,12 @@ html {
 .text-base {
     color: var(--primary);
 }
+
+.valid-input, .valid-input:focus {
+    border-color: green;
+    position: relative;
+}
+
+.invalid-input, .invalid-input:focus {
+    border-color: red;
+}

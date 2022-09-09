@@ -7,16 +7,16 @@ const cors = require("cors");
 
 const http = require('http').Server(express);
 
-// create new socket.io instance linked with http server
-const io = require('socket.io')(http);  
+// // create new socket.io instance linked with http server
+// const io = require('socket.io')(http);  
 
-//handle the event like connection, disconnection
-io.on('connection',function(socket){
-    console.log("User connected");
-    socket.on('disconnect',function(){
-        console.log("user disconnected");
-    })
-})
+// //handle the event like connection, disconnection
+// io.on('connection',function(socket){
+//     console.log("User connected");
+//     socket.on('disconnect',function(){
+//         console.log("user disconnected");
+//     })
+// })
 http.listen(5000);
 
 /**
@@ -46,8 +46,10 @@ mongoose.connect(dbConfig).then(
 
 // Routes Index
 const userRoutes = require("./routes/userRoutes");
+const locationRoutes = require("./apis/location");
 
 app.use("/user", userRoutes);
+app.use("/location", locationRoutes);
 
 app.get("/", (req, res) => {
     // CORS policy would block the request if this is not specified

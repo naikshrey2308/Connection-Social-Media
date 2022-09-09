@@ -21,6 +21,37 @@ function Form(props) {
     const locRef = useRef();
     const picRef = useRef();
     const bioRef = useRef();
+    const locGetterBtnRef = useRef();
+
+    const getLocation = () => {
+        locGetterBtnRef.current.innerHTML = "<span class='spinner-border spinner-border-sm m-0 mx-4 text-light'></span>";
+        if(navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(getFullLocation);
+        } else {
+            // location not supported by the browser or turned off by the user
+        }
+    }
+
+    const getFullLocation = async (pos) => {
+        const loginParams = {
+            lat: pos.coords.latitude,
+            lon: pos.coords.longitude
+        }
+
+        const req = await fetch("/location/reverseGeocode", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(loginParams),
+        });
+        const res = await req.json();
+        const val = `${res.features[0].properties.city}, ${res.features[0].properties.state}, ${res.features[0].properties.country}`;
+        document.getElementById("location").value = val;
+        setLocation(val);
+        locGetterBtnRef.current.innerHTML = "Find My Location";
+    }
 
 
     const changeForm = () => {
@@ -77,14 +108,26 @@ function Form(props) {
         switch(curr) {
             case 1: 
                 if(usernameRef.current.value && nameRef.current.value && passwordRef.current.value && cpasswordRef.current.value && emailRef.current.value) {
-                    if(passwordRef.current.value == cpasswordRef.current.value)
+                    if(passwordRef.current.value == cpasswordRef.current.value) {
                         setCurr(2);
+                        setNextDisabled(null);
+                    }
+                    else
+                        setNextDisabled("Passwords don't match.");
+                }
+                else {
+                    setNextDisabled("Please enter all the fields. Some fields seem to be left out.");
                 }
                 break;
             case 2:
-                if(dobRef.current.value) {
+                if(dobRef.current.value != null && dobRef.current.value != '') {
                     setCurr(3);
+                    setNextDisabled(null);
                 }
+                else {
+                    setNextDisabled("Please select your date of birth.");
+                }
+                break;
             default:
                 setCurr((curr == 6) ? curr : ++curr);
                 break;
@@ -108,7 +151,7 @@ function Form(props) {
                 <div className="logo text-center mb-0 text-base">Connection</div>
 
                     <form method="POST" action="" className="mx-xl-5 px-lg-5" autocomplete="off">
-
+                        <p className="text-center text-danger">{nextDisabled}</p>
                         {(curr == 1) && <>
                             <input ref={nameRef} id="name" spellCheck="false" type="text" size="30" name="name" className="form-control" placeholder="Enter your Name" value={user.name} onChange={checkName} required />
                             <p className="text-start" style={{fontSize: 12}} id="nameCorrector"></p>
@@ -141,7 +184,8 @@ function Form(props) {
                         {(curr == 4) && <>
                             <h6>Your location helps us find friends near your area</h6>
                             <img src= {process.env.PUBLIC_URL + "/media/svgs/world-location.svg"} className="w-50 mx-auto mt-3 mb-5" />
-                            <input ref={locRef} type="text" value={user.location} onChange={setLocation} name="location" id="location" className="input-control form-control" placeholder="e.g. Mumbai, India" />
+                            <input ref={locRef} type="text" value={user.location} onChange={setLocation} name="location" id="location" className="input-control form-control" placeholder="e.g. Mumbai, Maharashtra, India" />
+                            <p className="text-center my-3"><button ref={locGetterBtnRef} type="button" onClick={getLocation} className="btn btn-primary text-light">Find My Location</button></p>
                         </>}
 
                         {(curr == 5) && <>
@@ -156,7 +200,7 @@ function Form(props) {
                             <div contentEditable="true" id="bio-para" className="border p-3"></div>
                         </>}
 
-                        <input type="button" className="btn btn-base btn-light float-end mr-3 mt-5 px-4 submit" value={(curr == 6) ? "Register" : "Next >"} onClick={nextPage} disabled={nextDisabled} />
+                        <input type="button" className="btn btn-base btn-light float-end mr-3 mt-5 px-4 submit" value={(curr == 6) ? "Register" : "Next >"} onClick={nextPage} />
                         
                         {(curr > 1) && <><input type="button" className="btn btn-secondary border btn-light float-end mx-1 mt-5 px-4 submit border" value="< Prev" onClick={prevPage} /></>}
 

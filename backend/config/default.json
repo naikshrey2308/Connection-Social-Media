@@ -4,6 +4,9 @@
         "host": "localhost",
         "port": 5984,
         "dbName": "mongodb+srv://shruti_shrey:Ku1CYbSjfeQskqFv@cluster0.sul6uu5.mongodb.net/social-network-application?retryWrites=true&w=majority"
+      },
+      "reverseGeocoding": {
+        "key": "4ecb227a8daf45878234997df495f1ef"
       }
     }
   }
