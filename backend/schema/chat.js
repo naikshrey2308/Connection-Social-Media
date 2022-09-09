@@ -14,7 +14,7 @@ const ChatSchema = mongoose.Schema({
         }
     },
     'chats':{
-        type : Types.Array, //of object {time,content,flag}
+        type : Types.DocumentArray, //of object {time,content,flag}
     }
 }) 
 

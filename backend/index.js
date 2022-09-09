@@ -4,6 +4,21 @@ const mongoose = require("mongoose");
 const app = express();
 const cors = require("cors");
 
+
+const http = require('http').Server(express);
+
+// create new socket.io instance linked with http server
+const io = require('socket.io')(http);  
+
+//handle the event like connection, disconnection
+io.on('connection',function(socket){
+    console.log("User connected");
+    socket.on('disconnect',function(){
+        console.log("user disconnected");
+    })
+})
+http.listen(5000);
+
 /**
  * Defines the configuration for the current node.js server
  * connection urls, passwords and other environment variables to be kept here
