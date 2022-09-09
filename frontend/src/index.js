@@ -5,6 +5,8 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import Loader from './Pages/Loader';
 
+import { LoginProvider } from './Contexts/loginContext';
+
 const LoginPage = React.lazy(() => import("./Pages/LoginPage"));
 const ChattingPage = React.lazy(() => import("./Pages/ChattingPage"));
 const HomePage = React.lazy(() => import("./Pages/HomePage"));
@@ -19,7 +21,9 @@ root.render(
         <Route path="/">
           <Route index element={
             <Suspense fallback={<Loader/>}>
-              <LoginPage/>
+              <LoginProvider>
+                <LoginPage/>  
+              </LoginProvider> 
             </Suspense>
           } />
           <Route path="home" element={
