@@ -8,6 +8,7 @@ function Form(props) {
 
     const [user, setUser] = useState({});
     const [nextDisabled, setNextDisabled] = useState(false);
+    const [pic, setPic] = useState();
 
     const { isLoginFormEnabled, setIsLoginFormEnabled } = useContext(LoginContext);
 
@@ -19,9 +20,13 @@ function Form(props) {
     const dobRef = useRef();
     const mobRef = useRef();
     const locRef = useRef();
+    const cityRef = useRef();
+    const stateRef = useRef();
+    const countryRef = useRef();
     const picRef = useRef();
     const bioRef = useRef();
     const locGetterBtnRef = useRef();
+    const picDisplayRef = useRef();
 
     const getLocation = () => {
         locGetterBtnRef.current.innerHTML = "<span class='spinner-border spinner-border-sm m-0 mx-4 text-light'></span>";
@@ -33,7 +38,7 @@ function Form(props) {
     }
 
     const getFullLocation = async (pos) => {
-        const loginParams = {
+        const coords = {
             lat: pos.coords.latitude,
             lon: pos.coords.longitude
         }
@@ -44,15 +49,16 @@ function Form(props) {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
-            body: JSON.stringify(loginParams),
+            body: JSON.stringify(coords),
         });
+
         const res = await req.json();
-        const val = `${res.features[0].properties.city}, ${res.features[0].properties.state}, ${res.features[0].properties.country}`;
-        document.getElementById("location").value = val;
-        setLocation(val);
+        cityRef.current.value = res.features[0].properties.city;
+        stateRef.current.value = res.features[0].properties.state;
+        countryRef.current.value = res.features[0].properties.country;
+        setLocation();
         locGetterBtnRef.current.innerHTML = "Find My Location";
     }
-
 
     const changeForm = () => {
         setIsLoginFormEnabled(true);
@@ -93,15 +99,21 @@ function Form(props) {
     };
 
     const setLocation = () => {
-        setUser({...user, location: document.getElementById("location").value});
+        setUser({...user, location: {
+            city: cityRef.current.value,
+            state: stateRef.current.value,
+            country: countryRef.current.value
+        }});
     };
 
     const setBio = () => {
         setUser({...user, bio: document.getElementById("bio").value});
     };
 
-    const setProfilePic = () => {
-        setUser({...user, profilePic: document.getElementById("profile_pic").value});
+    const setProfilePic = async() => {
+        picDisplayRef.current.src = await URL.createObjectURL(picRef.current.files[0]);
+        setUser({...user, profilePic: picDisplayRef.current.src});
+        setPic(picRef.current.files[0]);
     };
 
     function nextPage() {
@@ -139,6 +151,33 @@ function Form(props) {
         setCurr(--curr);
     }
 
+    const handleSubmit = async () => {
+        const userDetails = {
+            name: user.name,
+            username: user.username,
+            email: user.email,
+            password: user.password,
+            dob: user.birthdate,
+            mobileNumber: user.mobile,
+            location: user.location,
+            profilePic: pic,
+            bio: user.bio,
+        }
+
+        const req = await fetch("/user/register", {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(user),
+        });
+
+        const res = await req.json();
+
+        console.log(res);
+    }
+
     useEffect(() => {
 
     }, []);
@@ -150,7 +189,7 @@ function Form(props) {
                 <div className="form form-control mx-auto text-center border-0 mt-5">
                 <div className="logo text-center mb-0 text-base">Connection</div>
 
-                    <form method="POST" action="" className="mx-xl-5 px-lg-5" autocomplete="off">
+                    <form method="POST" encType="multipart/form-data" action="" className="mx-xl-5 px-lg-5" autocomplete="off">
                         <p className="text-center text-danger">{nextDisabled}</p>
                         {(curr == 1) && <>
                             <input ref={nameRef} id="name" spellCheck="false" type="text" size="30" name="name" className="form-control" placeholder="Enter your Name" value={user.name} onChange={checkName} required />
@@ -184,14 +223,18 @@ function Form(props) {
                         {(curr == 4) && <>
                             <h6>Your location helps us find friends near your area</h6>
                             <img src= {process.env.PUBLIC_URL + "/media/svgs/world-location.svg"} className="w-50 mx-auto mt-3 mb-5" />
-                            <input ref={locRef} type="text" value={user.location} onChange={setLocation} name="location" id="location" className="input-control form-control" placeholder="e.g. Mumbai, Maharashtra, India" />
+                            <div className="d-flex justdiy-content-evenly">
+                            <input ref={cityRef} type="text" value={(user.location) ? user.location.city : null} onChange={setLocation} name="city" id="city" className="input-control form-control" placeholder="Mumbai" />
+                            <input ref={stateRef} type="text" value={(user.location) ? user.location.state : null} onChange={setLocation} name="state" id="state" className="input-control form-control" placeholder="Maharashtra" />
+                            <input ref={countryRef} type="text" value={(user.location) ? user.location.country : null} onChange={setLocation} name="country" id="country" className="input-control form-control" placeholder="India" />
+                            </div>
                             <p className="text-center my-3"><button ref={locGetterBtnRef} type="button" onClick={getLocation} className="btn btn-primary text-light">Find My Location</button></p>
                         </>}
 
                         {(curr == 5) && <>
                             <h6>A picture to impress the community. Add a profile photo.</h6>
-                            <img src={process.env.PUBLIC_URL + "/media/svgs/profile.svg"} className="w-50 mx-auto mt-3 mb-5 p-3" style={{borderRadius: "50%"}} />
-                            <input useRef={picRef} type="file" onChange={setProfilePic} name="profile_pic" id="profile_pic" className="input-control form-control" />
+                            <img ref={picDisplayRef} src={(user.profilePic == undefined) ? process.env.PUBLIC_URL + "/media/svgs/profile.svg" : user.profilePic} height={200} className="w-50 mx-auto mt-3 mb-5 p-3" style={{borderRadius: "50%"}} />
+                            <input ref={picRef} type="file" onChange={setProfilePic} name="profile_pic" id="profile_pic" accept="image/*" className="input-control form-control" />
                         </>}
 
                         {(curr == 6) && <>
@@ -200,7 +243,7 @@ function Form(props) {
                             <div contentEditable="true" id="bio-para" className="border p-3"></div>
                         </>}
 
-                        <input type="button" className="btn btn-base btn-light float-end mr-3 mt-5 px-4 submit" value={(curr == 6) ? "Register" : "Next >"} onClick={nextPage} />
+                        <input type="button" className="btn btn-base btn-light float-end mr-3 mt-5 px-4 submit" value={(curr == 6) ? "Register" : "Next >"} onClick={(curr != 6) ? nextPage : handleSubmit} />
                         
                         {(curr > 1) && <><input type="button" className="btn btn-secondary border btn-light float-end mx-1 mt-5 px-4 submit border" value="< Prev" onClick={prevPage} /></>}
 

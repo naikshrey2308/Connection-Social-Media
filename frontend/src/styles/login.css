@@ -59,3 +59,8 @@ input.form-control {
 #mobile_number {
     background-image: url("../media/icons/mobile.svg");
 }
+
+#city, #state, #country {
+    padding-left: 20px;
+    border-radius: 0px;
+}
