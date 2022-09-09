@@ -69,13 +69,13 @@ const userSchema = new mongoose.Schema({
     },
 
     'followers':{
-        type: Types.DocumentArray,
+        type: Types.Array,
         required: true,
         default: [],
     },
 
     'following':{
-        type: Types.Number,
+        type: Types.Array,
         required: true,
         default: 0,
     }

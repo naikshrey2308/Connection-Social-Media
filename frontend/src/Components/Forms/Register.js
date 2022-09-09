@@ -1,4 +1,4 @@
-import { memo, useEffect, useState, useContext } from "react";
+import { memo, useEffect, useRef, useState, useContext } from "react";
 import "../../styles/login.css";
 import validate from "../Reusables/Validator";
 import LoginContext from "../../Contexts/loginContext";
@@ -7,8 +7,21 @@ function Form(props) {
     let [curr, setCurr] = useState(1);
 
     const [user, setUser] = useState({});
+    const [nextDisabled, setNextDisabled] = useState(false);
 
     const { isLoginFormEnabled, setIsLoginFormEnabled } = useContext(LoginContext);
+
+    const nameRef = useRef();
+    const usernameRef = useRef();
+    const passwordRef = useRef();
+    const cpasswordRef = useRef();
+    const emailRef = useRef();
+    const dobRef = useRef();
+    const mobRef = useRef();
+    const locRef = useRef();
+    const picRef = useRef();
+    const bioRef = useRef();
+
 
     const changeForm = () => {
         setIsLoginFormEnabled(true);
@@ -34,6 +47,10 @@ function Form(props) {
         setUser({...user, password: document.getElementById("password").value});
     };
 
+    const setcPassword = () => {
+        setUser({...user, cpassword: document.getElementById("confirm_password").value});
+    };
+
     const checkDOB = () => {
         setUser({...user, birthdate: document.getElementById("birthdate").value});
     };
@@ -57,8 +74,21 @@ function Form(props) {
     };
 
     function nextPage() {
-        if(curr == 6) return;
-        setCurr(++curr);
+        switch(curr) {
+            case 1: 
+                if(usernameRef.current.value && nameRef.current.value && passwordRef.current.value && cpasswordRef.current.value && emailRef.current.value) {
+                    if(passwordRef.current.value == cpasswordRef.current.value)
+                        setCurr(2);
+                }
+                break;
+            case 2:
+                if(dobRef.current.value) {
+                    setCurr(3);
+                }
+            default:
+                setCurr((curr == 6) ? curr : ++curr);
+                break;
+          }
     }
 
     function prevPage() {
@@ -80,53 +110,53 @@ function Form(props) {
                     <form method="POST" action="" className="mx-xl-5 px-lg-5" autocomplete="off">
 
                         {(curr == 1) && <>
-                            <input id="name" spellCheck="false" type="text" size="30" name="name" className="form-control" placeholder="Enter your Name" value={user.name} onChange={checkName} />
+                            <input ref={nameRef} id="name" spellCheck="false" type="text" size="30" name="name" className="form-control" placeholder="Enter your Name" value={user.name} onChange={checkName} required />
                             <p className="text-start" style={{fontSize: 12}} id="nameCorrector"></p>
                             
-                            <input id="email" spellCheck="false" type="email" size="30" name="email" className="form-control" placeholder="Enter your Email" value={user.email} onChange={checkEmail} />
+                            <input ref={emailRef} id="email" spellCheck="false" type="email" size="30" name="email" className="form-control" placeholder="Enter your Email" value={user.email} onChange={checkEmail} required />
                             <p className="text-start" style={{fontSize: 12}} id="emailCorrector"></p>
                             
-                            <input id="username" spellCheck="false" type="text" size="30" name="username" className="form-control" placeholder="Choose your Username" value={user.username} onChange={checkUsername} /> 
+                            <input ref={usernameRef} id="username" spellCheck="false" type="text" size="30" name="username" className="form-control" placeholder="Choose your Username" value={user.username} onChange={checkUsername} required /> 
                             <p className="text-start" style={{fontSize: 12}} id="usernameCorrector"></p>                       
                             
-                            <input id="password" type="password" size="30" name="password" className="form-control" placeholder="Set Password" value={user.password} onChange={setPassword} />
+                            <input ref={passwordRef} id="password" type="password" size="30" name="password" className="form-control" placeholder="Set Password" value={user.password} onChange={setPassword} required />
                             <p className="text-start" style={{fontSize: 12}} id="passwordCorrector"></p>
                             
-                            <input id="confirm_password" type="password" size="30" name="confirm_password" className="form-control" placeholder="Re-enter Password" />
+                            <input ref={cpasswordRef} onChange={setcPassword} value={user.cpassword} id="confirm_password" type="password" size="30" name="confirm_password" className="form-control" placeholder="Re-enter Password" required />
                         </>}
 
                         {(curr == 2) && <>
                             <h6>We require your birthdate to make your day special</h6>
                             <img src= {process.env.PUBLIC_URL + "/media/svgs/birthday.svg"} className="w-50 mx-auto mt-3 mb-5" />
-                            <input type="date" name="birthdate" id="birthdate" className="input-control form-control my-3" value={user.birthdate} onChange={checkDOB} />
+                            <input ref={dobRef} type="date" name="birthdate" id="birthdate" className="input-control form-control my-3" value={user.birthdate} onChange={checkDOB} required />
                         </>}
                         
                         {(curr == 3) && <>
                             <h6>Your mobile number helps us verify your profile. This won't be displayed in your profile.</h6>
                             <img src= {process.env.PUBLIC_URL + "/media/svgs/mobile.svg"} className="w-50 mx-auto mt-3 mb-5" />
-                            <input type="text" value={user.mobile} onChange={checkMob} name="mobile_number" id="mobile_number" className="input-control form-control" placeholder="+91 12345 67890" />
+                            <input ref={mobRef} type="text" value={user.mobile} onChange={checkMob} name="mobile_number" id="mobile_number" className="input-control form-control" placeholder="+91 12345 67890" />
                             <p className="text-start" style={{fontSize: 12}} id="mobileNumberCorrector"></p>
                         </>}
 
                         {(curr == 4) && <>
                             <h6>Your location helps us find friends near your area</h6>
                             <img src= {process.env.PUBLIC_URL + "/media/svgs/world-location.svg"} className="w-50 mx-auto mt-3 mb-5" />
-                            <input type="text" value={user.location} onChange={setLocation} name="location" id="location" className="input-control form-control" placeholder="e.g. Mumbai, India" />
+                            <input ref={locRef} type="text" value={user.location} onChange={setLocation} name="location" id="location" className="input-control form-control" placeholder="e.g. Mumbai, India" />
                         </>}
 
                         {(curr == 5) && <>
                             <h6>A picture to impress the community. Add a profile photo.</h6>
                             <img src={process.env.PUBLIC_URL + "/media/svgs/profile.svg"} className="w-50 mx-auto mt-3 mb-5 p-3" style={{borderRadius: "50%"}} />
-                            <input type="file" onChange={setProfilePic} name="profile_pic" id="profile_pic" className="input-control form-control" />
+                            <input useRef={picRef} type="file" onChange={setProfilePic} name="profile_pic" id="profile_pic" className="input-control form-control" />
                         </>}
 
                         {(curr == 6) && <>
                             <h6>Ahhhh! Finally. We're just there. Finish setting up your profile with a great bio.</h6>
-                            <textarea id="bio" value={user.bio} onChange={setBio} name="bio" className="d-none"></textarea>
+                            <textarea ref={bioRef} id="bio" value={user.bio} onChange={setBio} name="bio" className="d-none"></textarea>
                             <div contentEditable="true" id="bio-para" className="border p-3"></div>
                         </>}
 
-                        <input type="button" className="btn btn-base btn-light float-end mr-3 mt-5 px-4 submit" value={(curr == 6) ? "Register" : "Next >"} onClick={nextPage} />
+                        <input type="button" className="btn btn-base btn-light float-end mr-3 mt-5 px-4 submit" value={(curr == 6) ? "Register" : "Next >"} onClick={nextPage} disabled={nextDisabled} />
                         
                         {(curr > 1) && <><input type="button" className="btn btn-secondary border btn-light float-end mx-1 mt-5 px-4 submit border" value="< Prev" onClick={prevPage} /></>}
 
