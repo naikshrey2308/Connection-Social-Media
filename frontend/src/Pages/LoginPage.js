@@ -11,9 +11,7 @@ function LoginPage(props) {
         setIsLoginFormEnabled(!isLoginFormEnabled);
     }
 
-    useEffect(() => {
-        
-    }, [isLoginFormEnabled]);
+    useEffect(() => {}, [isLoginFormEnabled]);
 
     return (
         <div id="login-page" className="min-vh-100">

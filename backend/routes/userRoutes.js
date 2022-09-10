@@ -38,5 +38,42 @@ router.post("/login", (req, res) => {
     });
 });
 
-
+router.post("/register", (req, res) => {
+    var error={};
+    var isRegistered=false;
+    User.find({
+        $or: [{ username: req.body.username }, { email: req.body.email }]
+    }).then((data)=>{
+        if(data!=null){
+            var matched_data="email";
+            if(data.username==req.body.username){
+                matched_data="username";
+            }
+            error.error=matched_data+" is already exist";
+            res.json(
+                {
+                    "data":error,
+                    "isRegistered":isRegistered
+                });
+        }
+        else{
+            var location={
+                country:req.body.country,
+                state:req.body.state,
+                city:req.body.city
+            }
+            
+            User.insert({
+                'name':req.body.name,
+                'username':req.body.username,
+                'mobileNumber':req.body.mobileNumber,
+                'location':location,
+                'dob':req.body.dob,
+                'password':req.body.password,
+                'email':req.body.email,
+                'bio':req.body.bio
+            })
+        }
+    })
+});
 module.exports = router;

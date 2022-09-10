@@ -4,14 +4,8 @@ const Types = mongoose.Schema.Types;
 const userSchema = new mongoose.Schema({
 
     'name': {
-        'first':{
-            type: Types.String,
-            required:true,
-        },
-        'last':{
-            type: Types.String,
-            required:true,
-        }
+         type: Types.String,
+         required:true,
     },
 
     'username': {
