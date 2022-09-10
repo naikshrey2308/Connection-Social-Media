@@ -1,7 +1,8 @@
 const express = require("express");
 const User = require("../schema/user");
 const router = express.Router();
-
+const multer =require("multer");
+const upload = multer({ dest: './images/profilePics' });
 
 /**
  * This function would log the user into the website.
@@ -28,6 +29,10 @@ router.post("/login", (req, res) => {
         else {
             data = "Logged in successfully!";
             isLoggedIn = true;
+
+            // create session for the current user
+            // ...
+
         }
 
         // send the response back to the user
@@ -41,10 +46,13 @@ router.post("/login", (req, res) => {
 router.post("/register", (req, res) => {
     var error={};
     var isRegistered=false;
+
+    console.log(req.body);
     User.find({
         $or: [{ username: req.body.username }, { email: req.body.email }]
     }).then((data)=>{
-        if(data!=null){
+        console.log(data.length);
+        if(data.length){
             var matched_data="email";
             if(data.username==req.body.username){
                 matched_data="username";
@@ -62,18 +70,24 @@ router.post("/register", (req, res) => {
                 state:req.body.state,
                 city:req.body.city
             }
-            
-            User.insert({
-                'name':req.body.name,
-                'username':req.body.username,
-                'mobileNumber':req.body.mobileNumber,
-                'location':location,
-                'dob':req.body.dob,
-                'password':req.body.password,
-                'email':req.body.email,
-                'bio':req.body.bio
-            })
+
+            if(req.body.profilePic.name!=null){
+                upload.single(req.body.username);
+            }
+            // User.insert({
+            //     'name':req.body.name,
+            //     'username':req.body.username,
+            //     'mobileNumber':req.body.mobileNumber,
+            //     'location':location,
+            //     'dob':req.body.dob,
+            //     'password':req.body.password,
+            //     'email':req.body.email,
+            //     'bio':req.body.bio
+            // })
+
+            res.json(req.body);
         }
     })
 });
+
 module.exports = router;
