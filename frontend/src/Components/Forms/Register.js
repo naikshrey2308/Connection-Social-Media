@@ -2,6 +2,7 @@ import { memo, useEffect, useRef, useState, useContext } from "react";
 import "../../styles/login.css";
 import validate from "../Reusables/Validator";
 import LoginContext from "../../Contexts/loginContext";
+import axios from "axios";
 
 function Form(props) {
     let [curr, setCurr] = useState(1);
@@ -114,6 +115,7 @@ function Form(props) {
         picDisplayRef.current.src = await URL.createObjectURL(picRef.current.files[0]);
         setUser({...user, profilePic: picDisplayRef.current.src});
         setPic(picRef.current.files[0]);
+        
     };
 
     function nextPage() {
@@ -152,26 +154,40 @@ function Form(props) {
     }
 
     const handleSubmit = async () => {
-        const userDetails = {
-            name: user.name,
-            username: user.username,
-            email: user.email,
-            password: user.password,
-            dob: user.birthdate,
-            mobileNumber: user.mobile,
-            location: user.location,
-            profilePic: pic,
-            bio: user.bio,
-        }
+        // const userDetails = {
+        //     name: user.name,
+        //     username: user.username,
+        //     password: user.password,
+        //     email: user.email,
+        //     dob: user.birthdate,
+        //     mobileNumber: user.mobile,
+        //     location: user.location,
+        //     bio: user.bio
+        // }
 
-        const req = await fetch("/user/register", {
-            method: "POST",
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(user),
-        });
+        const formdata = new FormData();
+        formdata.append("name", user.name);
+        formdata.append("username", user.username);
+        formdata.append("password", user.password);
+        formdata.append("email", user.email);
+        formdata.append("dob", user.birthdate);
+        formdata.append("mobileNumber", user.mobile);
+        formdata.append("location", user.location);
+        formdata.append("profilePic", pic);
+        formdata.append("bio", user.bio);
+        
+        // user.pic=picRef.current.files[0];
+        
+        // const req = await fetch("/user/register", {
+        //     method: "POST",
+        //     headers: {
+        //         "Accept": "application/json",
+        //         "Content-Type": "application/json",
+        //     },
+        //     body: JSON.stringify(formdata),
+        // });
+
+        const req = await axios.post('/user/register', formdata);
 
         const res = await req.json();
 

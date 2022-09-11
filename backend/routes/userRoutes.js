@@ -1,8 +1,9 @@
 const express = require("express");
+const fs = require("fs");
 const User = require("../schema/user");
 const router = express.Router();
-const multer =require("multer");
-const upload = multer({ dest: './images/profilePics' });
+// const multer =require("multer");
+// const upload = multer({ dest: './images/profilePics' });
 
 /**
  * This function would log the user into the website.
@@ -11,7 +12,7 @@ const upload = multer({ dest: './images/profilePics' });
 router.post("/login", (req, res) => {
     // find a user from the database
     User.findOne({
-        username: req.body.username,
+        username: req.username,
     }).then(data => {
         isLoggedIn = false;
         
@@ -21,7 +22,7 @@ router.post("/login", (req, res) => {
             isLoggedIn = false;
         }
         // or the passwords don't match
-        else if(data.password != req.body.password) {
+        else if(data.password != req.password) {
             data = "Invalid username or password supplied.";
             isLoggedIn = false;
         }
@@ -49,12 +50,12 @@ router.post("/register", (req, res) => {
 
     console.log(req.body);
     User.find({
-        $or: [{ username: req.body.username }, { email: req.body.email }]
+        $or: [{ username: req.username }, { email: req.email }]
     }).then((data)=>{
         console.log(data.length);
         if(data.length){
             var matched_data="email";
-            if(data.username==req.body.username){
+            if(data.username==req.username){
                 matched_data="username";
             }
             error.error=matched_data+" is already exist";
@@ -66,26 +67,27 @@ router.post("/register", (req, res) => {
         }
         else{
             var location={
-                country:req.body.country,
-                state:req.body.state,
-                city:req.body.city
+                country:req.country,
+                state:req.state,
+                city:req.city
             }
 
-            if(req.body.profilePic.name!=null){
-                upload.single(req.body.username);
+            if(req.profilePic){
+                console.log(req.profilePic);
+                fs.createWriteStream(`../backend/images/profilePics/${req.username}.png`).write(req.profilePic);
             }
             // User.insert({
-            //     'name':req.body.name,
-            //     'username':req.body.username,
-            //     'mobileNumber':req.body.mobileNumber,
+            //     'name':req.name,
+            //     'username':req.username,
+            //     'mobileNumber':req.mobileNumber,
             //     'location':location,
-            //     'dob':req.body.dob,
-            //     'password':req.body.password,
-            //     'email':req.body.email,
-            //     'bio':req.body.bio
+            //     'dob':req.dob,
+            //     'password':req.password,
+            //     'email':req.email,
+            //     'bio':req.bio
             // })
 
-            res.json(req.body);
+            res.json(req);
         }
     })
 });
