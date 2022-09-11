@@ -2,8 +2,25 @@ const express = require("express");
 const fs = require("fs");
 const User = require("../schema/user");
 const router = express.Router();
-// const multer =require("multer");
-// const upload = multer({ dest: './images/profilePics' });
+
+const path = require("path");
+const fs = require("fs");
+
+const multer = require('multer');
+
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'images/profilePics/')
+    },
+    filename: function (req, file, cb) {
+      req.body.fileType = path.extname(file.originalname);
+      cb(null, req.body.username + req.body.fileType) //Appending extension
+    }
+});
+
+const upload = multer({storage: storage});
+
+
 
 /**
  * This function would log the user into the website.
@@ -45,51 +62,60 @@ router.post("/login", (req, res) => {
 });
 
 router.post("/register", (req, res) => {
-    var error={};
-    var isRegistered=false;
+    var error = {};
+    var isRegistered = false;
 
     console.log(req.body);
+
     User.find({
-        $or: [{ username: req.username }, { email: req.email }]
-    }).then((data)=>{
-        console.log(data.length);
-        if(data.length){
-            var matched_data="email";
-            if(data.username==req.username){
-                matched_data="username";
-            }
-            error.error=matched_data+" is already exist";
-            res.json(
-                {
-                    "data":error,
-                    "isRegistered":isRegistered
-                });
-        }
-        else{
-            var location={
-                country:req.country,
-                state:req.state,
-                city:req.city
-            }
+        $or: [{ username: req.body.username }, { email: req.body.email }]
+            }).then((data) => {
+                if(data.length){
+                    var matched_data = "email";
+                    if(data.username == req.body.username){
+                        matched_data = "username";
+                    }
+                    error.error = matched_data + " already exists!";
+                    res.json({ "data" : error, "isRegistered" : false });
+                } 
+                else {
+                    var location = {
+                        country:req.body.country,
+                        state:req.body.state,
+                        city:req.body.city
+                    }
 
-            if(req.profilePic){
-                console.log(req.profilePic);
-                fs.createWriteStream(`../backend/images/profilePics/${req.username}.png`).write(req.profilePic);
-            }
-            // User.insert({
-            //     'name':req.name,
-            //     'username':req.username,
-            //     'mobileNumber':req.mobileNumber,
-            //     'location':location,
-            //     'dob':req.dob,
-            //     'password':req.password,
-            //     'email':req.email,
-            //     'bio':req.bio
-            // })
+            var user = new User({
+                'name': req.body.name,
+                'username': req.body.username,
+                'mobileNumber': req.body.mobileNumber,
+                'location': location,
+                'dob': req.body.dob,
+                'password': req.body.password,
+                'email': req.body.email,
+                'bio': req.body.bio
+            });
 
-            res.json(req);
+            user.save((err, resp) => {
+                if(err) {
+                    console.log(err);
+                    isRegistered = false;
+                    res.json({ "isRegistered": false });
+                } else {
+                    console.log(resp);
+                    isRegistered = true;
+                    res.json({ "isRegistered": true });
+                }
+            });
         }
-    })
+    });
+});
+
+router.post("/register/profilePic", upload.single("profilePic"), (req, res) => {
+    if(fs.existsSync(`/images/profilePics/${req.body.username}.${req.body.fileType}`))
+        res.json({ isUploaded: true });
+    else
+        res.json({ isUploaded: false });
 });
 
 module.exports = router;

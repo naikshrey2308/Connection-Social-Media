@@ -108,7 +108,8 @@ function Form(props) {
     };
 
     const setBio = () => {
-        setUser({...user, bio: document.getElementById("bio").value});
+        bioRef.current.value = document.getElementById("bio-para").innerHTML;
+        setUser({...user, bio: bioRef.current.value});
     };
 
     const setProfilePic = async() => {
@@ -154,48 +155,51 @@ function Form(props) {
     }
 
     const handleSubmit = async () => {
-        // const userDetails = {
-        //     name: user.name,
-        //     username: user.username,
-        //     password: user.password,
-        //     email: user.email,
-        //     dob: user.birthdate,
-        //     mobileNumber: user.mobile,
-        //     location: user.location,
-        //     bio: user.bio
-        // }
 
-        const formdata = new FormData();
-        formdata.append("name", user.name);
-        formdata.append("username", user.username);
-        formdata.append("password", user.password);
-        formdata.append("email", user.email);
-        formdata.append("dob", user.birthdate);
-        formdata.append("mobileNumber", user.mobile);
-        formdata.append("location", user.location);
-        formdata.append("profilePic", pic);
-        formdata.append("bio", user.bio);
+        let formdata = new FormData();
+        formdata.name = user.name;
+        formdata.username = user.username;
+        formdata.password = user.password;
+        formdata.email = user.email;
+        formdata.dob = user.birthdate;
+        formdata.mobileNumber = user.mobile;
+        formdata.location = user.location;
+        formdata.bio = user.bio;
         
-        // user.pic=picRef.current.files[0];
-        
-        // const req = await fetch("/user/register", {
-        //     method: "POST",
-        //     headers: {
-        //         "Accept": "application/json",
-        //         "Content-Type": "application/json",
-        //     },
-        //     body: JSON.stringify(formdata),
-        // });
+        const req = await fetch("/user/register", {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formdata),
+        });
 
-        const req = await axios.post('/user/register', formdata);
+        let res = await req.json();
 
-        const res = await req.json();
+        if(res.isRegistered === false) {
+            // handle error
+            return;
+        }
 
-        console.log(res);
+        const picData = new FormData();
+        picData.append("username", user.username);
+        picData.append("profilePic", pic, pic.name);
+        res = await axios.post("/user/register/profilePic", picData, {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        });
+
+        if(res.isUploaded === false) {
+            // handle error for picture upload
+            return;
+        } else {
+            // registered message
+        }
     }
 
     useEffect(() => {
-
     }, []);
 
     return (

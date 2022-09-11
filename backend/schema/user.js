@@ -4,8 +4,9 @@ const Types = mongoose.Schema.Types;
 const userSchema = new mongoose.Schema({
 
     'name': {
-         type: Types.String,
-         required:true,
+
+        type: Types.String,
+        required: true
     },
 
     'username': {
