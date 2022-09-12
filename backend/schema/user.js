@@ -63,16 +63,21 @@ const userSchema = new mongoose.Schema({
         maxLength: 200,
     },
 
-    'followers':{
+    'followers': {
         type: Types.Array,
         required: true,
         default: [],
     },
 
-    'following':{
+    'following': {
         type: Types.Array,
         required: true,
         default: 0,
+    },
+
+    'posts': {
+        type: Types.Array,
+        default: [],
     }
 });
 

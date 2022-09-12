@@ -41,6 +41,11 @@ root.render(
               <Discover />
             </Suspense>
           } />
+          <Route path="user" element={
+            <Suspense fallback={<Loader/>}>
+              {/* <UserProfile /> */}
+            </Suspense>
+          } />
           <Route path="updateProfile" element={
             <Suspense fallback={<Loader/>}>
               <UserProfileUpdate/>

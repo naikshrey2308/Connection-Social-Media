@@ -3,6 +3,8 @@ import "../../styles/login.css";
 import validate from "../Reusables/Validator";
 import LoginContext from "../../Contexts/loginContext";
 import axios from "axios";
+import  { useNavigate } from 'react-router-dom';
+
 
 function Form(props) {
     let [curr, setCurr] = useState(1);
@@ -153,7 +155,7 @@ function Form(props) {
         if(curr == 0) return;
         setCurr(--curr);
     }
-
+    let navigate= useNavigate();
     const handleSubmit = async () => {
 
         let formdata = new FormData();
@@ -176,7 +178,9 @@ function Form(props) {
         });
 
         let res = await req.json();
-
+        if(res.isRegistered){
+            setCurr(7);
+        }
         if(res.isRegistered === false) {
             // handle error
             return;
@@ -261,7 +265,15 @@ function Form(props) {
                             <h6>Ahhhh! Finally. We're just there. Finish setting up your profile with a great bio.</h6>
                             <textarea ref={bioRef} id="bio" value={user.bio} onChange={setBio} name="bio" className="d-none"></textarea>
                             <div contentEditable="true" id="bio-para" className="border p-3"></div>
+                        </>} 
+
+                        {(curr == 7) && <>
+                            <center>
+                                <img src={process.env.PUBLIC_URL + "/media/gifs/success.gif" } />
+                                <button onClick={()=>navigate('/home')}>Continue</button>
+                            </center>
                         </>}
+                        
 
                         <input type="button" className="btn btn-base btn-light float-end mr-3 mt-5 px-4 submit" value={(curr == 6) ? "Register" : "Next >"} onClick={(curr != 6) ? nextPage : handleSubmit} />
                         

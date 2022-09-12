@@ -2,7 +2,7 @@ import { memo, useEffect, useState, useRef, useContext } from "react";
 import LoginContext from "../../Contexts/loginContext";
 import "../../styles/login.css";
 import validate from "../Reusables/Validator";
-import  { useNavigate } from 'react-router-dom'
+import  { useNavigate } from 'react-router-dom';
 
 function Form(props) {
     const [username, setUsername] = useState("");
