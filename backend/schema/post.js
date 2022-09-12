@@ -1,9 +1,14 @@
 const mongoose = require("mongoose");
 const Types = mongoose.Schema.Types;
 
+const postTypes = {
+    TEXT_POST: "text",
+    PIC_POST: "pic"
+}
+
 const postSchema = mongoose.Schema({
     'user_id': {
-        type: Types.ObjectId,
+        type: Types.Decimal128,
         required: true,
     },
 
@@ -22,7 +27,7 @@ const postSchema = mongoose.Schema({
         required: true,
     },
 
-    'contents': {
+    'content': {
         'caption': {
             type: Types.String,
         },
@@ -42,4 +47,4 @@ const postSchema = mongoose.Schema({
 
 const Post = new mongoose.Model('Post', postSchema);
 
-module.exports = Post;
+module.exports = { "Post": Post, "postTypes": postTypes };

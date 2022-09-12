@@ -12,6 +12,7 @@ const ChattingPage = React.lazy(() => import("./Pages/ChattingPage"));
 const HomePage = React.lazy(() => import("./Pages/HomePage"));
 const UserProfileUpdate = React.lazy(() => import("./Pages/UserProfileUpdate"));
 const Discover = React.lazy(() => import("./Pages/Discover"));
+const Post = React.lazy(() => import("./Pages/Post"));
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -41,9 +42,9 @@ root.render(
               <Discover />
             </Suspense>
           } />
-          <Route path="user" element={
+          <Route path="post" element={
             <Suspense fallback={<Loader/>}>
-              {/* <UserProfile /> */}
+              <Post />
             </Suspense>
           } />
           <Route path="updateProfile" element={
