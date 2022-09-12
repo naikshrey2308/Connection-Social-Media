@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const path = require("path");
+const fs = require("fs");
 
 // import schemas
 const { Post, postTypes } = require("../schema/post");
@@ -12,40 +14,55 @@ var storage = multer.diskStorage({
       cb(null, 'images/posts/')
     },
     filename: function (req, file, cb) {
-      if(req.body.postPic == null)
+      if(req.body.type != postTypes.PIC_POST)
         return;
       req.body.fileType = path.extname(file.originalname);
-      req.body.content.url = `${req.body.username}_${Date.now()}_${req.body.fileType}`;
-      cb(null, req.body.content.url);
+      req.body.url = `${req.body.username}_${Date.now()}_${req.body.fileType}`;
+      cb(null, req.body.url);
     }
 });
 
 const upload = multer({storage: storage});
 
-router.post("/create", upload.single("postPic"), async (req, res) => {
+router.post("/create", upload.single("postPic"), (req, res) => {
+    console.log(req.body);
+
     let isPosted = false;
 
     // if the post is not a text post, check image status
-    if(req.body.type == postTypes.PIC_POST && !fs.existsSync(`/images/posts/${req.body.content.url}`)) {
+    if(!fs.existsSync(`/images/posts/${req.body.url}`)) {
         isPosted = false;
+        console.log("hii");
         return res.json({ "isPosted": isPosted });
     }
         
     // create a new post
+    let content = {
+        text: req.body.text,
+        url: req.body.url,
+        caption: req.body.caption,
+    };
+
     const post = new Post({
-        user_id: req.body.user_id,
-        type: req.body.type,
-        content: req.body.content,
+        'user_id': req.body.user_id,
+        'type': req.body.type,
+        'content': content,
     });
+
+    console.log(post);
+
     // save the post meta-data to the database
-    await post.save((err, data) => {
+    post.save((err, data) => {
         if(err) {
             console.log(err);
             isPosted = false;
         } else {
+            console.log(data);
             isPosted = true;
         }
     });
 
     res.json({ "isPosted": isPosted });
 });
+
+module.exports = router;

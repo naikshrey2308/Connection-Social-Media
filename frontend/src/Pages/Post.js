@@ -1,4 +1,5 @@
 import { memo, useRef, useState } from "react";
+import axios from "axios";
 
 function PostUploader(props) {
     const [post, setPost] = useState(null);
@@ -10,15 +11,20 @@ function PostUploader(props) {
     const changePost = () => setPost(postRef.current.files[0]);
     const changeCaption = () => setCaption(captionRef.current.value);
 
-    async function handleSubmit(e) {
-        e.preventDefault();
+    async function handleSubmit() {
         let data = new FormData();
         data.set("user_id", "1");
         data.set("type", "pic");
         data.set("caption", caption);
         data.append("postPic", post);
 
-        
+        let res = await axios.post("/posts/create", data, {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        });
+
+        console.log(res.data);
     }
 
     return (
