@@ -1,8 +1,11 @@
 const express = require("express");
-const fs = require("fs");
 const User = require("../schema/user");
 const router = express.Router();
+// const browserHistory=require('react-router').browserHistory;
 
+
+
+//image upload
 const path = require("path");
 const fs = require("fs");
 
@@ -20,6 +23,8 @@ var storage = multer.diskStorage({
 
 const upload = multer({storage: storage});
 
+//session 
+
 
 
 /**
@@ -28,18 +33,19 @@ const upload = multer({storage: storage});
  */
 router.post("/login", (req, res) => {
     // find a user from the database
+    // console.log(req);
     User.findOne({
-        username: req.username,
+        username: req.body.username,
     }).then(data => {
         isLoggedIn = false;
-        
+        console.log(data);
         // if either username is incorrect
-        if(data == null) {
+        if(data == {}) {
             data = "User not found! Create an account if you don't have one.";
             isLoggedIn = false;
         }
         // or the passwords don't match
-        else if(data.password != req.password) {
+        else if(data.password != req.body.password) {
             data = "Invalid username or password supplied.";
             isLoggedIn = false;
         }
@@ -49,12 +55,15 @@ router.post("/login", (req, res) => {
             isLoggedIn = true;
 
             // create session for the current user
+            req.session.username=req.body.username;
+            console.log(req.session);
             // ...
 
         }
 
         // send the response back to the user
         res.json({"data": data, "isLoggedIn": isLoggedIn});
+        
     }).catch(err => {
         res.json({"err": err});
         console.log(err);

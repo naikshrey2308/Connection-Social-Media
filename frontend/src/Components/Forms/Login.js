@@ -2,6 +2,7 @@ import { memo, useEffect, useState, useRef, useContext } from "react";
 import LoginContext from "../../Contexts/loginContext";
 import "../../styles/login.css";
 import validate from "../Reusables/Validator";
+import  { useNavigate } from 'react-router-dom'
 
 function Form(props) {
     const [username, setUsername] = useState("");
@@ -20,7 +21,7 @@ function Form(props) {
     const changeForm = () => {
         setIsLoginFormEnabled(false);
     }
-
+    let navigate= useNavigate();
     const handleSubmit = async (event) => {
         event.preventDefault();
         const loginParams = {
@@ -36,13 +37,16 @@ function Form(props) {
             body: JSON.stringify(loginParams),
         });
         const res = await req.json();
+        console.log(res.isLoggedIn);
+        if(res.isLoggedIn==true)
+            navigate('/home')
         setLoginMessage((!res.isLoggedIn) ? res.data : null);
     }
 
     useEffect(() => {
         
     }, []);
-
+    
     return (
         <>
         <div className="main bg-light row g-0">

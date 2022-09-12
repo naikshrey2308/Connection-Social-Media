@@ -5,6 +5,11 @@ const bodyParser = require("body-parser");
 const app = express();
 const cors = require("cors");
 
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
+
+app.use(cookieParser());
+app.use(session({secret: "Shh, its a secret!"}));
 
 const http = require('http').Server(express);
 
