@@ -11,12 +11,13 @@ const LoginPage = React.lazy(() => import("./Pages/LoginPage"));
 const ChattingPage = React.lazy(() => import("./Pages/ChattingPage"));
 const HomePage = React.lazy(() => import("./Pages/HomePage"));
 const UserProfileUpdate = React.lazy(() => import("./Pages/UserProfileUpdate"));
+const UserProfile = React.lazy(() => import("./Pages/UserProfile"));
 const Discover = React.lazy(() => import("./Pages/Discover"));
 const Post = React.lazy(() => import("./Pages/Post"));
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
+  <>
     <BrowserRouter>
       <Routes>
         <Route path="/">
@@ -47,6 +48,11 @@ root.render(
               <Post />
             </Suspense>
           } />
+          <Route path="user/*" element={
+            <Suspense fallback={<Loader/>}>
+              <UserProfile />
+            </Suspense>
+          } />
           <Route path="updateProfile" element={
             <Suspense fallback={<Loader/>}>
               <UserProfileUpdate/>
@@ -56,7 +62,7 @@ root.render(
       </Routes>  
     </BrowserRouter>
     <App />
-  </React.StrictMode>
+  </>
 );
 
 // If you want to start measuring performance in your app, pass a function

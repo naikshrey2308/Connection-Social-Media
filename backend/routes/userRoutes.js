@@ -127,4 +127,36 @@ router.post("/register/profilePic", upload.single("profilePic"), (req, res) => {
         res.json({ isUploaded: false });
 });
 
+
+/**
+ * This request is for getting the current logged in user
+ */
+router.get("/current", (req, res) => {
+
+});
+
+/**
+ * This request is for getting any other user
+ */
+router.get("/:id", (req, res) => {
+    
+    let isFound = false;
+    
+    User.findOne({
+        "_id": req.params.id
+    }).then((data) => {
+        // if the user is not found
+        if(data == null || data == {}) {
+            isFound = false;
+            res.json({ "isFound": isFound });
+        } 
+        // else if the user is found, send the details
+        else {
+            isFound = true;
+            res.json({ "isFound": isFound, "user": data });
+        }
+    });
+
+});
+
 module.exports = router;
