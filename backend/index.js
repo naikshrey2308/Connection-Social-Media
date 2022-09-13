@@ -5,6 +5,9 @@ const bodyParser = require("body-parser");
 const app = express();
 const cors = require("cors");
 
+global.__baseURL = __dirname;
+module.exports = { baseURL: __baseURL }
+
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 

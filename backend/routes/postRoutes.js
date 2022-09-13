@@ -3,6 +3,9 @@ const router = express.Router();
 const path = require("path");
 const fs = require("fs");
 
+let baseURL = require("../index");
+baseURL = baseURL.baseURL;
+
 // import schemas
 const { Post, postTypes } = require("../schema/post");
 
@@ -30,9 +33,9 @@ router.post("/create", upload.single("postPic"), (req, res) => {
     let isPosted = false;
 
     // if the post is not a text post, check image status
-    if(!fs.existsSync(`/images/posts/${req.body.url}`)) {
+    if(!fs.existsSync(`${baseURL}/images/posts/${req.body.url}`)) {
         isPosted = false;
-        console.log("hii");
+        console.log(`/images/posts/${req.body.url}`);
         return res.json({ "isPosted": isPosted });
     }
         
@@ -48,8 +51,6 @@ router.post("/create", upload.single("postPic"), (req, res) => {
         'type': req.body.type,
         'content': content,
     });
-
-    console.log(post);
 
     // save the post meta-data to the database
     post.save((err, data) => {
