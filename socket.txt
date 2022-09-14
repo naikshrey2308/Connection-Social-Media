@@ -1,0 +1,3 @@
+----> check if other user is connected (online) and show the status
+----> channle per client -----> pass the object ( msg , sender ,reciever , time ) 	
+----> if(other is not connected) no need of socket --->directly store into database
