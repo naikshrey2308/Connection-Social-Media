@@ -4,6 +4,7 @@ import validate from "../Reusables/Validator";
 import LoginContext from "../../Contexts/loginContext";
 import axios from "axios";
 import  { useNavigate } from 'react-router-dom';
+import { ReactSession }  from 'react-client-session';
 
 
 function Form(props) {
@@ -179,6 +180,7 @@ function Form(props) {
 
         let res = await req.json();
         if(res.isRegistered){
+            ReactSession.set("username", res.username);
             setCurr(7);
         }
         if(res.isRegistered === false) {

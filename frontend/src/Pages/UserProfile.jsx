@@ -1,5 +1,6 @@
 import { memo, useEffect, useState } from "react";
 import UserMainContent from "../Components/UserMainContent";
+import UserAdditionalContent from "../Components/UserAdditionalContent";
 import axios from "axios";
 
 function UserProfile(props) {
@@ -32,6 +33,9 @@ function UserProfile(props) {
             <div className="row min-vh-100 gx-0">
                 <div className="col-12 col-lg-4">
                     <UserMainContent user={user} /> 
+                </div>
+                <div className="col-12 col-lg-8"> 
+                    <UserAdditionalContent user={user} />
                 </div>
             </div>
             }

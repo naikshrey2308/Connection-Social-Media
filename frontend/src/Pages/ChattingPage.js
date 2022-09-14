@@ -3,14 +3,32 @@ import ChatLogs from "../Components/ChatLogs";
 import ChatSender from "../Components/ChatSender";
 import "../styles/chatpage.css";
 import Navbar from "../Components/Navbar";
+import { ReactSession }  from 'react-client-session';
+
 
 const chats = [
-    {name: "Shruti Patel", profilePic: "world-location", 
-    chats: [ {content: "Hii", time: "1" }, { content: "Hello!!!", time: "4" } ]},
-    {name: "Shrey Naik", profilePic: "mobile"},
+    // {name: "Shruti Patel", profilePic: "world-location", 
+    // chats: [ {content: "Hii", time: "1" }, { content: "Hello!!!", time: "4" } ]},
+    // {name: "Shrey Naik", profilePic: "mobile"},
 ];
 
 function ChattingPage(props) {
+    const preprocessing = async (event) => {
+        event.preventDefault();
+        const params = {
+            username: ReactSession.get("username"),
+        }
+        const req = await fetch("/chats/getAllChat", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(params),
+        });
+        const res = await req.json();
+        chats=res.chat;
+    }
     const [currUser, setCurrUser] = useState(undefined);
 
     return (
@@ -21,7 +39,7 @@ function ChattingPage(props) {
                 {currUser && <>
                     <div className={"col-12 col-lg-4 d-none d-lg-block border-end border-2"}><ChatLogs caller={setCurrUser} /></div>
                     <div className="col">
-                        <ChatSender user={currUser} caller={setCurrUser} />
+                        <ChatSender user={{user:currUser,chats:chats}} caller={ReactSession.get("username")} />
                     </div>
                 </>
                 }

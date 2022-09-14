@@ -8,7 +8,8 @@ function UserMainContent(props) {
                 <div style={{"transform": "translate(-50%, -50%)"}} className="position-absolute top-50 start-50 w-100 text-center">
                     {/* Basic information section */}
                     <img src="https://static.remove.bg/remove-bg-web/37843dee2531e43723b012aa78be4b91cc211fef/assets/start-1abfb4fe2980eabfbbaaa4365a0692539f7cd2725f324f904565a9a744f8e214.jpg" width={200} height={200} className="profile-image d-block mx-auto" />
-                    <h2 className="text-light my-4">{props.user.name}</h2>
+                    <h4 className="text-light mt-4 mb-2">@{props.user.username}</h4>
+                    <h5 className="text-light mb-4">{props.user.name}</h5>
                     <p className="my-2 text-light">{props.user.bio}</p>
                     <hr className="text-light" />
                     

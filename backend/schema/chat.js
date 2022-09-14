@@ -2,13 +2,12 @@ const mongoose = require("mongoose");
 const Types = mongoose.Schema.Types;
 
 const ChatSchema = mongoose.Schema({
-    'id':{
-        unique:true,
-        'id1':{
+    'username':{
+        'uname1':{
             type:Types.ObjectId,
             required:true
         },
-        'id2':{
+        'uname2':{
             type:Types.ObjectId,
             required:true
         }

@@ -58,10 +58,12 @@ mongoose.connect(dbConfig).then(
 const userRoutes = require("./routes/userRoutes");
 const locationRoutes = require("./apis/location");
 const postRoutes = require("./routes/postRoutes");
+const chatRoutes = require("./routes/chatRoutes");
 
 app.use("/user", userRoutes);
 app.use("/location", locationRoutes);
 app.use("/posts", postRoutes);
+app.use("/chats", chatRoutes);
 
 app.get("/", (req, res) => {
     // CORS policy would block the request if this is not specified

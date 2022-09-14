@@ -55,14 +55,14 @@ router.post("/login", (req, res) => {
             isLoggedIn = true;
 
             // create session for the current user
-            req.session.username=req.body.username;
-            console.log(req.session);
+            // req.session.username=req.body.username;
+            // console.log(req.session);
             // ...
 
         }
 
         // send the response back to the user
-        res.json({"data": data, "isLoggedIn": isLoggedIn});
+        res.json({"data": data, "isLoggedIn": isLoggedIn,"username":req.body.username,"profilePic":req.body.profilePic,"name":req.body.name});
         
     }).catch(err => {
         res.json({"err": err});
@@ -85,7 +85,7 @@ router.post("/register", (req, res) => {
                         matched_data = "username";
                     }
                     error.error = matched_data + " already exists!";
-                    res.json({ "data" : error, "isRegistered" : false });
+                    res.json({ "data" : error, "isRegistered" : false, "username":req.body.username });
                 } 
                 else {
                     var location = {
@@ -113,7 +113,7 @@ router.post("/register", (req, res) => {
                 } else {
                     console.log(resp);
                     isRegistered = true;
-                    res.json({ "isRegistered": true });
+                    res.json({ "isRegistered": true ,"username":req.body.username,"profilePic":req.body.profilePic,"name":req.body.name});
                 }
             });
         }
@@ -144,7 +144,7 @@ router.get("/:id", (req, res) => {
     
     User.findOne({
         "_id": req.params.id
-    }).then((data) => {
+    },{password:false}).then((data) => {
         // if the user is not found
         if(data == null || data == {}) {
             isFound = false;

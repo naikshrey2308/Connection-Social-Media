@@ -13,7 +13,7 @@ function Chat(props) {
 
 function ChatSender(props) {
     const [chatText, setChatText] = useState("");
-    const [chat_list, setChatList] = useState([]);
+    const [chat_list, setChatList] = useState(props.user.chats);
     const chatBar = useRef();
 
     const changeText = () => setChatText(chatBar.current.value);

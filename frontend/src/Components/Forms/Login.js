@@ -3,6 +3,9 @@ import LoginContext from "../../Contexts/loginContext";
 import "../../styles/login.css";
 import validate from "../Reusables/Validator";
 import  { useNavigate } from 'react-router-dom';
+import { ReactSession }  from 'react-client-session';
+
+
 
 function Form(props) {
     const [username, setUsername] = useState("");
@@ -37,10 +40,13 @@ function Form(props) {
             body: JSON.stringify(loginParams),
         });
         const res = await req.json();
-        console.log(res.isLoggedIn);
+        ReactSession.set("username", res.username);
+        ReactSession.set("profilePic", res.profilePic);
+        ReactSession.set("name", res.name);
+        console.log(ReactSession.get("username"));
         if(res.isLoggedIn==true)
             navigate('/home')
-        setLoginMessage((!res.isLoggedIn) ? res.data : null);
+        // setLoginMessage((!res.isLoggedIn) ? res.data : null);
     }
 
     useEffect(() => {
