@@ -72,20 +72,21 @@ function ImageContent(props) {
     const [posts, setPosts] = useState([]);
 
     useEffect(() => {
-        setPosts(
-            [
-                "https://st.depositphotos.com/1000423/2111/i/600/depositphotos_21114749-stock-photo-two-football-players-striking-the.jpg",
-                "https://st.depositphotos.com/1000423/2111/i/600/depositphotos_21114749-stock-photo-two-football-players-striking-the.jpg",
-                "https://st.depositphotos.com/1000423/2111/i/600/depositphotos_21114749-stock-photo-two-football-players-striking-the.jpg",
-                "https://st.depositphotos.com/1000423/2111/i/600/depositphotos_21114749-stock-photo-two-football-players-striking-the.jpg",
-                "https://st.depositphotos.com/1000423/2111/i/600/depositphotos_21114749-stock-photo-two-football-players-striking-the.jpg",
-                "https://st.depositphotos.com/1000423/2111/i/600/depositphotos_21114749-stock-photo-two-football-players-striking-the.jpg",
-                "https://st.depositphotos.com/1000423/2111/i/600/depositphotos_21114749-stock-photo-two-football-players-striking-the.jpg",
-                "https://st.depositphotos.com/1000423/2111/i/600/depositphotos_21114749-stock-photo-two-football-players-striking-the.jpg",
-                "https://st.depositphotos.com/1000423/2111/i/600/depositphotos_21114749-stock-photo-two-football-players-striking-the.jpg",
-                "https://st.depositphotos.com/1000423/2111/i/600/depositphotos_21114749-stock-photo-two-football-players-striking-the.jpg",
-            ]
-        );
+
+        (async () => {
+            // Load the user data from the server
+            let res = await fetch(`/posts/${encodeURIComponent("shrey.23")}`, {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                },
+            });
+
+            res = await res.json();
+
+            setPosts(res);
+        })();
     }, []);
 
     return (
@@ -96,7 +97,7 @@ function ImageContent(props) {
                     posts.map((post) => {
                         return (
                             <>
-                                <img src={post} width={220} height={220} className="m-2" />
+                                <img src={"/posts/" + post.content.url} width={220} height={220} className="m-2 border" />
                             </>
                         );
                     })

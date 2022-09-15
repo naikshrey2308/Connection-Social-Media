@@ -57,15 +57,28 @@ router.post("/create", upload.single("postPic"), async (req, res) => {
         if(err) {
             console.log(err);
             isPosted = false;
+            res.json({ "isPosted": isPosted });
         } else {
             console.log(data);
             isPosted = true;
-            res.json({ "isPosted": isPosted });
+            res.json({ "isPosted": true });
             return;
         }
     });
+});
 
-    res.json({ "isPosted": isPosted });
+
+/**
+ * This function finds all the posts posted by the username supplied in the get request
+ */
+router.get("/:username", (req, res) => {
+    
+    Post.find({
+        username: req.params.username,
+    }).then((data) => {
+        res.json(data);
+    });
+
 });
 
 module.exports = router;

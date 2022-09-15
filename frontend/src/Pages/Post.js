@@ -30,6 +30,7 @@ function PostUploader(props) {
 
     return (
         <>
+            <p>{ReactSession.get("username")}</p>
             <form className="form" encType="multipart/form-data">
                 <input ref={postRef} className="input-control" type="file" name="postPic" onChange={changePost} />
                 <textarea ref={captionRef} onChange={changeCaption}></textarea>
