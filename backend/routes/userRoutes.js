@@ -3,7 +3,8 @@ const User = require("../schema/user");
 const router = express.Router();
 // const browserHistory=require('react-router').browserHistory;
 
-
+let baseURL = require("../index");
+baseURL = baseURL.baseURL; 
 
 //image upload
 const path = require("path");
@@ -74,7 +75,7 @@ router.post("/register", (req, res) => {
     var error = {};
     var isRegistered = false;
 
-    console.log(req.body);
+    // console.log(req.body);
 
     User.find({
         $or: [{ username: req.body.username }, { email: req.body.email }]
@@ -102,7 +103,7 @@ router.post("/register", (req, res) => {
                 'dob': req.body.dob,
                 'password': req.body.password,
                 'email': req.body.email,
-                'bio': req.body.bio
+                'bio': req.body.bio,
             });
 
             user.save((err, resp) => {
@@ -111,7 +112,7 @@ router.post("/register", (req, res) => {
                     isRegistered = false;
                     res.json({ "isRegistered": false });
                 } else {
-                    console.log(resp);
+                    // console.log(resp);
                     isRegistered = true;
                     res.json({ "isRegistered": true ,"username":req.body.username,"profilePic":req.body.profilePic,"name":req.body.name});
                 }
@@ -121,8 +122,33 @@ router.post("/register", (req, res) => {
 });
 
 router.post("/register/profilePic", upload.single("profilePic"), (req, res) => {
-    if(fs.existsSync(`/images/profilePics/${req.body.username}.${req.body.fileType}`))
+    if(fs.existsSync(`${baseURL}/images/profilePics/${req.body.username}${req.body.fileType}`)) {
+        let user= new User();
+        User.findOne({
+            username: req.body.username,
+        }).then((data) => {
+            if(data == {})
+                res.json({ isUploaded: false });
+            else {
+                user = data;
+            }
+        });
+
+        user.profilePic = { "name": req.body.username + req.body.fileType };
+
+        console.log(user);
+
+        user.save((err, msg) => {
+            if(err) {
+                console.log(err);
+                res.json({ isUploaded: false });
+            } else {
+                console.log(msg);
+            }
+        });
+
         res.json({ isUploaded: true });
+    }
     else
         res.json({ isUploaded: false });
 });
