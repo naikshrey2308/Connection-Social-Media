@@ -16,16 +16,23 @@ app.use(session({secret: "Shh, its a secret!"}));
 
 const http = require('http').Server(express);
 
-// // create new socket.io instance linked with http server
-// const io = require('socket.io')(http);  
+// create new socket.io instance linked with http server
+const io = require('socket.io')(http);  
 
-// //handle the event like connection, disconnection
-// io.on('connection',function(socket){
-//     console.log("User connected");
-//     socket.on('disconnect',function(){
-//         console.log("user disconnected");
-//     })
-// })
+//handle the event like connection, disconnection
+io.on('connection',function(socket){
+    console.log("User connected");
+    socket.on('disconnect',function(){
+        console.log("user disconnected");
+    })
+})
+
+// catch the msg sent by one user and again send that msg to another user 
+io.on('msgSent',(msg)=>{
+    
+    io.emit('msgOther',msg);
+})
+
 http.listen(5000);
 
 /**

@@ -1,10 +1,12 @@
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import ChatLogs from "../Components/ChatLogs";
 import ChatSender from "../Components/ChatSender";
 import "../styles/chatpage.css";
 import Navbar from "../Components/Navbar";
 import { ReactSession }  from 'react-client-session';
+import socketIOClient from "socket.io-client";
 
+const urlServer = "http://127.0.0.1:5000";
 
 const chats = [
     // {name: "Shruti Patel", profilePic: "world-location", 
@@ -13,6 +15,13 @@ const chats = [
 ];
 
 function ChattingPage(props) {
+
+    useEffect(
+        ()=>{
+            const socket = socketIOClient(urlServer);
+        }
+    )
+
     const preprocessing = async (event) => {
         event.preventDefault();
         const params = {

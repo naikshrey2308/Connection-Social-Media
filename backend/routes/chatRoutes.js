@@ -37,4 +37,38 @@ router.post("/getAllChat", (req, res) => {
     res.json({ 'chat' : chat });
 });
 
+router.get("/insertChat", (req, res) => {
+
+    // make object passed according to this{body:{sender: , reciever: , chat: { text: ,time: ,flag:}}}
+
+    let sender = req.body.sender;
+    let reciever = req.body.reciever;
+    Chat.find( { $or: [ { uname : { uname1 : reciever , uname2 : sender } }  , { uname : { uname1 : sender , uname2 : reciever } } ] }).then(
+        (data)=>{
+            if(data=={}){
+                let chatObj = new Chat({
+                    username:{
+                        uname1 : sender,
+                        uname2 : reciever
+                    },
+                    chats:[]
+                });
+                chatObj.chats.push({
+                    text : req.body.chat.text ,
+                    time : req.body.chat.time,
+                    flag : 1
+                })
+                chatObj.save();
+            }
+            else{
+                let flag = 0;
+                if(data.username.uname1 === sender){
+                    flag = 1;
+                }
+                // insert the obj accordingly
+            }
+        }
+    )
+});
+
 module.exports = router;

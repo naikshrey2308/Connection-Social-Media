@@ -1,4 +1,7 @@
 import { memo, useState, useRef, useEffect } from "react";
+import { ReactSession }  from 'react-client-session';
+import socketIOClient from "socket.io-client";
+const urlServer = "http://127.0.0.1:5000";
 
 function Chat(props) {
     return (
@@ -12,6 +15,16 @@ function Chat(props) {
 }
 
 function ChatSender(props) {
+    const socket = socketIOClient(urlServer);
+    socket.on('msgOther',(msg)=>{
+        
+    })
+    useEffect(
+        ()=>{
+            
+        }
+    )
+
     const [chatText, setChatText] = useState("");
     const [chat_list, setChatList] = useState(props.user.chats);
     const chatBar = useRef();
@@ -22,6 +35,13 @@ function ChatSender(props) {
         const timestamp = `${(new Date()).getHours()}:${(new Date()).getMinutes()}`;
         setChatList([{time: timestamp, content: chatText}, ...chat_list]);
         setChatText("");
+        let msg = {
+            sender : ReactSession.get("username"),
+            reciever : props.user.username , //have to add this username property in user object
+            text : chatText,
+            time : timestamp
+        };
+        socket.emit("msgSent",msg);
     }
 
     function closeChat() {
