@@ -1,6 +1,7 @@
 import { memo, useEffect, useState } from "react";
 import UserMainContent from "../Components/UserMainContent";
 import UserAdditionalContent from "../Components/UserAdditionalContent";
+import Navbar from "../Components/Navbar";
 import axios from "axios";
 
 function UserProfile(props) {
@@ -11,7 +12,7 @@ function UserProfile(props) {
         
         (async () => {
             // Load the user data from the server
-            let user1 = await fetch(`/user/${"631f7ff0156587887667df33"}`, {
+            let user1 = await fetch(`/user/${encodeURIComponent("shrey.23")}`, {
                 method: "GET",
                 headers: {
                     "Accept": "application/json",
@@ -28,6 +29,7 @@ function UserProfile(props) {
 
     return (
         <>
+            <Navbar />
             {
             (user) && 
             <div className="row min-vh-100 gx-0">

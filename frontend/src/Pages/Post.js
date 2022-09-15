@@ -13,7 +13,7 @@ function PostUploader(props) {
 
     async function handleSubmit() {
         let data = new FormData();
-        data.set("user_id", "1");
+        data.set("user_id", "6322fc8a18109c4a74c0e0bf");
         data.set("type", "pic");
         data.set("caption", caption);
         data.append("postPic", post);

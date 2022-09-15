@@ -3,11 +3,10 @@ import "../styles/user-profile.css";
 
 function UserMainContent(props) {
     return (
-        <>
-            <div className="bg-base position-relative" style={{height: "100%"}}>
-                <div style={{"transform": "translate(-50%, -50%)"}} className="position-absolute top-50 start-50 w-100 text-center">
+            <div className="set-nav-align position-fixed col-lg-4 col-12 text-center bg-base py-5" style={{height: "100vh"}}>
+                
                     {/* Basic information section */}
-                    <img src="https://static.remove.bg/remove-bg-web/37843dee2531e43723b012aa78be4b91cc211fef/assets/start-1abfb4fe2980eabfbbaaa4365a0692539f7cd2725f324f904565a9a744f8e214.jpg" width={200} height={200} className="profile-image d-block mx-auto" />
+                    <img src={ "/profilePics/" + ((props.user.profilePic) ? (props.user.profilePic.name) : "default.png") } width={200} height={200} className="profile-image d-block mx-auto" />
                     <h4 className="text-light mt-4 mb-2">@{props.user.username}</h4>
                     <h5 className="text-light mb-4">{props.user.name}</h5>
                     <p className="my-2 text-light">{props.user.bio}</p>
@@ -31,9 +30,8 @@ function UserMainContent(props) {
 
                     {/* Follow button */}
                     <button className="btn follow-btn btn-light text-base">Follow</button> 
-                </div>
+
             </div>
-        </>
     );
 }
 

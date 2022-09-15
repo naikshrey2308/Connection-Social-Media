@@ -1,7 +1,11 @@
 @import url("./base.css");
 
-nav{
-    height: 60px;
+:root {
+    --navbar-height: 3.5rem;
+}
+
+nav {
+    height: var(--navbar-height);
 }
 
 .logonav {

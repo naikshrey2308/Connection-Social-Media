@@ -138,13 +138,13 @@ router.get("/current", (req, res) => {
 /**
  * This request is for getting any other user
  */
-router.get("/:id", (req, res) => {
+router.get("/:username", (req, res) => {
     
     let isFound = false;
     
     User.findOne({
-        "_id": req.params.id
-    },{password:false}).then((data) => {
+        "username": req.params.username
+    },{ password: false }).then((data) => {
         // if the user is not found
         if(data == null || data == {}) {
             isFound = false;

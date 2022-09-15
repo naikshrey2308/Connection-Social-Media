@@ -1,9 +1,9 @@
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useRef } from "react";
 import "../styles/navbar.css";
 
-function Navbar() {
+function Navbar(props) {
 
     const [Home, Chat, Post, Discover, Profile] = [useRef(), useRef(), useRef(), useRef(), useRef()];
 
@@ -24,7 +24,7 @@ function Navbar() {
 
     return (
         <>
-            <nav className="navbar navbar-expand-lg border-bottom fixed-top bg-light">
+            <nav className={"navbar navbar-expand-lg fixed-top border-bottom border-2 bg-light"}>
                 <div className="container-fluid">
                     <a className="navbar-brand logonav" href="#">Connection</a>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,7 +50,7 @@ function Navbar() {
                                 <Link onMouseEnter={() => activateIcon(Discover)} onMouseLeave={() => blurIcon(Discover)} className="nav-link" to="/discover"><img ref={Discover} src= {process.env.PUBLIC_URL + "/media/icons/group-add_hollow.svg"} className="nav_img"/></Link>
                             </li>
                             <li className="nav-item">
-                                <Link onMouseEnter={() => activateIcon(Profile)} onMouseLeave={() => blurIcon(Profile)} className="nav-link float-end" to="/userProfile"><img ref={Profile} src= {process.env.PUBLIC_URL + "/media/icons/account_hollow.svg"} className="nav_img"/></Link>
+                                <Link onMouseEnter={() => activateIcon(Profile)} onMouseLeave={() => blurIcon(Profile)} className="nav-link float-end" to="/user/"><img ref={Profile} src= {process.env.PUBLIC_URL + "/media/icons/account_hollow.svg"} className="nav_img"/></Link>
                             </li>
                         </ul>
                     </div>

@@ -13,6 +13,100 @@ function AboutContent(props) {
     );
 }
 
+function TextContent(props) {
+    
+    const [posts, setPosts] = useState([]);
+
+    useEffect(() => {
+        setPosts(
+            [
+                "eat. sleep. code. repeat.",
+                "Good Evening!!",
+                "eat. sleep. code. repeat.",
+            ]
+        );
+    }, []);
+
+    return (
+        <>
+            <div className="container my-3">
+                {
+                    posts.map((post) => {
+                        return (
+                            <>
+                                <div className="container text-post border my-3 border-1 p-3">
+                                    <div className="d-flex w-100">
+                                        <img src="https://st.depositphotos.com/1000423/2111/i/600/depositphotos_21114749-stock-photo-two-football-players-striking-the.jpg" width={25} height={25} style={{borderRadius: "50%"}} />
+                                        <div className="px-3">{props.user.username}</div>
+                                        <div className="text-end w-100">
+                                            <button className="btn btn-light p-0">
+                                                <img src={process.env.PUBLIC_URL + "/media/icons/expand.svg"} className="mx-3" width={15} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <hr/>
+                                    <p>{post}</p>
+                                    <hr/>
+                                    <div className="d-flex w-100">
+                                        <div className="text-start">
+                                            <button className="btn btn-white p-0">
+                                                <img src={process.env.PUBLIC_URL + "/media/icons/like.svg"} className="mx-3" width={15} />
+                                            </button>
+                                            <button className="btn btn-white p-0">
+                                                <img src={process.env.PUBLIC_URL + "/media/icons/comment.svg"} className="mx-3" width={15} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </>
+                        );
+                    })
+                }
+            </div>
+        </>
+    );
+}
+
+function ImageContent(props) {
+
+    const [posts, setPosts] = useState([]);
+
+    useEffect(() => {
+        setPosts(
+            [
+                "https://st.depositphotos.com/1000423/2111/i/600/depositphotos_21114749-stock-photo-two-football-players-striking-the.jpg",
+                "https://st.depositphotos.com/1000423/2111/i/600/depositphotos_21114749-stock-photo-two-football-players-striking-the.jpg",
+                "https://st.depositphotos.com/1000423/2111/i/600/depositphotos_21114749-stock-photo-two-football-players-striking-the.jpg",
+                "https://st.depositphotos.com/1000423/2111/i/600/depositphotos_21114749-stock-photo-two-football-players-striking-the.jpg",
+                "https://st.depositphotos.com/1000423/2111/i/600/depositphotos_21114749-stock-photo-two-football-players-striking-the.jpg",
+                "https://st.depositphotos.com/1000423/2111/i/600/depositphotos_21114749-stock-photo-two-football-players-striking-the.jpg",
+                "https://st.depositphotos.com/1000423/2111/i/600/depositphotos_21114749-stock-photo-two-football-players-striking-the.jpg",
+                "https://st.depositphotos.com/1000423/2111/i/600/depositphotos_21114749-stock-photo-two-football-players-striking-the.jpg",
+                "https://st.depositphotos.com/1000423/2111/i/600/depositphotos_21114749-stock-photo-two-football-players-striking-the.jpg",
+                "https://st.depositphotos.com/1000423/2111/i/600/depositphotos_21114749-stock-photo-two-football-players-striking-the.jpg",
+            ]
+        );
+    }, []);
+
+    return (
+        <>
+            <div className="container my-3">
+                <div className="d-flex justify-content-center w-100 image-flex">
+                {
+                    posts.map((post) => {
+                        return (
+                            <>
+                                <img src={post} width={220} height={220} className="m-2" />
+                            </>
+                        );
+                    })
+                }
+                </div>
+            </div>
+        </>
+    );
+}
+
 function UserAdditionalContent(props) {
 
     const [aboutActive, setAboutActive] = useState(true);
@@ -37,21 +131,28 @@ function UserAdditionalContent(props) {
         setImageActive(false);
     }
 
+    useEffect(() => {
+        const url = "https://st.depositphotos.com/1000423/2111/i/600/depositphotos_21114749-stock-photo-two-football-players-striking-the.jpg";
+
+    }, []);
+
     return (
         <>
-            <div className="d-flex justify-content-evenly shadow border-bottom py-2 w-100">
-                <div className={(aboutActive ? "active" : "")} onClick={makeAboutActive}>
+            <div className="set-nav-align d-flex justify-content-evenly border-bottom border-3 w-100">
+                <div className={(aboutActive ? "active-tab" : "") + " post-type-icon my-0 py-2"} onClick={makeAboutActive}>
                     <img className="p-1" src={process.env.PUBLIC_URL + "/media/icons/about-section.svg"} width={35} height={35} />
                 </div>
-                <div className={(imageActive ? "active" : "")} onClick={makeImageActive}>
+                <div className={(imageActive ? "active-tab" : "") + " post-type-icon my-0 py-2"} onClick={makeImageActive}>
                     <img className="p-1" src={process.env.PUBLIC_URL + "/media/icons/image-post.svg"} width={35} height={35} />
                 </div>
-                <div className={(textActive ? "active" : "")} onClick={makeTextActive}>
+                <div className={(textActive ? "active-tab" : "") + " post-type-icon my-0 py-2"} onClick={makeTextActive}>
                     <img className="p-1" src={process.env.PUBLIC_URL + "/media/icons/text-post.svg"} width={35} height={35} />
                 </div>
             </div>
 
-            { aboutActive && <AboutContent user={props.user} /> }
+            { aboutActive && <AboutContent user={props.user} /> } 
+            { imageActive && <ImageContent user={props.user} /> } 
+            { textActive && <TextContent user={props.user} /> } 
         </>
     );
 }
