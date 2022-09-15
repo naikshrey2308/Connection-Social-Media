@@ -57,7 +57,7 @@ router.get("/insertChat", (req, res) => {
                     text : req.body.chat.text ,
                     time : req.body.chat.time,
                     flag : 1
-                })
+                });
                 chatObj.save();
             }
             else{
@@ -65,7 +65,13 @@ router.get("/insertChat", (req, res) => {
                 if(data.username.uname1 === sender){
                     flag = 1;
                 }
-                // insert the obj accordingly
+                let obj = new Chat(data);
+                obj.chats.push({
+                    text : req.body.chat.text ,
+                    time : req.body.chat.time,
+                    flag : flag
+                });
+                obj.save();
             }
         }
     )

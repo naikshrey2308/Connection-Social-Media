@@ -123,27 +123,26 @@ router.post("/register", (req, res) => {
 
 router.post("/register/profilePic", upload.single("profilePic"), (req, res) => {
     if(fs.existsSync(`${baseURL}/images/profilePics/${req.body.username}${req.body.fileType}`)) {
-        let user= new User();
         User.findOne({
             username: req.body.username,
         }).then((data) => {
             if(data == {})
                 res.json({ isUploaded: false });
             else {
-                user = data;
-            }
-        });
+                let user = new User(data);
+                
+                user.profilePic = { "name": req.body.username + req.body.fileType };
 
-        user.profilePic = { "name": req.body.username + req.body.fileType };
+                console.log(user);
 
-        console.log(user);
-
-        user.save((err, msg) => {
-            if(err) {
-                console.log(err);
-                res.json({ isUploaded: false });
-            } else {
-                console.log(msg);
+                user.save((err, msg) => {
+                    if(err) {
+                        console.log(err);
+                        res.json({ isUploaded: false });
+                    } else {
+                        console.log(msg);
+                    }
+                });
             }
         });
 

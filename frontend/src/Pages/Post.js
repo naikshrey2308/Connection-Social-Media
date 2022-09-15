@@ -1,4 +1,5 @@
 import { memo, useRef, useState } from "react";
+import { ReactSession } from "react-client-session";
 import axios from "axios";
 
 function PostUploader(props) {
@@ -13,7 +14,7 @@ function PostUploader(props) {
 
     async function handleSubmit() {
         let data = new FormData();
-        data.set("user_id", "6322fc8a18109c4a74c0e0bf");
+        data.set("username", "shrey.23");
         data.set("type", "pic");
         data.set("caption", caption);
         data.append("postPic", post);

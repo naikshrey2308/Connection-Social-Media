@@ -7,8 +7,8 @@ const postTypes = {
 }
 
 const postSchema = mongoose.Schema({
-    'user_id': {
-        type: Types.Decimal128,
+    'username': {
+        type: Types.String,
         required: true,
     },
 

@@ -27,7 +27,7 @@ var storage = multer.diskStorage({
 
 const upload = multer({storage: storage});
 
-router.post("/create", upload.single("postPic"), (req, res) => {
+router.post("/create", upload.single("postPic"), async (req, res) => {
     console.log(req.body);
 
     let isPosted = false;
@@ -47,19 +47,21 @@ router.post("/create", upload.single("postPic"), (req, res) => {
     };
 
     const post = new Post({
-        'user_id': req.body.user_id,
+        'username': req.body.username,
         'type': req.body.type,
         'content': content,
     });
 
     // save the post meta-data to the database
-    post.save((err, data) => {
+    await post.save((err, data) => {
         if(err) {
             console.log(err);
             isPosted = false;
         } else {
             console.log(data);
             isPosted = true;
+            res.json({ "isPosted": isPosted });
+            return;
         }
     });
 
