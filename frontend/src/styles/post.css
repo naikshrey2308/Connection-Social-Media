@@ -1,0 +1,15 @@
+@import url("../styles/base.css");
+
+.active-tile > button {
+    opacity: 1 !important;
+    outline-offset: 3px !important;
+    outline: 2px solid white !important;
+}
+
+.uploader {
+    min-width: 60vw;
+}
+
+.span-editable, .text-editor {
+    outline: none;
+}

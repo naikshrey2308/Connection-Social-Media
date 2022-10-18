@@ -44,7 +44,7 @@ function Navbar(props) {
                                 <Link onMouseEnter={() => activateIcon(Chat)} onMouseLeave={() => blurIcon(Chat)} className="nav-link" to="/chat"><img ref={Chat} src= {process.env.PUBLIC_URL + "/media/icons/chat_hollow.svg"} className="nav_img" /></Link>
                             </li>
                             <li className="nav-item">
-                                <Link onMouseEnter={() => activateIcon(Post)} onMouseLeave={() => blurIcon(Post)} className="nav-link" to="/create"><img ref={Post} src= {process.env.PUBLIC_URL + "/media/icons/add_hollow.svg"} className="nav_img"/></Link>
+                                <Link onMouseEnter={() => activateIcon(Post)} onMouseLeave={() => blurIcon(Post)} className="nav-link" to="/post"><img ref={Post} src= {process.env.PUBLIC_URL + "/media/icons/add_hollow.svg"} className="nav_img"/></Link>
                             </li>
                             <li className="nav-item">
                                 <Link onMouseEnter={() => activateIcon(Discover)} onMouseLeave={() => blurIcon(Discover)} className="nav-link" to="/discover"><img ref={Discover} src= {process.env.PUBLIC_URL + "/media/icons/group-add_hollow.svg"} className="nav_img"/></Link>

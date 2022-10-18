@@ -1,4 +1,5 @@
-@import url('http://fonts.cdnfonts.com/css/earnest-harlley');
+/* @import url('http://fonts.cdnfonts.com/css/earnest-harlley'); */
+@import url('https://fonts.googleapis.com/css2?family=Meow+Script&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Arima&family=IBM+Plex+Mono&display=swap');
 @import url("animate.css");
 
@@ -86,4 +87,12 @@ html {
 
 .invalid-input, .invalid-input:focus {
     border-color: red;
+}
+
+.br-10 {
+    border-radius: 10px;
+}
+
+.br-50p {
+    border-radius: 50%;
 }

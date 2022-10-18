@@ -40,6 +40,9 @@ function Form(props) {
             body: JSON.stringify(loginParams),
         });
         const res = await req.json();
+        
+        setLoginMessage(res.data);
+
         ReactSession.set("username", res.username);
         ReactSession.set("profilePic", res.profilePic);
         ReactSession.set("name", res.name);

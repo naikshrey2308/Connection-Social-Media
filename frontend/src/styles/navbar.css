@@ -9,7 +9,8 @@ nav {
 }
 
 .logonav {
-    font-family: "Earnest Harlley", "Times New Roman", Calibri;
+    font-family: "Meow Script", "Times New Roman", Calibri;
+    color: var(--primary);
     font-size: 40px;
 }
 .nav_img{
