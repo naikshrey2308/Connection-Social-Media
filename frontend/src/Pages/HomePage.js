@@ -2,7 +2,8 @@ import Navbar from "../Components/Navbar";
 import { memo } from "react";
 function HomePage() {
     return(
-        < Navbar />
+        // < Navbar />
+        <></>
     );
 }
 export default memo(HomePage);

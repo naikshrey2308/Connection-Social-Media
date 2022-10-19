@@ -36,7 +36,7 @@ function TextContent(props) {
         posts.forEach((post) => {
             document.getElementById(post._id).innerHTML = post.content.text;
         });
-    }, []);
+    }, [posts]);
 
     return (
         <>

@@ -166,30 +166,54 @@ function TextPostRenderer(props) {
 
     const toggleLinkSetter = () => setLinkSetter(!linkSetter); 
 
+    const navigate = useNavigate();
+
+    const placeholderText = "Start Typing Here...";
+
+    const [error, setError] = useState(null);
+
     function formatText(event, value) {
         const element = event.target;
         const action = element.id;
         document.execCommand(action, false, value);
     }
 
+    function checkNull() {
+        if(!textContentRef.current.innerHTML) {
+            setError("Post cannot have empty text.");
+        } else {
+            setError(null);
+        }
+    }
+
     async function handleSubmit() {
+        if(textContentRef.current.innerHTML == placeholderText) {
+            setError("Post cannot have empty text. Kindly type something before posting.");
+            return;
+        }
+
         setText(textContentRef.current.innerHTML);
+        // console.log(text);
 
         let data = new FormData();
         data.set("username", "shrey.23");
         data.set("type", "text");
-        data.set("text", text);
+        data.set("text", textContentRef.current.innerHTML);
 
         let res = await axios.post("/posts/create", data);
 
         console.log(res);
 
         alert("Done");
-        // navigate("/home");
+        navigate("/home");
     }
 
     return (
         <div className="shadow">
+            {
+                (error) && 
+                <p style={{fontSize: 14}} className="px-2 alert alert-danger text-danger">{error}</p>
+            }
             <div className="d-flex bg-white p-2 border-bottom">
                 <img className="br-50p" src={process.env.PUBLIC_URL + "/media/profilePics/S.png"} width={30} />
                 <p className="w-100 px-3 m-0">Shrey Naik</p>
@@ -259,8 +283,8 @@ function TextPostRenderer(props) {
                 </button>
                 </div>
             }
-            <div ref={textContentRef} className="text-editor bg-light position-relative p-3" contentEditable={true}>
-                Start Typing Here...
+            <div ref={textContentRef} onKeyDown={checkNull} className="text-editor bg-light position-relative p-3" contentEditable={true}>
+                {placeholderText}
             </div>
             <div className="bg-white border-top">
                 <div className="d-flex p-3">
@@ -313,7 +337,7 @@ function Post(props) {
         <div className="min-vh-100 bg-base">
             <PostContext.Provider value={{ active, setActive, tileOptions }}>
                 <ImagePostRendererContext.Provider value={{ post, caption, setPost, setCaption }}>
-                    <Navbar />
+                    {/* <Navbar /> */}
                     <div className="uploader position-absolute top-50 start-50" style={{ transform: "translate(-50%, -50%)" }}>
                     <h1 className="text-center text-white display-3">Create A Post</h1>
                     <p className="text-center text-light">Select a type of post you wish to create...</p>

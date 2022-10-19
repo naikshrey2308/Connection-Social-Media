@@ -168,7 +168,7 @@ function Discover() {
 
     return (
         <>
-            <Navbar />
+            {/* <Navbar /> */}
             {/* Find friends that near you and match your vibes */}
             <Finder />
             <div className="container">
