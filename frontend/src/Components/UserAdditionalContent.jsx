@@ -18,14 +18,25 @@ function TextContent(props) {
     const [posts, setPosts] = useState([]);
 
     useEffect(() => {
-        setPosts(
-            [
-                "eat. sleep. code. repeat.",
-                "Good Evening!!",
-                "eat. sleep. code. repeat.",
-            ]
-        );
-    }, []);
+        (async () => {
+            // Load the user data from the server
+            let res = await fetch(`/posts/text/${encodeURIComponent("shrey.23")}`, {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                },
+            });
+
+            res = await res.json();
+
+            setPosts(res);
+        })();
+
+        posts.forEach((post) => {
+            document.getElementById(post._id).innerHTML = post.content.text;
+        });
+    }, [posts]);
 
     return (
         <>
@@ -45,7 +56,9 @@ function TextContent(props) {
                                         </div>
                                     </div>
                                     <hr/>
-                                    <p>{post}</p>
+                                    <div id={post._id}>
+
+                                    </div>
                                     <hr/>
                                     <div className="d-flex w-100">
                                         <div className="text-start">
@@ -72,20 +85,21 @@ function ImageContent(props) {
     const [posts, setPosts] = useState([]);
 
     useEffect(() => {
-        setPosts(
-            [
-                "https://st.depositphotos.com/1000423/2111/i/600/depositphotos_21114749-stock-photo-two-football-players-striking-the.jpg",
-                "https://st.depositphotos.com/1000423/2111/i/600/depositphotos_21114749-stock-photo-two-football-players-striking-the.jpg",
-                "https://st.depositphotos.com/1000423/2111/i/600/depositphotos_21114749-stock-photo-two-football-players-striking-the.jpg",
-                "https://st.depositphotos.com/1000423/2111/i/600/depositphotos_21114749-stock-photo-two-football-players-striking-the.jpg",
-                "https://st.depositphotos.com/1000423/2111/i/600/depositphotos_21114749-stock-photo-two-football-players-striking-the.jpg",
-                "https://st.depositphotos.com/1000423/2111/i/600/depositphotos_21114749-stock-photo-two-football-players-striking-the.jpg",
-                "https://st.depositphotos.com/1000423/2111/i/600/depositphotos_21114749-stock-photo-two-football-players-striking-the.jpg",
-                "https://st.depositphotos.com/1000423/2111/i/600/depositphotos_21114749-stock-photo-two-football-players-striking-the.jpg",
-                "https://st.depositphotos.com/1000423/2111/i/600/depositphotos_21114749-stock-photo-two-football-players-striking-the.jpg",
-                "https://st.depositphotos.com/1000423/2111/i/600/depositphotos_21114749-stock-photo-two-football-players-striking-the.jpg",
-            ]
-        );
+
+        (async () => {
+            // Load the user data from the server
+            let res = await fetch(`/posts/images/${encodeURIComponent("shrey.23")}`, {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                },
+            });
+
+            res = await res.json();
+
+            setPosts(res);
+        })();
     }, []);
 
     return (
@@ -96,7 +110,7 @@ function ImageContent(props) {
                     posts.map((post) => {
                         return (
                             <>
-                                <img src={post} width={220} height={220} className="m-2" />
+                                <img src={"/posts/" + post.content.url} width={220} height={220} className="m-2 border" />
                             </>
                         );
                     })

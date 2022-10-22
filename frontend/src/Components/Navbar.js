@@ -1,6 +1,10 @@
-import { memo, useEffect } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useRef,useState } from "react";
+import { useRef } from "react";
+import { MdAdd, MdChat, MdComment, MdHome, MdOutlineChatBubble, MdOutlineChatBubbleOutline, MdOutlineHome, MdOutlinePersonAdd, MdPersonAdd } from "react-icons/md";
+import { IoCompass, IoCompassOutline, IoPersonCircle, IoPersonCircleOutline, IoPersonCircleSharp } from "react-icons/io5";
+
 import "../styles/navbar.css";
 // import { post } from "../../../backend/routes/userRoutes";
 import Button from 'react-bootstrap/Button';
@@ -8,32 +12,39 @@ import Modal from 'react-bootstrap/Modal';
 
 function Navbar(props) {
 
-    const [Home, Chat, Post, Discover, Profile] = [useRef(), useRef(), useRef(), useRef(), useRef()];
+    const [Home, setHome] = useState(false);
+    const [Chat, setChat] = useState(false);
+    const [Post, setPost] = useState(false);
+    const [Discover, setDiscover] = useState(false);
+    const [Profile, setProfile] = useState(false);
 
-    // Mapping of icon variables with icon names
-    Home.name = "home";
-    Chat.name = "chat";
-    Post.name = "add";
-    Discover.name = "group-add";
-    Profile.name = "account";
+    const activateIcon = useCallback((callback) => {
+        // callback(true);
+    }, []);
 
-    const activateIcon = (icon) => {
-        icon.current.src = `${process.env.PUBLIC_URL}/media/icons/${icon.name}.svg`;
-    }
+    const blurIcon = useCallback((callback) => {
+        // callback(false);
+    }, []);
 
-    const blurIcon = (icon) => {
-        icon.current.src = `${process.env.PUBLIC_URL}/media/icons/${icon.name}_hollow.svg`;
-    }
+    const activate = useCallback((callback) => {
+        setHome(false);
+        setChat(false);
+        setPost(false);
+        setDiscover(false);
+        setProfile(false);
+        
+        callback(true);
+    }, []);
+
+    useEffect(() => {
+
+    }, []);
 
     //for modal show and hide purpose
     const [showPost, setShowPost] = useState(false);
     const closePostPage = () => setShowPost(false);
     const showPostPage = () => setShowPost(true);
 
-    // make whole post object
-    const [post,setPost] = useEffect({});
-
-    //handle the data get from modal form
     
     const showPostRef = useRef();
     const picRef = useRef();
@@ -77,26 +88,72 @@ function Navbar(props) {
 
                         <ul className="navbar-nav mx-auto me-0 mb-2 mb-lg-0">
                             <li className="nav-item">
-                                <Link onMouseEnter={() => activateIcon(Home)} onMouseLeave={() => blurIcon(Home)} className="nav-link active ml-3" aria-current="page" to="/home"><img ref={Home} src= {process.env.PUBLIC_URL + "/media/icons/home_hollow.svg" } className="nav_img" /></Link>
+                                <Link onMouseEnter={() => activateIcon(setHome)} onMouseLeave={() => blurIcon(setHome)} onClick={() => activate(setHome)} className="nav-link active ml-3" aria-current="page" to="/home">
+                                    {
+                                        (!Home) &&
+                                        <MdOutlineHome color="black" size={25}></MdOutlineHome>
+                                    }
+                                    {
+                                        (Home) &&
+                                        <MdHome color="var(--primary)" size={25}></MdHome>
+                                    }
+                                </Link>
                             </li>
                             <li className="nav-item">
-                                <Link onMouseEnter={() => activateIcon(Chat)} onMouseLeave={() => blurIcon(Chat)} className="nav-link" to="/chat"><img ref={Chat} src= {process.env.PUBLIC_URL + "/media/icons/chat_hollow.svg"} className="nav_img" /></Link>
+                                <Link onMouseEnter={() => activateIcon(setChat)} onMouseLeave={() => blurIcon(setChat)} onClick={() => activate(setChat)} className="nav-link" to="/chat">
+                                {
+                                    (!Chat) &&
+                                    <MdOutlineChatBubbleOutline color="black" size={20}></MdOutlineChatBubbleOutline>
+                                }
+                                {
+                                    (Chat) &&
+                                    <MdOutlineChatBubble color="var(--primary)" size={20}></MdOutlineChatBubble>
+                                }
+                                </Link>
                             </li>
                             <li className="nav-item">
-                                <img ref={Post} src= {process.env.PUBLIC_URL + "/media/icons/add_hollow.svg"} className="nav_img " onMouseEnter={() => activateIcon(Post)} onMouseLeave={() => blurIcon(Post)} onClick={showPostPage}/>
+
+                                <Link onMouseEnter={() => activateIcon(setPost)} onMouseLeave={() => blurIcon(setPost)} onClick={() => activate(setPost)} className="nav-link" to="/post">
+                                {
+                                    (!Post) &&
+                                    <MdAdd color="black" size={25}></MdAdd>
+                                }
+                                {
+                                    (Post) &&
+                                    <MdAdd color="var(--primary)" size={25}></MdAdd>
+                                } 
+                                </Link>
                             </li>
                             <li className="nav-item">
-                                <Link onMouseEnter={() => activateIcon(Discover)} onMouseLeave={() => blurIcon(Discover)} className="nav-link" to="/discover"><img ref={Discover} src= {process.env.PUBLIC_URL + "/media/icons/group-add_hollow.svg"} className="nav_img"/></Link>
+                                <Link onMouseEnter={() => activateIcon(setDiscover)} onMouseLeave={() => blurIcon(setDiscover)} onClick={() => activate(setDiscover)} className="nav-link" to="/discover">
+                                {
+                                    (!Discover) &&
+                                    <IoCompassOutline color="black" size={25}></IoCompassOutline>
+                                }
+                                {
+                                    (Discover) &&
+                                    <IoCompass color="var(--primary)" size={25}></IoCompass>
+                                }
+                                </Link>
                             </li>
                             <li className="nav-item">
-                                <Link onMouseEnter={() => activateIcon(Profile)} onMouseLeave={() => blurIcon(Profile)} className="nav-link float-end" to="/user/"><img ref={Profile} src= {process.env.PUBLIC_URL + "/media/icons/account_hollow.svg"} className="nav_img"/></Link>
+                                <Link onMouseEnter={() => activateIcon(setProfile)} onMouseLeave={() => blurIcon(setProfile)} onClick={() => activate(setProfile)} className="nav-link float-end" to="/user/">
+                                {
+                                    (!Profile) &&
+                                    <IoPersonCircleOutline color="black" size={25}></IoPersonCircleOutline>
+                                }
+                                {
+                                    (Profile) &&
+                                    <IoPersonCircle color="var(--primary)" size={25}></IoPersonCircle>
+                                }
+                                </Link>
                             </li>
                         </ul>
                     </div>
                 </div>
             </nav>
 
-            <Modal show={showPost} onHide={closePostPage}>
+            {/* <Modal show={showPost} onHide={closePostPage}>
                 <Modal.Header closeButton>
                     <Modal.Title>Create Post</Modal.Title>
                 </Modal.Header>
@@ -116,7 +173,7 @@ function Navbar(props) {
                     </form>
                 </Modal.Body>
                 
-            </Modal>
+            </Modal> */}
         </>
     );
 

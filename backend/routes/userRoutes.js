@@ -41,7 +41,7 @@ router.post("/login", (req, res) => {
         isLoggedIn = false;
         console.log(data);
         // if either username is incorrect
-        if(data == {}) {
+        if(data == {} || data == null) {
             data = "User not found! Create an account if you don't have one.";
             isLoggedIn = false;
         }

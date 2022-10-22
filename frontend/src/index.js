@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import Loader from './Pages/Loader';
 
 import { LoginProvider } from './Contexts/loginContext';
+import Navbar from './Components/Navbar';
 
 const LoginPage = React.lazy(() => import("./Pages/LoginPage"));
 const ChattingPage = React.lazy(() => import("./Pages/ChattingPage"));
@@ -19,6 +20,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <>
     <BrowserRouter>
+    <Navbar />
       <Routes>
         <Route path="/">
           <Route index element={

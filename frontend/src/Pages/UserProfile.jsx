@@ -29,7 +29,7 @@ function UserProfile(props) {
 
     return (
         <>
-            <Navbar />
+            {/* <Navbar /> */}
             {
             (user) && 
             <div className="row min-vh-100 gx-0">
