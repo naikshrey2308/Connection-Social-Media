@@ -1,7 +1,10 @@
 import { memo, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useRef } from "react";
+import { useRef,useState } from "react";
 import "../styles/navbar.css";
+// import { post } from "../../../backend/routes/userRoutes";
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 
 function Navbar(props) {
 
@@ -21,6 +24,42 @@ function Navbar(props) {
     const blurIcon = (icon) => {
         icon.current.src = `${process.env.PUBLIC_URL}/media/icons/${icon.name}_hollow.svg`;
     }
+
+    //for modal show and hide purpose
+    const [showPost, setShowPost] = useState(false);
+    const closePostPage = () => setShowPost(false);
+    const showPostPage = () => setShowPost(true);
+
+    // make whole post object
+    const [post,setPost] = useEffect({});
+
+    //handle the data get from modal form
+    
+    const showPostRef = useRef();
+    const picRef = useRef();
+    const captionRef = useRef();
+    const locationRef = useRef();
+
+    // post.picture = picRef;
+
+    const onLocation = () =>{
+
+    }
+    
+    const onPostPic = async() => {
+        showPostRef.current.src = await URL.createObjectURL(picRef.current.files[0]);
+        setPost({...post, postPic: showPostRef.current.src});
+        
+    };
+    const onCaption = ()=>{
+
+    }
+
+    const handleSubmit = ()=>{
+
+    }
+
+    
 
     return (
         <>
@@ -44,7 +83,7 @@ function Navbar(props) {
                                 <Link onMouseEnter={() => activateIcon(Chat)} onMouseLeave={() => blurIcon(Chat)} className="nav-link" to="/chat"><img ref={Chat} src= {process.env.PUBLIC_URL + "/media/icons/chat_hollow.svg"} className="nav_img" /></Link>
                             </li>
                             <li className="nav-item">
-                                <Link onMouseEnter={() => activateIcon(Post)} onMouseLeave={() => blurIcon(Post)} className="nav-link" to="/create"><img ref={Post} src= {process.env.PUBLIC_URL + "/media/icons/add_hollow.svg"} className="nav_img"/></Link>
+                                <img ref={Post} src= {process.env.PUBLIC_URL + "/media/icons/add_hollow.svg"} className="nav_img " onMouseEnter={() => activateIcon(Post)} onMouseLeave={() => blurIcon(Post)} onClick={showPostPage}/>
                             </li>
                             <li className="nav-item">
                                 <Link onMouseEnter={() => activateIcon(Discover)} onMouseLeave={() => blurIcon(Discover)} className="nav-link" to="/discover"><img ref={Discover} src= {process.env.PUBLIC_URL + "/media/icons/group-add_hollow.svg"} className="nav_img"/></Link>
@@ -56,6 +95,28 @@ function Navbar(props) {
                     </div>
                 </div>
             </nav>
+
+            <Modal show={showPost} onHide={closePostPage}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Create Post</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <form method="POST" encType="multipart/form-data" action="" className="mx-xl-5 px-lg-5" autocomplete="off">
+                        <h6>Add Location :</h6>
+                        <input ref={locationRef} type="text" onChange={onLocation} name="location" id="location" className="input-control form-control" placeholder="Location" />
+                        
+                        <h6>Choose Picture : </h6>
+                        <img ref={showPostRef} src={(post.picture === undefined) ? process.env.PUBLIC_URL + "/media/svgs/nopost.png" : post.picture} width={400} height={150} className="w-50 mx-auto mt-3 mb-5 p-3" style={{borderRadius: "5%"}} />
+                        <input ref={picRef} type="file" onChange={onPostPic} name="postPic" id="postPic" accept="image/posts/*" className="input-control form-control" />
+                       
+                        <h6>Add Caption :</h6>
+                        <input ref={captionRef} type="text" onChange={onCaption} name="caption" id="caption" className="input-control form-control" placeholder="Put Your Thoughts" />
+                        
+                        <input type="button" className="btn btn-base btn-light float-end mr-3 mt-5 px-4 submit" value="Post" onClick={handleSubmit} />
+                    </form>
+                </Modal.Body>
+                
+            </Modal>
         </>
     );
 
