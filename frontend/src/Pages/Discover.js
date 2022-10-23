@@ -20,25 +20,47 @@ function FriendCard(props) {
     );
 }
 
+var suggestions=[];
+
+const fetchRandomPeople= async()=>{
+    console.log("inside1");
+    let req = await fetch('/user/getRandomPeople',{
+        method:'POST',   
+        headers : {
+            'Content-Type' : 'application/json',
+            'Accept':'application/json'
+        },
+        body:{}
+    });
+    let res = req.json();
+    console.log("inside2");
+    suggestions = res.people;
+    console.log(suggestions);
+    
+}
+
 function FriendCarousel() {
 
-    const suggestedFriends = [
-        {
-            name: "Shrey Naik",
-            subtitle: "Lives near your area",
-            profilePic: "snapshot.png"
-        },
-        {
-            name: "Shruti Patel",
-            subtitle: "Matches your vibe",
-            profilePic: "S.png"
-        }, 
-        {
-            name: "Vedant Parikh",
-            subtitle: "Lives near your area",
-            profilePic: "spaceman.jpg"
-        }
-    ];
+    // const suggestedFriends = [
+    //     {
+    //         name: "Shrey Naik",
+    //         subtitle: "Lives near your area",
+    //         profilePic: "snapshot.png"
+    //     },
+    //     {
+    //         name: "Shruti Patel",
+    //         subtitle: "Matches your vibe",
+    //         profilePic: "S.png"
+    //     }, 
+    //     {
+    //         name: "Vedant Parikh",
+    //         subtitle: "Lives near your area",
+    //         profilePic: "spaceman.jpg"
+    //     }
+    // ];
+    console.log("before");
+    fetchRandomPeople();
+    const suggestedFriends = suggestions;
 
     return (
         <>
@@ -67,13 +89,29 @@ function FriendCarousel() {
     );
 }
 
+async function Follow(user) {
+
+    const req = await fetch("/user/follow",{
+        method: "POST",
+        headers : {
+            'Content-Type' : 'application/json',
+            'Accept':'application/json'
+        },
+        body:JSON.stringify({
+            email:user.email
+        })
+    });
+
+    const res = await req.json();
+}
+
 function FriendRow(props) {
     return (
         <>
             <div className="d-flex px-3 justify-content-start">
                 <img src={`${process.env.PUBLIC_URL}/media/profilePics/${props.data.profilePic}`} width={40} height={40} className="border p-1 me-5" style={{borderRadius: "50%"}} />
                 <p className="fs-7 my-auto w-100">{props.data.name}</p>
-                <button className="btn btn-sm btn-light text-base m-0 px-4">Follow</button>
+                <button className="btn btn-sm btn-light text-base m-0 px-4" onClick={Follow(props.data)}>Follow</button>
             </div>
             <br />
         </>
@@ -82,26 +120,28 @@ function FriendRow(props) {
 
 function FriendRows() {
 
-    let suggestedFriends = [
-        {
-            name: "Shrey Naik",
-            subtitle: "Lives near your area",
-            profilePic: "snapshot.png"
-        },
-        {
-            name: "Shruti Patel",
-            subtitle: "Matches your vibe",
-            profilePic: "S.png"
-        }, 
-        {
-            name: "Vedant Parikh",
-            subtitle: "Lives near your area",
-            profilePic: "spaceman.jpg"
-        },
-    ];
+    fetchRandomPeople();
+    let suggestedFriends = suggestions;
+    // let suggestedFriends = [
+    //     {
+    //         name: "Shrey Naik",
+    //         subtitle: "Lives near your area",
+    //         profilePic: "snapshot.png"
+    //     },
+    //     {
+    //         name: "Shruti Patel",
+    //         subtitle: "Matches your vibe",
+    //         profilePic: "S.png"
+    //     }, 
+    //     {
+    //         name: "Vedant Parikh",
+    //         subtitle: "Lives near your area",
+    //         profilePic: "spaceman.jpg"
+    //     },
+    // ];
 
-    suggestedFriends = suggestedFriends.concat(suggestedFriends);   
-    suggestedFriends = suggestedFriends.concat(suggestedFriends);
+    // suggestedFriends = suggestedFriends.concat(suggestedFriends);   
+    // suggestedFriends = suggestedFriends.concat(suggestedFriends);
 
     return (
         <>

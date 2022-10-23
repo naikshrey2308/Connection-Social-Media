@@ -11,6 +11,7 @@ const path = require("path");
 const fs = require("fs");
 
 const multer = require('multer');
+const { response } = require("express");
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -35,6 +36,7 @@ const upload = multer({storage: storage});
 router.post("/login", (req, res) => {
     // find a user from the database
     // console.log(req);
+    let email='';
     User.findOne({
         username: req.body.username,
     }).then(data => {
@@ -54,7 +56,7 @@ router.post("/login", (req, res) => {
         else {
             data = "Logged in successfully!";
             isLoggedIn = true;
-
+            email= data.email;
             // create session for the current user
             // req.session.username=req.body.username;
             // console.log(req.session);
@@ -63,7 +65,7 @@ router.post("/login", (req, res) => {
         }
 
         // send the response back to the user
-        res.json({"data": data, "isLoggedIn": isLoggedIn,"username":req.body.username,"profilePic":req.body.profilePic,"name":req.body.name});
+        res.json({"data": data, "isLoggedIn": isLoggedIn,"username":req.body.username,"profilePic":req.body.profilePic,"name":req.body.name,"email":email});
         
     }).catch(err => {
         res.json({"err": err});
@@ -178,10 +180,43 @@ router.get("/:username", (req, res) => {
         // else if the user is found, send the details
         else {
             isFound = true;
-            res.json({ "isFound": isFound, "user": data });
+            res.json({ isFound: isFound, user: data });
         }
     });
 
 });
+
+router.post('/follow',(req,res)=>{
+    const email_ = req.body.email;
+    User.find({email:email_}).then(
+        (data)=>{
+            // var follower = data.followers.push(window.sessionStorage.getItem("email"));
+            // User.updateOne({email:email_},{$set:{followers:follower}});
+        }
+    );
+    User.find({email:window.sessionStorage.getItem("email")}).then(
+        (data)=>{
+            var followings = data.following.push(email_);
+            User.updateOne({email:window.sessionStorage.getItem("email")},{$set:{following:followings}});
+        }
+    );
+});
+
+router.post('/getRandomPeople',(req,res)=>{
+    console.log("in server");
+    User.find({}).limit(2).then((data)=>{
+        let array=[];
+        for(var i in data){
+            array.push({
+                name : i.name,
+                profilePic : i.profilePic.name ,
+                email : i.email,
+                subtitle : i.bio
+
+            })
+        }
+    });
+    res.json({people:array});
+})
 
 module.exports = router;

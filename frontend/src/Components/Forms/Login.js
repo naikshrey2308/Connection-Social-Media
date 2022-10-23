@@ -49,6 +49,7 @@ function Form(props) {
 
         // ReactSession.set("username", res.username);
         window.sessionStorage.setItem("username", res.username);
+        window.sessionStorage.setItem("email", res.email);
 
         window.sessionStorage.setItem("password", loginParams.password);
         // ReactSession.set("profilePic", res.profilePic);

@@ -1,21 +1,10 @@
-import logo from './logo.svg';
 import './App.css';
-
-// import Login from './Components/Forms/Login';
-// import LoginPage from './Pages/LoginPage';
-
 import React, { Suspense,createContext ,useContext} from 'react';
-import ReactDOM from 'react-dom/client';
 import {BrowserRouter, Routes, Route} from "react-router-dom";
-
 import Loader from './Pages/Loader';
-
 import { LoginProvider } from './Contexts/loginContext';
-// import ShowContext from './Contexts/showContext';
-// import { Show } from './Contexts/showContext';
 import Navbar from './Components/Navbar';
 import { useState, useEffect } from 'react';
-
 const LoginPage = React.lazy(() => import("./Pages/LoginPage"));
 const ChattingPage = React.lazy(() => import("./Pages/ChattingPage"));
 const HomePage = React.lazy(() => import("./Pages/HomePage"));
@@ -100,7 +89,7 @@ function App() {
 					<Post />
 					</Suspense>
 				} />
-				<Route path="user/*" element={
+				<Route path="users/*" element={
 					<Suspense fallback={<Loader/>}>
 					{/* { setShow(true) } */}
 					<UserProfile />
