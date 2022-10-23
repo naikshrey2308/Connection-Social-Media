@@ -1,6 +1,8 @@
 import ManageProfile from "../Components/ManageProfile";
 import { memo } from "react";
 import "../styles/userProfile.css";
+import { ReactSession }  from 'react-client-session';
+
 
 function UserProfileUpdatePage() {
     let person={
@@ -34,6 +36,8 @@ function UserProfileUpdatePage() {
            },
               ];
     person.profilePic=person.id.toString();
+    console.log(ReactSession.get("username"));
+
     return(
         <ManageProfile user={person} />
     );

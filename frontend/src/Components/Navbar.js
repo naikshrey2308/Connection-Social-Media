@@ -1,7 +1,6 @@
-import { memo, useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect} from "react";
 import { Link } from "react-router-dom";
 import { useRef,useState } from "react";
-import { useRef } from "react";
 import { MdAdd, MdChat, MdComment, MdHome, MdOutlineChatBubble, MdOutlineChatBubbleOutline, MdOutlineHome, MdOutlinePersonAdd, MdPersonAdd } from "react-icons/md";
 import { IoCompass, IoCompassOutline, IoPersonCircle, IoPersonCircleOutline, IoPersonCircleSharp } from "react-icons/io5";
 
@@ -41,39 +40,40 @@ function Navbar(props) {
     }, []);
 
     //for modal show and hide purpose
-    const [showPost, setShowPost] = useState(false);
-    const closePostPage = () => setShowPost(false);
-    const showPostPage = () => setShowPost(true);
+    // const [showPost, setShowPost] = useState(false);
+    // const closePostPage = () => setShowPost(false);
+    // const showPostPage = () => setShowPost(true);
 
     
-    const showPostRef = useRef();
-    const picRef = useRef();
-    const captionRef = useRef();
-    const locationRef = useRef();
+    // const showPostRef = useRef();
+    // const picRef = useRef();
+    // const captionRef = useRef();
+    // const locationRef = useRef();
 
-    // post.picture = picRef;
+    // // post.picture = picRef;
 
-    const onLocation = () =>{
+    // const onLocation = () =>{
 
-    }
+    // }
     
-    const onPostPic = async() => {
-        showPostRef.current.src = await URL.createObjectURL(picRef.current.files[0]);
-        setPost({...post, postPic: showPostRef.current.src});
+    // const onPostPic = async() => {
+    //     showPostRef.current.src = await URL.createObjectURL(picRef.current.files[0]);
+    //     setPost({...post, postPic: showPostRef.current.src});
         
-    };
-    const onCaption = ()=>{
+    // };
+    // const onCaption = ()=>{
 
-    }
+    // }
 
-    const handleSubmit = ()=>{
+    // const handleSubmit = ()=>{
 
-    }
+    // }
 
     
 
     return (
         <>
+        {
             <nav className={"navbar navbar-expand-lg fixed-top border-bottom border-2 bg-light"}>
                 <div className="container-fluid">
                     <a className="navbar-brand logonav" href="#">Connection</a>
@@ -153,7 +153,16 @@ function Navbar(props) {
                 </div>
             </nav>
 
-            {/* <Modal show={showPost} onHide={closePostPage}>
+            
+        }
+        </>
+    );
+
+}
+
+export default memo(Navbar);
+
+{/* <Modal show={showPost} onHide={closePostPage}>
                 <Modal.Header closeButton>
                     <Modal.Title>Create Post</Modal.Title>
                 </Modal.Header>
@@ -174,9 +183,3 @@ function Navbar(props) {
                 </Modal.Body>
                 
             </Modal> */}
-        </>
-    );
-
-}
-
-export default memo(Navbar);

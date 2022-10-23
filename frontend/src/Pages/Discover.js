@@ -171,9 +171,6 @@ function Discover() {
             {/* <Navbar /> */}
             {/* Find friends that near you and match your vibes */}
             <Finder />
-            <div className="container">
-                <p>{temp.msg}</p>
-            </div>
         </>
     );
 }

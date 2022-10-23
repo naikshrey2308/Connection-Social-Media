@@ -15,7 +15,7 @@ function LoginPage(props) {
 
     return (
         <div id="login-page" className="min-vh-100">
-            { isLoginFormEnabled ? <Login /> : <Register /> }
+            { isLoginFormEnabled ? <Login/> : <Register /> }
         </div>
     );
 }

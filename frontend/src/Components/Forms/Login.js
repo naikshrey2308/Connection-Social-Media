@@ -1,13 +1,15 @@
 import { memo, useEffect, useState, useRef, useContext } from "react";
 import LoginContext from "../../Contexts/loginContext";
+// import ShowContext from "../../Contexts/showContext";
+
 import "../../styles/login.css";
 import validate from "../Reusables/Validator";
 import  { useNavigate } from 'react-router-dom';
 import { ReactSession }  from 'react-client-session';
 
-
-
 function Form(props) {
+    // var show = useContext(ShowContext);
+
     const [username, setUsername] = useState("");
     const [loginMessage, setLoginMessage] = useState(null);
 
@@ -43,11 +45,20 @@ function Form(props) {
         
         setLoginMessage(res.data);
 
-        ReactSession.set("username", res.username);
-        ReactSession.set("profilePic", res.profilePic);
-        ReactSession.set("name", res.name);
-        console.log(ReactSession.get("username"));
+        // ReactSession.set("username", res.username);
+        window.sessionStorage.setItem("username", res.username);
+
+        window.sessionStorage.setItem("password", loginParams.password);
+        // ReactSession.set("profilePic", res.profilePic);
+        window.sessionStorage.setItem("profilePic", res.profilePic);
+
+        window.sessionStorage.setItem("name", res.name);
+        // ReactSession.set("name", res.name);
+
+        // console.log(ReactSession.get("username"));
         if(res.isLoggedIn==true)
+            // show(true);
+            setIsLoginFormEnabled(true);
             navigate('/home')
         // setLoginMessage((!res.isLoggedIn) ? res.data : null);
     }

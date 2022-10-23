@@ -180,7 +180,9 @@ function Form(props) {
 
         let res = await req.json();
         if(res.isRegistered){
-            ReactSession.set("username", res.username);
+            // ReactSession.set("username", res.username);
+            window.sessionStorage.setItem("username", res.username);
+
             setCurr(7);
         }
         if(res.isRegistered === false) {
