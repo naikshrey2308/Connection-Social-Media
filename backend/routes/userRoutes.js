@@ -41,7 +41,7 @@ router.post("/login", (req, res) => {
         username: req.body.username,
     }).then(data => {
         isLoggedIn = false;
-        console.log(data);
+        // console.log(data);
         // if either username is incorrect
         if(data == {} || data == null) {
             data = "User not found! Create an account if you don't have one.";
@@ -159,13 +159,13 @@ router.post("/register/profilePic", upload.single("profilePic"), (req, res) => {
  * This request is for getting the current logged in user
  */
 router.get("/current", (req, res) => {
-
+    console.log("current user...");
 });
 
 /**
  * This request is for getting any other user
  */
-router.get("/:username", (req, res) => {
+router.get("getUser/:username", (req, res) => {
     
     let isFound = false;
     
@@ -202,21 +202,21 @@ router.post('/follow',(req,res)=>{
     );
 });
 
-router.post('/getRandomPeople',(req,res)=>{
+router.get('/getRandomPeople', (req, res) => {
     console.log("in server");
-    User.find({}).limit(2).then((data)=>{
-        let array=[];
-        for(var i in data){
-            array.push({
-                name : i.name,
-                profilePic : i.profilePic.name ,
-                email : i.email,
-                subtitle : i.bio
+    let array=[];
+    User.find({}).limit(5).then((data)=>{
+        // for(var i in data){
+        //     array.push({
+        //         name : i.name,
+        //         profilePic : (i.profilePic) ? i.profilePic.name : null,
+        //         email : i.email,
+        //         subtitle : i.bio
 
-            })
-        }
+        //     })
+        // }
+        res.json({"people": data});
     });
-    res.json({people:array});
-})
+});
 
 module.exports = router;

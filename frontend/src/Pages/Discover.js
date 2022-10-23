@@ -22,22 +22,21 @@ function FriendCard(props) {
 
 var suggestions=[];
 
-const fetchRandomPeople= async()=>{
-    console.log("inside1");
-    let req = await fetch('/user/getRandomPeople',{
-        method:'POST',   
-        headers : {
-            'Content-Type' : 'application/json',
-            'Accept':'application/json'
-        },
-        body:{}
-    });
-    let res = req.json();
-    console.log("inside2");
-    suggestions = res.people;
-    console.log(suggestions);
-    
-}
+// const fetchRandomPeople= async()=>{
+//     console.log("inside1");
+//     let req = await fetch('/user/shrey.23',{
+//         method:'GET',   
+//         headers : {
+//             'Content-Type' : 'application/json',
+//             'Accept':'application/json'
+//         },
+//         // body:{}
+//     });
+//     let res = req.json();
+//     console.log("inside2");
+//     suggestions = res.people;
+//     console.log(suggestions);
+// }
 
 function FriendCarousel() {
 
@@ -58,13 +57,33 @@ function FriendCarousel() {
     //         profilePic: "spaceman.jpg"
     //     }
     // ];
-    console.log("before");
-    fetchRandomPeople();
-    const suggestedFriends = suggestions;
+
+    let suggestedFriends;
+    useEffect(() => {
+        console.log("before");
+        
+        (async function() {
+            console.log("inside1");
+            let req = await fetch('/user/getRandomPeople', {
+                method:'GET',   
+                headers : {
+                    'Content-Type' : 'application/json',
+                    'Accept':'application/json'
+                },
+                // body:{}
+            });
+            let res = await req.json();
+            console.log("inside2");
+            suggestions = res.people;
+            console.log(suggestions);
+        })();
+
+        suggestedFriends = suggestions;
+    }, []);
 
     return (
         <>
-            <div id="friend-carousel" className="carousel carousel-dark slide" data-bs-interval="false">
+            { (suggestedFriends) && <div id="friend-carousel" className="carousel carousel-dark slide" data-bs-interval="false">
                 <div className="carousel-inner">
                 {
                     suggestedFriends.map((ele, ind) => {
@@ -85,6 +104,7 @@ function FriendCarousel() {
                     <span className="visually-hidden">Next</span>
                 </button>
                 </div>
+            }
         </>
     );
 }
@@ -120,7 +140,7 @@ function FriendRow(props) {
 
 function FriendRows() {
 
-    fetchRandomPeople();
+    // fetchRandomPeople();
     let suggestedFriends = suggestions;
     // let suggestedFriends = [
     //     {
@@ -182,7 +202,7 @@ function Finder() {
                 </div>
             </div>
 
-            <FriendRows />
+            {/* <FriendRows /> */}
 
         </>
     );
@@ -193,17 +213,17 @@ function Discover() {
     const [temp, setTemp] = useState("Shrey");
 
     useEffect(() => {
-        async function getData() {
-            try {
-                let resText = await fetch("http://localhost:4000/");
-                resText = await resText.json();
-                console.log(resText);
-                setTemp(resText);
-            } catch(err) {
-                console.log("error: ", err);
-            }
-        }
-        getData();
+        // async function getData() {
+        //     try {
+        //         let resText = await fetch("/user/current");
+        //         resText = await resText.json();
+        //         console.log(resText);
+        //         setTemp(resText);
+        //     } catch(err) {
+        //         console.log("error: ", err);
+        //     }
+        // }
+        // getData();
     }, []);
 
     return (
