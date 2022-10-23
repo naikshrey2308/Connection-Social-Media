@@ -6,8 +6,8 @@ import { IoCompass, IoCompassOutline, IoPersonCircle, IoPersonCircleOutline, IoP
 
 import "../styles/navbar.css";
 // import { post } from "../../../backend/routes/userRoutes";
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
+// import Button from 'react-bootstrap/Button';
+// import Modal from 'react-bootstrap/Modal';
 
 function Navbar(props) {
 

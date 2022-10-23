@@ -25,7 +25,7 @@ const Discover = React.lazy(() => import("./Pages/Discover"));
 const Post = React.lazy(() => import("./Pages/Post"));
 
 
-const LoginStatusContext = createContext();
+export const LoginStatusContext = createContext();
 
 function App() {
 	
@@ -65,7 +65,7 @@ function App() {
 		<LoginStatusContext.Provider value={{ IsLoggedIn, setIsLoggedIn }}>
 		<BrowserRouter>
 		{
-			{IsLoggedIn} && <Navbar /> 
+			IsLoggedIn && <Navbar /> 
 		}	
 			<Routes>
 				<Route path="/">

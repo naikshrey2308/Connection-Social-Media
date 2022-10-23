@@ -6,12 +6,14 @@ import "../../styles/login.css";
 import validate from "../Reusables/Validator";
 import  { useNavigate } from 'react-router-dom';
 import { ReactSession }  from 'react-client-session';
+import { LoginStatusContext } from "../../App";
 
 function Form(props) {
     // var show = useContext(ShowContext);
 
     const [username, setUsername] = useState("");
     const [loginMessage, setLoginMessage] = useState(null);
+    const { IsLoggedIn, setIsLoggedIn } = useContext(LoginStatusContext);
 
     const { isLoginFormEnabled, setIsLoginFormEnabled } = useContext(LoginContext);
 
@@ -59,7 +61,8 @@ function Form(props) {
         if(res.isLoggedIn==true)
             // show(true);
             setIsLoginFormEnabled(true);
-            navigate('/home')
+            navigate('/home');
+            setIsLoggedIn(true);
         // setLoginMessage((!res.isLoggedIn) ? res.data : null);
     }
 
