@@ -137,7 +137,7 @@ function Navbar(props) {
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link onMouseEnter={() => activateIcon(setProfile)} onMouseLeave={() => blurIcon(setProfile)} onClick={() => activate(setProfile)} className="nav-link float-end" to="/user/">
+                                <Link onMouseEnter={() => activateIcon(setProfile)} onMouseLeave={() => blurIcon(setProfile)} onClick={() => activate(setProfile)} className="nav-link float-end" to="/users/">
                                 {
                                     (!Profile) &&
                                     <IoPersonCircleOutline color="black" size={25}></IoPersonCircleOutline>

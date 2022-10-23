@@ -123,6 +123,8 @@ router.post("/register", (req, res) => {
     });
 });
 
+router.get("/")
+
 router.post("/register/profilePic", upload.single("profilePic"), (req, res) => {
     if(fs.existsSync(`${baseURL}/images/profilePics/${req.body.username}${req.body.fileType}`)) {
         User.findOne({
@@ -165,7 +167,7 @@ router.get("/current", (req, res) => {
 /**
  * This request is for getting any other user
  */
-router.get("/:username", (req, res) => {
+router.get("getuser/:username", (req, res) => {
     
     let isFound = false;
     
