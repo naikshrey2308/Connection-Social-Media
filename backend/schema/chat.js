@@ -4,11 +4,11 @@ const Types = mongoose.Schema.Types;
 const ChatSchema = mongoose.Schema({
     'username':{
         'uname1':{
-            type:Types.ObjectId,
+            type:Types.String,
             required:true
         },
         'uname2':{
-            type:Types.ObjectId,
+            type:Types.String,
             required:true
         }
     },
@@ -23,7 +23,7 @@ const ChatSchema = mongoose.Schema({
 // shrey --- shruti
 // sender --- reciever
 // [
-// {
+// 
 //     time:
 //     content:
 //     flag: 1 (SEND) 0

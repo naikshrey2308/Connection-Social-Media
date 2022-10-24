@@ -9,8 +9,7 @@ console.log(ReactSession.get("username"));
 const urlServer = "http://127.0.0.1:5000";
 
 const chats = [
-    // 
-    {name: "Shruti Patel", profilePic: "world-location"}, 
+    // {name: "Shruti Patel", profilePic: "world-location"}, 
     // chats: [ {content: "Hii", time: "1" }, { content: "Hello!!!", time: "4" } ]},
     // {name: "Shrey Naik", profilePic: "mobile"},
 ];
@@ -30,7 +29,7 @@ function ChattingPage(props) {
         event.preventDefault();
         const params = {
             username: ReactSession.get("username"),
-        }
+        };
         const req = await fetch("/chats/getAllChat", {
             method: "POST",
             headers: {
@@ -43,6 +42,8 @@ function ChattingPage(props) {
         chats=res.chat;
     }
     const [currUser, setCurrUser] = useState(undefined);
+
+
    
 
     return (

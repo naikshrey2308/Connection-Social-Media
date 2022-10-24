@@ -63,7 +63,7 @@ function ChatList(props) {
 function ChatLogs(props) {
     return (
         <>
-            <div id="chat_logs" className="container-fluid">
+            <div id="chat_logs" className="container-fluid my-5">
                 <SearchChatLog />
                 <ChatList caller={props.caller} />
             </div>

@@ -7,7 +7,7 @@ import "../styles/discover.css";
 function FriendCard(props) {
     props = props.data;
 
-    const  followevent=async (user)=> {
+    const  followevent = async (user)=> {
         console.log("inside follow function"+window.sessionStorage.getItem('email'));
         const req = await fetch("/user/follow",{
             method: "POST",
@@ -32,7 +32,7 @@ function FriendCard(props) {
                 <div className="card-body text-center">
                     <h3>{props.name}</h3>
                     <p>{props.subtitle}</p>
-                    <p className="text-center"><button className="btn btn-primary px-4 py-2" onClick={followevent(props)}>Follow</button></p>
+                    <p className="text-center"><button className="btn btn-primary px-4 py-2" onClick={() => followevent(props)}>Follow</button></p>
                     <p className="text-center"><button className="btn px-4 py-2">View Profile</button></p>
                 </div>
             </div>
@@ -53,12 +53,14 @@ function FriendCarousel() {
         (async function() {
             // console.log("inside1");
             let req = await fetch('/user/getRandomPeople', {
-                method:'GET',   
+                method:'POST',   
                 headers : {
                     'Content-Type' : 'application/json',
                     'Accept':'application/json'
                 },
-                // body:{}
+                body: JSON.stringify({
+                    email: window.sessionStorage.getItem("email"),
+                })
             });
             let res = await req.json();
             // console.log("inside2");
@@ -147,16 +149,19 @@ function FriendRows() {
         (async function() {
             // console.log("inside1");
             let req = await fetch('/user/getRandomPeople', {
-                method:'GET',   
+                method:'POST',   
                 headers : {
                     'Content-Type' : 'application/json',
                     'Accept':'application/json'
                 },
-                // body:{}
+                body: JSON.stringify({
+                    email: window.sessionStorage.getItem("email"),
+                })
             });
             let res = await req.json();
             // console.log("inside2____");
             suggestions = res.people;
+
             // console.log(suggestions);
             setSuggestedFriends(suggestions);
         })();

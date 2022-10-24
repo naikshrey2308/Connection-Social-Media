@@ -207,28 +207,43 @@ router.post('/follow',(req,res)=>{
     console.log("in follow");
     const email_ = req.body.email;
     User.findOne({email:email_}).then(
-        (data)=>{
-            console.log(data);
-            var follower = data.followers.push(req.body.email_session);
-            User.updateOne({email:email_},{$set:{followers:follower}});
+        (data) => {
+            if(data.followers.indexOf(req.body.email_session) != -1) {
+                console.log("already present");
+            } else {
+                data.followers.push(req.body.email_session);
+                console.log(data.followers);
+                User.updateOne({email:email_},{$set: {followers: data.followers}})
+                .then(msg => console.log(msg))
+                .catch(err => console.log(err));
+            }
         }
     );
-    // console.log("email"+req.body.email_session);
+    console.log("email " + req.body.email_session);
     User.findOne({email:req.body.email_session}).then(
         (data)=>{
-            // console.log("data"+data);
-            var followings = data.following.push(email_);
-            User.updateOne({email:req.body.email_session},{$set:{following:followings}});
+            if(data.following.indexOf(req.body.email) != -1) {
+                console.log("already present");
+            } else {
+                // console.log("data"+data);
+                data.following.push(email_);
+                console.log(data.following);
+                User.updateOne({email:req.body.email_session},{$set: {following: data.following}})
+                .then(msg => console.log(msg))
+                .catch(err => console.log(err));
+            }
         }
     );
 });
 
-router.get('/getRandomPeople', (req, res) => {
+router.post('/getRandomPeople', (req, res) => {
     // console.log("in server");
     let array=[];
     User.find({}).limit(5).then((data)=>{
         const default_ = 'default_.png';
         for(var i of data){
+            if(i.email == req.body.email)
+                continue;
             // console.log(i);
             if(i.profilePic.name===undefined)
             {
