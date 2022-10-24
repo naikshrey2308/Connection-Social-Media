@@ -72,7 +72,7 @@ const userSchema = new mongoose.Schema({
     'following': {
         type: Types.Array,
         required: true,
-        default: 0,
+        default: [],
     },
 
     'posts': {

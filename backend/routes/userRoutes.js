@@ -36,12 +36,18 @@ const upload = multer({storage: storage});
 router.post("/login", (req, res) => {
     // find a user from the database
     // console.log(req);
-    let email='';
+    var email_='x';
+    var profilePic_='x';
+    var name_='x';
     User.findOne({
         username: req.body.username,
-    }).then(data => {
+    }).then((data) => {
+        // console.log("data in login"+ data);
+        email_= data.email;
+        profilePic_ = data.profilePic.name;
+        name_ = data.name;
         isLoggedIn = false;
-        console.log(data);
+        // console.log(data);
         // if either username is incorrect
         if(data == {} || data == null) {
             data = "User not found! Create an account if you don't have one.";
@@ -56,16 +62,24 @@ router.post("/login", (req, res) => {
         else {
             data = "Logged in successfully!";
             isLoggedIn = true;
-            email= data.email;
+            
             // create session for the current user
             // req.session.username=req.body.username;
             // console.log(req.session);
             // ...
 
         }
-
+        const user={
+            "data": data, 
+            "isLoggedIn": isLoggedIn,
+            "username":req.body.username,
+            "profilePic":profilePic_,
+            "name":name_,
+            "email":email_
+        };
         // send the response back to the user
-        res.json({"data": data, "isLoggedIn": isLoggedIn,"username":req.body.username,"profilePic":req.body.profilePic,"name":req.body.name,"email":email});
+        // console.log("user"+user);
+        res.json(user);
         
     }).catch(err => {
         res.json({"err": err});
@@ -137,7 +151,7 @@ router.post("/register/profilePic", upload.single("profilePic"), (req, res) => {
                 
                 user.profilePic = { "name": req.body.username + req.body.fileType };
 
-                console.log(user);
+                // console.log(user);
 
                 user.save((err, msg) => {
                     if(err) {
@@ -161,13 +175,14 @@ router.post("/register/profilePic", upload.single("profilePic"), (req, res) => {
  * This request is for getting the current logged in user
  */
 router.get("/current", (req, res) => {
-
+    // console.log("current user...");
 });
 
 /**
  * This request is for getting any other user
  */
-router.get("getuser/:username", (req, res) => {
+
+router.get("getUser/:username", (req, res) => {
     
     let isFound = false;
     
@@ -189,36 +204,46 @@ router.get("getuser/:username", (req, res) => {
 });
 
 router.post('/follow',(req,res)=>{
+    console.log("in follow");
     const email_ = req.body.email;
-    User.find({email:email_}).then(
+    User.findOne({email:email_}).then(
         (data)=>{
-            // var follower = data.followers.push(window.sessionStorage.getItem("email"));
-            // User.updateOne({email:email_},{$set:{followers:follower}});
+            console.log(data);
+            var follower = data.followers.push(req.body.email_session);
+            User.updateOne({email:email_},{$set:{followers:follower}});
         }
     );
-    User.find({email:window.sessionStorage.getItem("email")}).then(
+    // console.log("email"+req.body.email_session);
+    User.findOne({email:req.body.email_session}).then(
         (data)=>{
+            // console.log("data"+data);
             var followings = data.following.push(email_);
-            User.updateOne({email:window.sessionStorage.getItem("email")},{$set:{following:followings}});
+            User.updateOne({email:req.body.email_session},{$set:{following:followings}});
         }
     );
 });
 
-router.post('/getRandomPeople',(req,res)=>{
-    console.log("in server");
-    User.find({}).limit(2).then((data)=>{
-        let array=[];
-        for(var i in data){
+router.get('/getRandomPeople', (req, res) => {
+    // console.log("in server");
+    let array=[];
+    User.find({}).limit(5).then((data)=>{
+        const default_ = 'default_.png';
+        for(var i of data){
+            // console.log(i);
+            if(i.profilePic.name===undefined)
+            {
+                i.profilePic.name = default_;
+            }
             array.push({
                 name : i.name,
-                profilePic : i.profilePic.name ,
+                profilePic : i.profilePic.name,
                 email : i.email,
                 subtitle : i.bio
 
             })
         }
+        res.json({"people": array});
     });
-    res.json({people:array});
-})
+});
 
 module.exports = router;

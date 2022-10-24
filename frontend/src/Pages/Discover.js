@@ -2,17 +2,37 @@ import { memo, useEffect, useState } from "react";
 import Navbar from "../Components/Navbar";
 import "../styles/discover.css";
 
+
+
 function FriendCard(props) {
     props = props.data;
+
+    const  followevent=async (user)=> {
+        console.log("inside follow function"+window.sessionStorage.getItem('email'));
+        const req = await fetch("/user/follow",{
+            method: "POST",
+            headers : {
+                'Content-Type' : 'application/json',
+                'Accept':'application/json'
+            },
+            body:JSON.stringify({
+                email:user.email,
+                email_session:window.sessionStorage.getItem('email')
+            })
+        });
+    
+        const res = await req.json();
+    };
+
     return (
         <>
             {/* Finder card for people */}
             <div className="friend-finder-card card border-0 container">
-                <img src={`${process.env.PUBLIC_URL}/media/profilePics/${props.profilePic}`} className="p-3 card-img-circled" />
+                <img src={`http://localhost:4000/static/profilePics/${props.profilePic}`} className="p-3 card-img-circled" />
                 <div className="card-body text-center">
                     <h3>{props.name}</h3>
                     <p>{props.subtitle}</p>
-                    <p className="text-center"><button className="btn btn-primary px-4 py-2">Follow</button></p>
+                    <p className="text-center"><button className="btn btn-primary px-4 py-2" onClick={followevent(props)}>Follow</button></p>
                     <p className="text-center"><button className="btn px-4 py-2">View Profile</button></p>
                 </div>
             </div>
@@ -22,49 +42,37 @@ function FriendCard(props) {
 
 var suggestions=[];
 
-const fetchRandomPeople= async()=>{
-    console.log("inside1");
-    let req = await fetch('/user/getRandomPeople',{
-        method:'POST',   
-        headers : {
-            'Content-Type' : 'application/json',
-            'Accept':'application/json'
-        },
-        body:{}
-    });
-    let res = req.json();
-    console.log("inside2");
-    suggestions = res.people;
-    console.log(suggestions);
-    
-}
+
 
 function FriendCarousel() {
 
-    // const suggestedFriends = [
-    //     {
-    //         name: "Shrey Naik",
-    //         subtitle: "Lives near your area",
-    //         profilePic: "snapshot.png"
-    //     },
-    //     {
-    //         name: "Shruti Patel",
-    //         subtitle: "Matches your vibe",
-    //         profilePic: "S.png"
-    //     }, 
-    //     {
-    //         name: "Vedant Parikh",
-    //         subtitle: "Lives near your area",
-    //         profilePic: "spaceman.jpg"
-    //     }
-    // ];
-    console.log("before");
-    fetchRandomPeople();
-    const suggestedFriends = suggestions;
+    const [suggestedFriends,setSuggestedFriends]=useState([]);
+    useEffect(() => {
+        // console.log("before");
+        
+        (async function() {
+            // console.log("inside1");
+            let req = await fetch('/user/getRandomPeople', {
+                method:'GET',   
+                headers : {
+                    'Content-Type' : 'application/json',
+                    'Accept':'application/json'
+                },
+                // body:{}
+            });
+            let res = await req.json();
+            // console.log("inside2");
+            suggestions = res.people;
+            // console.log(suggestions);
+            setSuggestedFriends(suggestions);
+        })();
+
+        
+    }, []);
 
     return (
         <>
-            <div id="friend-carousel" className="carousel carousel-dark slide" data-bs-interval="false">
+            { (suggestedFriends) && <div id="friend-carousel" className="carousel carousel-dark slide" data-bs-interval="false">
                 <div className="carousel-inner">
                 {
                     suggestedFriends.map((ele, ind) => {
@@ -85,33 +93,22 @@ function FriendCarousel() {
                     <span className="visually-hidden">Next</span>
                 </button>
                 </div>
+            }
         </>
     );
 }
 
-async function Follow(user) {
 
-    const req = await fetch("/user/follow",{
-        method: "POST",
-        headers : {
-            'Content-Type' : 'application/json',
-            'Accept':'application/json'
-        },
-        body:JSON.stringify({
-            email:user.email
-        })
-    });
-
-    const res = await req.json();
-}
 
 function FriendRow(props) {
+
+    
     return (
         <>
             <div className="d-flex px-3 justify-content-start">
-                <img src={`${process.env.PUBLIC_URL}/media/profilePics/${props.data.profilePic}`} width={40} height={40} className="border p-1 me-5" style={{borderRadius: "50%"}} />
+                <img src={`http://localhost:4000/static/profilePics/${props.data.profilePic}`} width={40} height={40} className="border p-1 me-5" style={{borderRadius: "50%"}} />
                 <p className="fs-7 my-auto w-100">{props.data.name}</p>
-                <button className="btn btn-sm btn-light text-base m-0 px-4" onClick={Follow(props.data)}>Follow</button>
+                <button className="btn btn-sm btn-light text-base m-0 px-4" >Follow</button>
             </div>
             <br />
         </>
@@ -120,8 +117,8 @@ function FriendRow(props) {
 
 function FriendRows() {
 
-    fetchRandomPeople();
-    let suggestedFriends = suggestions;
+    // fetchRandomPeople();
+    // let suggestedFriends = suggestions;
     // let suggestedFriends = [
     //     {
     //         name: "Shrey Naik",
@@ -142,6 +139,30 @@ function FriendRows() {
 
     // suggestedFriends = suggestedFriends.concat(suggestedFriends);   
     // suggestedFriends = suggestedFriends.concat(suggestedFriends);
+
+    const [suggestedFriends,setSuggestedFriends]=useState([]);
+    useEffect(() => {
+        // console.log("before___");
+        
+        (async function() {
+            // console.log("inside1");
+            let req = await fetch('/user/getRandomPeople', {
+                method:'GET',   
+                headers : {
+                    'Content-Type' : 'application/json',
+                    'Accept':'application/json'
+                },
+                // body:{}
+            });
+            let res = await req.json();
+            // console.log("inside2____");
+            suggestions = res.people;
+            // console.log(suggestions);
+            setSuggestedFriends(suggestions);
+        })();
+
+        
+    }, []);
 
     return (
         <>
@@ -175,7 +196,7 @@ function Finder() {
         <>
             <div className="friend-finder-base bg-base position-relative container">
                 <div className="friend-finder-main position-absolute top-50 start-50">
-                    <h3 className="text-light fw-bold">Hello <u>user</u>, looking for more connections?</h3>
+                    <h3 className="text-light fw-bold">Hello <u>{window.sessionStorage.getItem('username')}</u>, looking for more connections?</h3>
                     <p className="text-center text-light">Here are some top picks for you!</p>
                 
                     <FriendCarousel />
@@ -193,17 +214,17 @@ function Discover() {
     const [temp, setTemp] = useState("Shrey");
 
     useEffect(() => {
-        async function getData() {
-            try {
-                let resText = await fetch("http://localhost:4000/");
-                resText = await resText.json();
-                console.log(resText);
-                setTemp(resText);
-            } catch(err) {
-                console.log("error: ", err);
-            }
-        }
-        getData();
+        // async function getData() {
+        //     try {
+        //         let resText = await fetch("/user/current");
+        //         resText = await resText.json();
+        //         console.log(resText);
+        //         setTemp(resText);
+        //     } catch(err) {
+        //         console.log("error: ", err);
+        //     }
+        // }
+        // getData();
     }, []);
 
     return (
