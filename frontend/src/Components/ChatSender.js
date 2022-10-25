@@ -3,10 +3,15 @@ import { ReactSession }  from 'react-client-session';
 import socketIOClient from "socket.io-client";
 const urlServer = "http://127.0.0.1:5000";
 
+
+
 function Chat(props) {
+
+    console.log(props);
+
     return (
         <>
-            <div className={((props.me) ? "right " : "left ") + "bg-grey chat my-2 px-3 pt-2"}>
+            <div className={(props.indicator_.sent===props.flag ? "right " : "left ") + "bg-grey chat my-2 px-3 pt-2"}>
                 <p className="mb-0">{props.text}</p>
                 <p className="text-end text-secondary mb-0" style={{fontSize: 14}}>{props.time}</p>
             </div>
@@ -15,33 +20,59 @@ function Chat(props) {
 }
 
 function ChatSender(props) {
-    const socket = socketIOClient(urlServer);
-    socket.on('msgOther',(msg)=>{
+    const socket ={};
+    // socket.on('msgOther',(msg)=>{
         
-    })
-    useEffect(
-        ()=>{
-            
-        }
-    )
+    // })
+    // const [chatList, setChatList] = useState([]);
+    
+    // const [indicator, setIndicator] = useState (props.indicator);
+
 
     const [chatText, setChatText] = useState("");
-    const [chat_list, setChatList] = useState(props.user.chats);
+    
     const chatBar = useRef();
 
     const changeText = () => setChatText(chatBar.current.value);
 
     const sendText = () => {
         const timestamp = `${(new Date()).getHours()}:${(new Date()).getMinutes()}`;
-        setChatList([{time: timestamp, content: chatText}, ...chat_list]);
+        var array = props.chats;
+        if(array){
+            array.push({
+                time : timestamp,
+                text: chatBar.current.value,
+                flag : props.indicator.sent
+            })
+        }
+        else{
+            array=[{
+                time : timestamp,
+                text : chatBar.current.value,
+                flag : props.indicator.sent
+            }]
+        }
+        props.setChat(array);
         setChatText("");
         let msg = {
-            sender : ReactSession.get("username"),
+            sender : window.sessionStorage.getItem('username'),
             reciever : props.user.username , //have to add this username property in user object
             text : chatText,
             time : timestamp
         };
-        socket.emit("msgSent",msg);
+        // socket.emit("msgSent",msg);
+        (async function(){
+            console.log("inside function insert")
+            const req = await fetch('/chats/insertChat',{
+                method : 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({chat:msg , email_:window.sessionStorage.getItem('email') , user:props.user , username:window.sessionStorage.getItem('username') , name:window.sessionStorage.getItem('name') , profilePic : window.sessionStorage.getItem('profilePic')}),
+            
+            });
+        })();
     }
 
     function closeChat() {
@@ -49,22 +80,23 @@ function ChatSender(props) {
     }
 
     useEffect(() => {
-        setChatList((props.user) ? props.user.chats : []);
-    }, [props.user]);
+        // setChatList((props.chats) ? props.chats : []);
+        console.log(props.chats);
+    },[]);
 
     return (
         (props.user != undefined) && <>
             <div id="chat_section" className="container-fluid px-0 min-vh-100 position-relative" style={{overflowY: "hidden", maxHeight: "100vh"}}>
                 <div className="py-3 d-flex bg-light border-bottom border-2 text-end">
                     <button className="btn btn-close my-auto mx-3" onClick={closeChat}></button>
-                    <img alt="" src={process.env.PUBLIC_URL + `./media/svgs/${props.user.profilePic}.svg`} className="mx-4 border" width={40} height={40} style={{borderRadius: "50%"}} />
+                    <img alt="" src={`http://localhost:4000/static/profilePics/${props.user.profilePic}`} className="mx-4 border" width={40} height={40} style={{borderRadius: "50%"}} />
                     <div className="text-start w-100 my-auto mx-3">{props.user.name}</div>
                 </div>
-                <div className="position-absolute start-0 end-0 chat_container">
+                {props.chats && <div className="position-absolute start-0 end-0 chat_container">
                     {
-                        chat_list.map(ele => <Chat me={true} time={ele.time} text={ele.content} />)
+                         props.chats.map(ele => <Chat indicator_={props.indicator} flag={ele.flag} time={ele.time} text={ele.text} />) 
                     }
-                </div>
+                </div>}
                 <div className="position-absolute py-3 container-fluid bottom-0">
                     <form className="d-flex" onSubmit={(e) => e.preventDefault()}>
                         <input ref={chatBar} value={chatText} onChange={changeText} type="text" className="input-control form-control px-3" placeholder="Type a message..." />

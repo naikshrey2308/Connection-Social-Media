@@ -284,7 +284,7 @@ router.post('/getFollowersFollowing',async (req,res)=>{
             // result_name.push(data.name);
         })
     }
-    console.log(result_);
+    // console.log(result_);
     res.json({ result:result_});
 })
 

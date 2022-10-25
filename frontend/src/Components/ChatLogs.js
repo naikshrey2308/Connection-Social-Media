@@ -39,9 +39,9 @@ function SearchChatLog(props) {
 
     const changeSearch = (setNewPeople) => {
 
-        if(searchBar.current.value===''){
-            setNewPeople([]);
-        }
+        // if(searchBar.current.value===''){
+        //     setNewPeople([]);
+        // }
         setSearch(searchBar.current.value);
         // console.log(search);
         if(searchBar.current.value!==''){
@@ -91,21 +91,23 @@ function UserChatBlock(props) {
 
 function ChatList(props) {
     console.log("inside chatlist");
+    // props.setPeople_(props.people_);
     console.log(props);
     return (
         <>
             {
-                props.people_.map(ele => <UserChatBlock user={ele} caller={props.caller} />)
+                props.people_.map(ele => <UserChatBlock user={ele} caller={props.caller_} />)
             }
         </>
     );
 }
 
 function ChatLogs(props) {
-    const [chats,setChats] =useState([]);
+    const [people,setPeople] =useState([]);
+    // const people__ = [];
     useEffect(()=>{
         (async function(){
-            const req = fetch('/chats/getPeopleForChat',{
+            const req = await fetch('/chats/getPeopleForChat',{
                 method : 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -114,19 +116,21 @@ function ChatLogs(props) {
                 body: JSON.stringify({emailSession : window.sessionStorage.getItem('email')}),
             });
             let res = await req.json();
-            await setChats(res.people);
+            // console.log(res);
+            setPeople(res.people);
+            // people__ = res.people;
         })();
     },[])
 
     function setChatFromSearch(chat_new){
-        setChats(chat_new);
+        setPeople(chat_new);
     }
 
     return (
         <>
             <div id="chat_logs" className="container-fluid my-5">
                 <SearchChatLog setNewPeople={setChatFromSearch}/>
-                <ChatList caller={props.caller} people_={chats}/>
+                <ChatList caller_={props.caller} people_ ={people} />
             </div>
         </>
     );

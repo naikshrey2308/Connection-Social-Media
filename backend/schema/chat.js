@@ -17,6 +17,7 @@ const ChatSchema = mongoose.Schema({
     }
 }) 
 
+module.exports = mongoose.model('chat',ChatSchema);
 // another collection for storing with whom the user had chat before
 // diff contacts => sent,recieved 
 // for the opposite user it will be recieved and sent
