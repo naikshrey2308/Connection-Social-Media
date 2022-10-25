@@ -275,10 +275,11 @@ router.post('/getFollowersFollowing',async (req,res)=>{
 
     for(var i of commonEmail_){
         await User.findOne({email:i}).then((data)=>{
+            
             result_.push({
                 username : data.username,
                 name : data.name,
-                profilePic : data.profilePic.name
+                profilePic : (data.profilePic.name ? data.profilePic.name : 'default_.png')
             })
             // result_name.push(data.name);
         })
