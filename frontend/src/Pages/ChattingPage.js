@@ -19,28 +19,28 @@ const chats = [
 function ChattingPage(props) {
 
     console.log(window.sessionStorage.getItem("username"));
-    useEffect(
-        ()=>{
-            const socket = socketIOClient(urlServer);
-        }
-    )
+    // useEffect(
+    //     ()=>{
+    //         const socket = socketIOClient(urlServer);
+    //     }
+    // )
 
-    const preprocessing = async (event) => {
-        event.preventDefault();
-        const params = {
-            username: ReactSession.get("username"),
-        };
-        const req = await fetch("/chats/getAllChat", {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify(params),
-        });
-        const res = await req.json();
-        chats=res.chat;
-    }
+    // const preprocessing = async (event) => {
+    //     event.preventDefault();
+    //     const params = {
+    //         username: ReactSession.get("username"),
+    //     };
+    //     const req = await fetch("/chats/getAllChat", {
+    //         method: "POST",
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //             'Accept': 'application/json'
+    //         },
+    //         body: JSON.stringify(params),
+    //     });
+    //     const res = await req.json();
+    //     chats=res.chat;
+    // }
     const [currUser, setCurrUser] = useState(undefined);
 
 
@@ -53,9 +53,9 @@ function ChattingPage(props) {
                 
                 {currUser && <>
                     <div className={"col-12 col-lg-4 d-none d-lg-block border-end border-2"}><ChatLogs caller={setCurrUser} /></div>
-                    <div className="col">
+                    {/* <div className="col">
                         <ChatSender user={{user:currUser,chats:chats}} caller={ReactSession.get("username")} />
-                    </div>
+                    </div> */}
                 </>
                 }
                 {!currUser && <>

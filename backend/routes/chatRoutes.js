@@ -4,6 +4,24 @@ const Chat = require("../schema/chat");
 const People = require("../schema/peopleChat");
 const router = express.Router();
 
+
+router.post('/getPeopleForChat',(req,res)=>{
+    var email_ = req.emailSession;
+    var arrayPeople = [];
+    People.findOne({email:email_}).then(
+        (data)=>{
+            if(data != null){
+                arrayPeople = data.people;
+                
+            }
+        }
+    );
+    console.log(arrayPeople);
+    console.log("inside chat");
+    
+    res.json({'people' : arrayPeople});
+})
+
 router.post("/getAllChat", (req, res) => {
     var uname_= req.username;
     var chat=[];

@@ -1,5 +1,7 @@
 const express = require("express");
 const User = require("../schema/user");
+const People = require("../schema/peopleChat");
+
 const router = express.Router();
 // const browserHistory=require('react-router').browserHistory;
 
@@ -67,7 +69,6 @@ router.post("/login", (req, res) => {
             // req.session.username=req.body.username;
             // console.log(req.session);
             // ...
-
         }
         const user={
             "data": data, 
@@ -260,5 +261,30 @@ router.post('/getRandomPeople', (req, res) => {
         res.json({"people": array});
     });
 });
+
+router.post('/getFollowersFollowing',async (req,res)=>{
+    var followers_ = [] , following_=[] , commonEmail_=[] , result_=[] , result_name = [];
+    await User.findOne({email:req.body.emailSession}).then(
+        (data)=>{
+            followers_ = data.followers;
+            following_ = data.following;
+
+            commonEmail_ = followers_.filter(value => following_.includes(value));
+        }
+    )
+
+    for(var i of commonEmail_){
+        await User.findOne({email:i}).then((data)=>{
+            result_.push({
+                username : data.username,
+                name : data.name,
+                profilePic : data.profilePic.name
+            })
+            // result_name.push(data.name);
+        })
+    }
+    console.log(result_);
+    res.json({ result:result_});
+})
 
 module.exports = router;
