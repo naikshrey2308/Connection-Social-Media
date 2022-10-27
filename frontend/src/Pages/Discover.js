@@ -44,7 +44,7 @@ var suggestions=[];
 
 
 
-function FriendCarousel() {
+function FriendCarousel(props) {
 
     const [suggestedFriends,setSuggestedFriends]=useState([]);
     useEffect(() => {
@@ -214,11 +214,13 @@ function Finder() {
     );
 }
 
-function Discover() {
+function Discover(props) {
 
     const [temp, setTemp] = useState("Shrey");
 
     useEffect(() => {
+        props.setNavbar(true);
+
         // async function getData() {
         //     try {
         //         let resText = await fetch("/user/current");

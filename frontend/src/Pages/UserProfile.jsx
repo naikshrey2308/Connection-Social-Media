@@ -9,6 +9,7 @@ function UserProfile(props) {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
+        props.setNavbar(true);
         
         (async () => {
             // Load the user data from the server

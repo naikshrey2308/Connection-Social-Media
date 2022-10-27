@@ -324,6 +324,12 @@ function Selector(props) {
 
 function Post(props) {
 
+
+    useEffect(()=>{
+        props.setNavbar(true);
+
+    },[]);
+
     const tileOptions = {
         IMAGE: 0,
         TEXT: 1,

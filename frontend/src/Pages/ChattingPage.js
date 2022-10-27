@@ -20,6 +20,7 @@ function ChattingPage(props) {
     }
 
     useEffect(()=>{
+        props.setNavbar(false);
         // (async function(){
         //     const req = fetch('/chats/getAllChat',{
         //         method : 'POST',

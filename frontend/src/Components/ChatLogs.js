@@ -128,7 +128,7 @@ function ChatLogs(props) {
 
     return (
         <>
-            <div id="chat_logs" className="container-fluid my-5">
+            <div id="chat_logs" className="container-fluid">
                 <SearchChatLog setNewPeople={setChatFromSearch}/>
                 <ChatList caller_={props.caller} people_ ={people} />
             </div>

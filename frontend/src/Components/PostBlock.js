@@ -1,9 +1,10 @@
 import { useEffect } from "react";
 import { memo } from "react";
 import '../styles/home.css';
-import {  MdComment } from "react-icons/md";
-import {  BiHeart } from "react-icons/bi";
+import {  MdComment,MdOutlineChatBubbleOutline } from "react-icons/md";
+import {  BiFlag, BiHeart } from "react-icons/bi";
 import {  BsSuitHeartFill } from "react-icons/bs";
+import { GoPrimitiveDot } from "react-icons/go";
 
 import { useState } from "react";
 
@@ -12,6 +13,8 @@ function PostBlock(props){
 
     const [liked,setLiked]=useState(false);
     const [likeArray,setLikeArray]=useState(props.postObj.likes);
+    const [flag,setFlag]=useState(false);
+
 
     // useEffect(()=>{
     //     console.log(props);
@@ -27,7 +30,7 @@ function PostBlock(props){
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
-                body: JSON.stringify({owner:props.postObj.username,person:window.sessionStorage.getItem('username')}),
+                body: JSON.stringify({owner:props.postObj.username,person:window.sessionStorage.getItem('username'),id:props.postObj.id}),
             });
             const res = await req.json();
             setLikeArray(res.newOne.likes);
@@ -39,34 +42,48 @@ function PostBlock(props){
     }
 
     useEffect(()=>{
-        console.log(props);
+        const i = props.postObj.comments.findIndex((val)=>val.person===window.sessionStorage.getItem('username'));
+        if(i!==-1){
+            setFlag(true);
+        }
     },[]);
     return(
-        <center><div className="my-3 block">
+        <center><div className="my-4 block shadow" >
             <div className="row">
                 <div className="col-1">
                     <img alt="" src={`http://localhost:4000/static/profilePics/${props.postObj.profilePic}`} className="mx-4 border" width={30} height={30} style={{borderRadius: "50%"}} />
                 </div>
                 <div className="col-3 my-2">
                     <h6>{props.postObj.name}</h6>
+                    
                 </div>
+                
             </div>
-            <div className="row">
+            <hr style={{marginTop:-1}}/>
+            <div className="row" >
                 <img alt="" src={`http://localhost:4000/static/posts/${props.postObj.content.url}`} className="mx-3 image-post"  />
             </div>
-            <div className="row mx-3 my-3">
+            <hr />
+            <div className="row w-100 mx-3 my-3">
                 <div className="col-1">
-                    {!liked && <BiHeart color="black" size={25} onClick={clickLike} style={{cursor: 'pointer'}}></BiHeart>}
-                    {liked && <BsSuitHeartFill color="red" size={25} onClick={clickLike} ></BsSuitHeartFill>}
+
+                    {!(liked || flag) && <BiHeart color="black" size={25} onClick={clickLike} style={{cursor: 'pointer'}}></BiHeart>}
+                    {(liked || flag) && <BsSuitHeartFill color="red" size={25} onClick={clickLike} ></BsSuitHeartFill>}
 
                 </div>
                 <div className="col-1">
-                    <MdComment color="black" size={25} onClick={addComment} style={{cursor: 'pointer'}}></MdComment>
+                    <MdOutlineChatBubbleOutline color="black" size={23} onClick={addComment} style={{cursor: 'pointer'}}></MdOutlineChatBubbleOutline>
+                </div>
+                <div className="col-9 text-end" style={{color:'grey',fontFamily:'calibri'}}>
+                    <b>{props.postObj.likes.length} </b> Likes
+                    &nbsp;<GoPrimitiveDot color="grey"/>
+                    &nbsp; <b>{props.postObj.comments.length}</b> Comments
                 </div>
             </div>
-            {/* <div className="row my-2 mx-3">
-                {props.postObj.content.caption!==null ? props.postObj.content.caption : <p></p>}
-            </div> */}
+
+            <div className="row my-2 mx-3">
+                {/* {props.postObj.content.caption ? props.postObj.content.caption : <></>} */}
+            </div>
         </div></center>
     );
 }

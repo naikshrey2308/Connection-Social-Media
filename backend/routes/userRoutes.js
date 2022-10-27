@@ -288,4 +288,16 @@ router.post('/getFollowersFollowing',async (req,res)=>{
     res.json({ result:result_});
 })
 
+router.post('/searchedUser',(req,res)=>{
+
+
+    User.find().then(
+        (data)=>{
+            res.json(data);
+            console.log(data);
+        }
+    )
+
+})
+
 module.exports = router;

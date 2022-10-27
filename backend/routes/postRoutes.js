@@ -104,6 +104,7 @@ router.get("/imageForShow/:username",async (req, res) => {
     }).limit(3).then((data) => {
         for(var i of data){
             let obj = {
+                id : i._id,
                 profilePic : profilePic,
                 name : name,
                 username : i.username,
@@ -114,7 +115,7 @@ router.get("/imageForShow/:username",async (req, res) => {
             }
             result.push(obj);
         }
-        console.log(result);
+        // console.log(result);
         res.json({ "result" : result });
     });
     
@@ -133,24 +134,26 @@ router.get("/text/:username", (req, res) => {
 });
 
 router.post('/likePost',(req,res)=>{
-    Post.findOne({username:req.body.owner}).then((data)=>{
-        console.log(data.likes.findIndex(value => value===req.body.person));
+    Post.findOne({_id : req.body.id}).then((data)=>{
+        // console.log(data.likes.findIndex(value => value===req.body.person));
         if(data.likes.findIndex(value => value===req.body.person) === -1)
         {
             let newOne = new Post(data);
             newOne.likes.push(req.body.person);
             newOne.save().then();
-            console.log(newOne);
+            // console.log(newOne);
             res.json({'newOne':data})
         }
     })
 })
 
 router.post('/addComment',(req,res)=>{
-    Post.findOne({username:req.body.owner}).then((data)=>{
+    console.log("inside comment");
+    Post.findOne({_id:req.body.post.id}).then((data)=>{
         // console.log(data.likes.findIndex(value => value===req.body.person));
-        
         let newOne = new Post(data);
+        console.log(data);
+
         newOne.comments.push({person:req.body.person,text:req.body.text});
         newOne.save().then();
         console.log(newOne);

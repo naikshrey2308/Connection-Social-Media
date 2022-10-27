@@ -4,13 +4,15 @@ import PostBlock from "../Components/PostBlock";
 import { memo, useEffect,useState } from "react";
 import ShowWholePost from "../Components/showWholePost";
 
-function HomePage() {
+function HomePage(props) {
 
     const [commonObject_, setCommonObject_]= useState([]);
     const [AllPosts, setAllPosts]= useState(null);
     const [modalShow , setmodalShow] =useState(false);
 
     useEffect(() => {
+        props.setNavbar(true);
+
         (async function(){
             const req = await fetch('/user/getFollowersFollowing',{
                 method : 'POST',
@@ -52,13 +54,23 @@ function HomePage() {
 
     const [postForModal,setPostForModal]= useState({});
 
+    function changeComment(newComment,flag){
+        if(flag){
+            let index = AllPosts.findIndex((val)=>val.id === postForModal.id);
+            AllPosts[index].comments.push(newComment);
+            postForModal.comments.push(newComment);
+            flag = !flag;
+        }
+    }
+
     function modalShow_(post){
+        // console.log("hello");
         setmodalShow(true);
         setPostForModal(post);
     }
 
     return(
-        <div style={{marginTop:4+'em'}}>
+        <div style={{marginTop:4+'em'}} >
             { AllPosts && <>
 
 
@@ -67,7 +79,7 @@ function HomePage() {
                  return <PostBlock postObj={value} modalShow={modalShow_}/>
                }) }
 
-               <ShowWholePost show={modalShow} onHide={() => setmodalShow(false)} post={postForModal} />
+               <ShowWholePost show={modalShow} onHide={() => setmodalShow(false)} post={postForModal} changecommentInUI={changeComment}/>
 
             </>}
         </div>

@@ -1,0 +1,39 @@
+/* input {
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+    outline: none;
+    height: 30px;
+    border-radius: 5px;
+}
+ 
+button {
+    position: absolute;
+    top: 0;
+    border-radius: 5px;
+    right: 0px;
+    z-index: 2;
+    border: none;
+    top: 2px;
+    height: 30px;
+    cursor: pointer;
+    color: white;
+    background-color: #1e90ff;
+    transform: translateX(2px);
+} */
+
+form{
+    /* background-color: var(--grey-light); */
+    /* padding-bottom: ; */
+}
+
+.postComment{
+    background-color: var(--grey-light);
+}
+
+.comments{
+    flex: 1;
+    height: 260px;
+  overflow-y: scroll;
+  /* background: lightgreen; */
+}
