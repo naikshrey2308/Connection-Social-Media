@@ -47,7 +47,7 @@ function ChatSender(props) {
         const timestamp = `${(new Date()).getHours()}:${(new Date()).getMinutes()}`;
         var array = props.chats;
         if(array){
-            array.push({
+            array.unshift({
                 time : timestamp,
                 text: chatBar.current.value,
                 flag : props.indicator.sent
@@ -95,7 +95,7 @@ function ChatSender(props) {
     return (
         (props.user != undefined) && <>
             <div id="chat_section" className="container-fluid px-0 min-vh-100 position-relative" style={{maxHeight: "100vh"}}>
-                <div className="py-3 d-flex bg-light border-bottom border-2 text-end">
+                <div style={{"zIndex": 2}} className="postion-absolute py-3 d-flex bg-light border-bottom border-2 text-end">
                     <button className="btn btn-close my-auto mx-3" onClick={closeChat}></button>
                     <img alt="" src={`http://localhost:4000/static/profilePics/${props.user.profilePic}`} className="mx-4 border" width={40} height={40} style={{borderRadius: "50%"}} />
                     <div className="text-start w-100 my-auto mx-3">{props.user.name}</div>

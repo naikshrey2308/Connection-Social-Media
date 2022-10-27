@@ -25,9 +25,10 @@
     flex-direction: column-reverse;
     bottom: 10%;
     padding: 10px 15px;
-    z-index:-1;
-    overflow-y: visible;
-    max-height: 90%;
+    z-index: -1;
+    overflow-y: scroll;
+    max-height: 88vh;
+    padding-bottom: 50px;
 }
 
 .right {

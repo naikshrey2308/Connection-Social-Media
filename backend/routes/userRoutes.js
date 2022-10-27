@@ -186,7 +186,7 @@ router.get("/current", (req, res) => {
 router.get("getUser/:username", (req, res) => {
     
     let isFound = false;
-    
+
     User.findOne({
         "username": req.params.username
     },{ password: false }).then((data) => {

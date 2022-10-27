@@ -13,7 +13,7 @@ function UserProfile(props) {
         
         (async () => {
             // Load the user data from the server
-            let user1 = await fetch(`/user/${encodeURIComponent("shrey.23")}`, {
+            let user1 = await fetch(`/user/getUser/${encodeURIComponent("shrey.23")}`, {
                 method: "GET",
                 headers: {
                     "Accept": "application/json",

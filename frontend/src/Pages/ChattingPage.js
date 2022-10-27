@@ -91,7 +91,7 @@ function ChattingPage(props) {
                 <div className={"col-12 col-lg-4 d-none d-lg-block border-end border-2"}><ChatLogs caller={setCurrUser} /></div>
                 {currUser && <>
                     <div className="col">
-                        <ChatSender user={currUser} caller={window.sessionStorage.getItem('email')} chats={allChats} indicator={indicator_} setChat={setChats}/>
+                        <ChatSender  user={currUser} caller={setCurrUser} chats={allChats} indicator={indicator_} setChat={setChats}/>
                     </div>
                 </>
                 }
