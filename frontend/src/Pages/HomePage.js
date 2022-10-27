@@ -8,7 +8,7 @@ function HomePage() {
 
     const [commonObject_, setCommonObject_]= useState([]);
     const [AllPosts, setAllPosts]= useState(null);
-    const [modalShow , setmodalShow] =useState(false);
+    const [modalShow , setmodalShow] = useState(false);
 
     useEffect(() => {
         (async function(){
@@ -23,12 +23,12 @@ function HomePage() {
             const res = await req.json();
             setCommonObject_(res.result);
             
-            console.log("inside function....");
+            // console.log("inside function....");
 
             var posts = [];
             for(var i of res.result){
                 const username = i.username;
-                console.log(`/posts/imageForShow/${username}`);
+                // console.log(`/posts/imageForShow/${username}`);
                 const req_ = await fetch(`/posts/imageForShow/${username}`,{
                     method: "GET",
                     headers: {
@@ -38,7 +38,7 @@ function HomePage() {
                 });
                 
                 const res_ = await req_.json();
-                console.log(res_.result);
+                // console.log(res_.result);
                 posts = posts.concat(res_.result);
             }
             // posts.sort((a,b)=>{return 0.5 - Math.random();})
@@ -54,6 +54,7 @@ function HomePage() {
     const [postForModal,setPostForModal]= useState({});
 
     function modalShow_(post){
+        console.log("inside modal show");
         setmodalShow(true);
         setPostForModal(post);
     }
@@ -63,11 +64,11 @@ function HomePage() {
             { AllPosts && <>
 
                { AllPosts.map(value => {
-                 console.log(value);
+                //  console.log(value);
                  return <PostBlock postObj={value} modalShow={modalShow_}/>
                }) }
 
-               {/* <ShowWholePost show={modalShow} onHide={() => setmodalShow(false)} post={postForModal} /> */}
+               <ShowWholePost show={true} onHide={() => setmodalShow(false)} post={postForModal} />
 
             </>}
         </div>
