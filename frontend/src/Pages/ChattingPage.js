@@ -2,17 +2,10 @@ import { memo, useEffect, useState } from "react";
 import ChatLogs from "../Components/ChatLogs";
 import ChatSender from "../Components/ChatSender";
 import "../styles/chatpage.css";
-import Navbar from "../Components/Navbar";
-import { ReactSession }  from 'react-client-session';
-import socketIOClient from "socket.io-client";
-// console.log(ReactSession.get("username"));
-const urlServer = "http://127.0.0.1:5000";
+// import socketIOClient from "socket.io-client";
+// const urlServer = "http://127.0.0.1:5000";
 
-const chats = [
-    // {name: "Shruti Patel", profilePic: "world-location"}, 
-    // chats: [ {content: "Hii", time: "1" }, { content: "Hello!!!", time: "4" } ]},
-    // {name: "Shrey Naik", profilePic: "mobile"},
-];
+
 
 // console.log(window.sessionStorage.getItem("name"));
 
@@ -61,7 +54,7 @@ function ChattingPage(props) {
             setAllChats(res.chat);
             setIndicator(res.indicator);
             console.log("hello");
-            
+            // const socket = socketIOClient(urlServer);
             console.log(indicator_);
         })();
         

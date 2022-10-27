@@ -29,7 +29,7 @@ function SearchChatLog(props) {
             const res = await req.json();
             // setCommonNames_(res.result_name);
             await setCommonObject_(res.result);
-            console.log(commonObject_);
+            // console.log(commonObject_);
         })();
     },[])
 

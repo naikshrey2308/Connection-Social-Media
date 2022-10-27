@@ -11,6 +11,8 @@ const { Post, postTypes } = require("../schema/post");
 
 // initialize multer
 const multer = require('multer');
+const User = require("../schema/user");
+const post = require("../schema/post");
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -86,6 +88,39 @@ router.get("/images/:username", (req, res) => {
 
 });
 
+router.get("/imageForShow/:username",async (req, res) => {
+
+    const result = []
+    var name='';
+    var profilePic='default_.png';
+    await User.findOne({username:req.params.username}).then((data)=>{
+        name = data.name;
+        profilePic = data.profilePic ? data.profilePic.name : profilePic ;
+    })
+
+    await Post.find({
+        username: req.params.username,
+        type: "pic"
+    }).limit(3).then((data) => {
+        for(var i of data){
+            let obj = {
+                profilePic : profilePic,
+                name : name,
+                username : i.username,
+                likes : i.likes,
+                comments : i.comments,
+                type : i.type,
+                content : i.content
+            }
+            result.push(obj);
+        }
+        console.log(result);
+        res.json({ "result" : result });
+    });
+    
+
+});
+
 router.get("/text/:username", (req, res) => {
 
     Post.find({
@@ -96,5 +131,32 @@ router.get("/text/:username", (req, res) => {
     });
 
 });
+
+router.post('/likePost',(req,res)=>{
+    Post.findOne({username:req.body.owner}).then((data)=>{
+        console.log(data.likes.findIndex(value => value===req.body.person));
+        if(data.likes.findIndex(value => value===req.body.person) === -1)
+        {
+            let newOne = new Post(data);
+            newOne.likes.push(req.body.person);
+            newOne.save().then();
+            console.log(newOne);
+            res.json({'newOne':data})
+        }
+    })
+})
+
+router.post('/addComment',(req,res)=>{
+    Post.findOne({username:req.body.owner}).then((data)=>{
+        // console.log(data.likes.findIndex(value => value===req.body.person));
+        
+        let newOne = new Post(data);
+        newOne.comments.push({person:req.body.person,text:req.body.text});
+        newOne.save().then();
+        console.log(newOne);
+        res.json({'newOne':data})
+        
+    })
+})
 
 module.exports = router;

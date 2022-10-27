@@ -30,7 +30,6 @@ io.on('connection',function(socket){
 
 // catch the msg sent by one user and again send that msg to another user 
 io.on('msgSent',(msg)=>{
-    
     io.emit('msgOther',msg);
 })
 

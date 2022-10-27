@@ -1,4 +1,5 @@
 const express = require("express");
+const { now } = require("mongoose");
 // const User = require("../schema/user");
 const Chat = require("../schema/chat");
 const { USER1RECEIVER, USER1SENDER } = require("../schema/flags");
@@ -49,7 +50,7 @@ router.post("/getAllChat", async (req, res) => {
                                 username : i.username,
                                 profilePic : i.profilePic,
                                 name : i.name,
-                                chats : data.chats
+                                chats : data.chats.reverse()
                             })
                         }
                     )
@@ -59,7 +60,7 @@ router.post("/getAllChat", async (req, res) => {
                         username : i.username,
                         profilePic : i.profilePic,
                         name : i.name,
-                        chats : data.chats
+                        chats : data.chats.reverse()
                     })
                 }
             }
@@ -87,7 +88,7 @@ router.post("/getChat",async (req,res)=>{
                         }
                         else{
                             console.log(data_);
-                            chat = data_.chats;
+                            chat = data_.chats.reverse();
                             indicator = Indicator[1];
                             res.json({ 'chat' : chat ,'indicator':indicator});
                         }
@@ -97,7 +98,7 @@ router.post("/getChat",async (req,res)=>{
                 else{
                     // console.log("inside else"+data);
                     
-                    chat = data.chats;
+                    chat = data.chats.reverse();
 
                     // if(data.username)
                     indicator = Indicator[0];
@@ -129,7 +130,8 @@ router.post("/insertChat", (req, res) => {
                 chatObj.chats.push({
                     text : req.body.chat.text ,
                     time : req.body.chat.time,
-                    flag : Indicator[0].sent
+                    flag : Indicator[0].sent,
+                    timeUse : new Date()
                 });
                 chatObj.save().then();
             }
@@ -142,7 +144,8 @@ router.post("/insertChat", (req, res) => {
                 obj.chats.push({
                     text : req.body.chat.text ,
                     time : req.body.chat.time,
-                    flag : flag
+                    flag : flag,
+                    timeUse : new Date()
                 });
                 obj.save().then();
             }

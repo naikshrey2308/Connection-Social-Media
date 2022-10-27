@@ -1,7 +1,6 @@
 import { memo, useState, useRef, useEffect } from "react";
-import { ReactSession }  from 'react-client-session';
-import socketIOClient from "socket.io-client";
-const urlServer = "http://127.0.0.1:5000";
+// import socketIOClient from "socket.io-client";
+// const urlServer = "http://127.0.0.1:5000";
 
 
 
@@ -20,13 +19,22 @@ function Chat(props) {
 }
 
 function ChatSender(props) {
-    const socket ={};
+    // const socket ={};
     // socket.on('msgOther',(msg)=>{
-        
+    //     if(msg.sender === props.user.username){
+    //         var array = props.chats;
+    //         if(array){
+    //             array.push(msg)
+    //         }
+    //         else{
+    //             array=[msg]
+    //         }
+    //         props.setChat(array);
+    //     }
+    //     else{
+            
+    //     }
     // })
-    // const [chatList, setChatList] = useState([]);
-    
-    // const [indicator, setIndicator] = useState (props.indicator);
 
 
     const [chatText, setChatText] = useState("");
