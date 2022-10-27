@@ -88,7 +88,7 @@ router.get("/images/:username", (req, res) => {
 
 });
 
-router.get("/imageForShow/:username",async (req, res) => {
+router.get("/imageForShow/:username", async (req, res) => {
 
     const result = []
     var name='';
