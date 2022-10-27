@@ -29,6 +29,7 @@ function HomePage() {
             var posts = [];
             for(var i of res.result){
                 const username = i.username;
+                console.log(`/posts/imageForShow/${username}`);
                 const req_ = await fetch(`/posts/imageForShow/${username}`,{
                     method: "GET",
                     headers: {
@@ -38,16 +39,13 @@ function HomePage() {
                 });
                 
                 const res_ = await req_.json();
-                console.log(res_);
-                posts = posts.concat(res_);
+                console.log(res_.result);
+                posts = posts.concat(res_.result);
             }
             // posts.sort((a,b)=>{return 0.5 - Math.random();})
-            if(posts !== []){
+            if(posts){
                 setAllPosts(posts);
-                console.log(AllPosts);
-            // console.log(AllPosts);
             }
-
             
         })();
     }, []);
@@ -62,8 +60,12 @@ function HomePage() {
     return(
         <div style={{marginTop:4+'em'}}>
             { AllPosts && <>
-                <h1>Hello</h1>
-               { AllPosts.map(value => <PostBlock postObj={value} modalShow={modalShow_}/>) }
+
+
+               { AllPosts.map(value => {
+                 console.log(value);
+                 return <PostBlock postObj={value} modalShow={modalShow_}/>
+               }) }
 
                <ShowWholePost show={modalShow} onHide={() => setmodalShow(false)} post={postForModal} />
 
