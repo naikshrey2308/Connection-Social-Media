@@ -22,11 +22,12 @@ function HomePage() {
             });
             const res = await req.json();
             setCommonObject_(res.result);
+            console.log(res);
             
             console.log("inside function....");
 
             var posts = [];
-            for(var i of commonObject_){
+            for(var i of res.result){
                 const username = i.username;
                 const req_ = await fetch(`/posts/imageForShow/${username}`,{
                     method: "GET",
@@ -43,7 +44,7 @@ function HomePage() {
             // posts.sort((a,b)=>{return 0.5 - Math.random();})
             if(posts !== []){
                 setAllPosts(posts);
-                console.log(posts);
+                console.log(AllPosts);
             // console.log(AllPosts);
             }
 
@@ -61,10 +62,10 @@ function HomePage() {
     return(
         <div style={{marginTop:4+'em'}}>
             { AllPosts && <>
-
+                <h1>Hello</h1>
                { AllPosts.map(value => <PostBlock postObj={value} modalShow={modalShow_}/>) }
 
-               {/* <ShowWholePost show={modalShow} onHide={() => setmodalShow(false)} post={postForModal} /> */}
+               <ShowWholePost show={modalShow} onHide={() => setmodalShow(false)} post={postForModal} />
 
             </>}
         </div>

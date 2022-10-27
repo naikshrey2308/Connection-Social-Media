@@ -38,6 +38,9 @@ function PostBlock(props){
         props.modalShow(props.postObj);
     }
 
+    useEffect(()=>{
+        console.log(props);
+    },[]);
     return(
         <center><div className="my-3 block">
             <div className="row">
