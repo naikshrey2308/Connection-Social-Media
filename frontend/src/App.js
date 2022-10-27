@@ -19,6 +19,13 @@ export const LoginStatusContext = createContext();
 function App() {
 	
 	const [ IsLoggedIn, setIsLoggedIn ] = useState(false);
+	const [ notChat, setNotChat ] = useState(true);
+
+	function setNavbarFlag(flag){
+		console.log("in app"+flag);
+		setNotChat(flag);
+	}
+
 
 	console.log(window.sessionStorage.getItem("password"));
 	
@@ -54,7 +61,7 @@ function App() {
 		<LoginStatusContext.Provider value={{ IsLoggedIn, setIsLoggedIn }}>
 		<BrowserRouter>
 		{
-			IsLoggedIn && <Navbar /> 
+			(IsLoggedIn && notChat) && <Navbar /> 
 		}	
 			<Routes>
 				<Route path="/">
@@ -68,37 +75,37 @@ function App() {
 				<Route path="home" element={
 					<Suspense fallback={<Loader/>}>
 					{/* { setShow(true) } */}
-					<HomePage/>
+					<HomePage setNavbar={setNavbarFlag}/>
 					</Suspense>
 				} />
 				<Route path="chat" element={
 					<Suspense fallback={<Loader/>}>
 					{/* { setShow(true) } */}
-					<ChattingPage/>
+					<ChattingPage setNavbar={setNavbarFlag}/>
 					</Suspense>
 				} />
 				<Route path="discover" element={
 					<Suspense fallback={<Loader/>}>
 					{/* { setShow(true) } */}
-					<Discover />
+					<Discover setNavbar={setNavbarFlag}/>
 					</Suspense>
 				} />
 				<Route path="post" element={
 					<Suspense fallback={<Loader/>}>
 					{/* { setShow(true) } */}
-					<Post />
+					<Post setNavbar={setNavbarFlag}/>
 					</Suspense>
 				} />
 				<Route path="users/*" element={
 					<Suspense fallback={<Loader/>}>
 					{/* { setShow(true) } */}
-					<UserProfile />
+					<UserProfile setNavbar={setNavbarFlag}/>
 					</Suspense>
 				} />
 				<Route path="updateProfile" element={
 					<Suspense fallback={<Loader/>}>
 					{/* { setShow(true) } */}
-					<UserProfileUpdate/>
+					<UserProfileUpdate setNavbar={setNavbarFlag}/>
 					</Suspense>
 				} />
 				</Route>

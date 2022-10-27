@@ -2,9 +2,13 @@ import ManageProfile from "../Components/ManageProfile";
 import { memo } from "react";
 import "../styles/userProfile.css";
 import { ReactSession }  from 'react-client-session';
+import { useEffect } from "react";
 
 
-function UserProfileUpdatePage() {
+function UserProfileUpdatePage(props) {
+    useEffect(()=>{
+        props.setNavbar(true);
+    },[])
     let person={
         id:1,
         name:"Shrey Ketan Naik",

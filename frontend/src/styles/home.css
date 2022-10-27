@@ -1,10 +1,10 @@
 @import url('base.css');
 
 .block{
-    background-color: var(--grey-light);
+    /* background-color: var(--grey-light); */
     font-family:  "Arima", "Times New Roman", "Calibri";
     padding-top: 13px;
-    padding-bottom: 9px;
+    padding-bottom: 3px;
     /* height : 60%; */
     width : 40%;
     border-radius: 7px;

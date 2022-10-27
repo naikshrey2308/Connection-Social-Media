@@ -25,6 +25,9 @@
     flex-direction: column-reverse;
     bottom: 10%;
     padding: 10px 15px;
+    z-index:-1;
+    overflow-y: visible;
+    max-height: 90%;
 }
 
 .right {
@@ -54,4 +57,10 @@
 
 .no-chats-img {
     width: 300px;
+}
+
+.chatArea{
+    flex: 1;
+    height: 500px;
+  overflow-y: scroll;
 }
