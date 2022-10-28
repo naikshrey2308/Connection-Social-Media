@@ -182,6 +182,9 @@ function Form(props) {
         if(res.isRegistered){
             // ReactSession.set("username", res.username);
             window.sessionStorage.setItem("username", res.username);
+            window.sessionStorage.setItem("profilePic", res.profilePic);
+            window.sessionStorage.setItem("password", res.password);
+            window.sessionStorage.setItem("email", res.email);
 
             setCurr(7);
         }
@@ -206,18 +209,18 @@ function Form(props) {
             // registered message
         }
 
-        // ReactSession.set("username", res.username);
-        window.sessionStorage.setItem("username", user.username);
-        window.sessionStorage.setItem("email", user.email);
+        // // ReactSession.set("username", res.username);
+        // window.sessionStorage.setItem("username", user.username);
+        // window.sessionStorage.setItem("email", user.email);
 
-        window.sessionStorage.setItem("password", user.password);
-        // ReactSession.set("profilePic", res.profilePic);
-        window.sessionStorage.setItem("profilePic", user.username);
+        // window.sessionStorage.setItem("password", user.password);
+        // // ReactSession.set("profilePic", res.profilePic);
+        // window.sessionStorage.setItem("profilePic", user.username);
 
-        window.sessionStorage.setItem("name", user.name);
-        // ReactSession.set("name", res.name);
+        // window.sessionStorage.setItem("name", user.name);
+        // // ReactSession.set("name", res.name);
 
-        navigate("/home");
+        // navigate("/home");
      
     }
 
