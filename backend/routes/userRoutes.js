@@ -271,12 +271,18 @@ router.post('/unfollow', (req, res) => {
             }
         }
     )
+
+    res.json({ "status": "true" });
 })
 
-router.post('/getRandomPeople', (req, res) => {
+router.post('/getRandomPeople', async (req, res) => {
     // console.log("in server");
     let array = [];
-    User.find({}).limit(5).then((data) => {
+    let followings = [];
+    await User.findOne({email : req.body.email}).then((data)=>{
+        following= data.following;
+    });
+    await User.find({}).limit(5).then((data) => {
         const default_ = 'default_.png';
         for (var i of data) {
             if (i.email == req.body.email)
@@ -289,8 +295,9 @@ router.post('/getRandomPeople', (req, res) => {
                 name: i.name,
                 profilePic: i.profilePic.name,
                 email: i.email,
-                subtitle: i.bio
-
+                subtitle: i.bio,
+                username : i.username,
+                isFollowed : followings.includes(i.email)
             })
         }
         res.json({ "people": array });

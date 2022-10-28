@@ -139,14 +139,14 @@ router.post('/likePost',(req,res)=>{
     Post.findOne({_id : req.body.id}).then((data)=>{
         // console.log(data.likes.findIndex(value => value===req.body.person));
 
-        if(data.likes.findIndex(value => value===req.body.person) === -1)
+        if(data.likes.indexOf(req.body.person) === -1)
         {
             // let newOne = new Post(data);
             // newOne.likes.push(req.body.person);
             // newOne.save().then();
             data.likes.push(req.body.person);
 
-            Post.update({_id : req.body.id},{$set : data.likes}).then();
+            Post.updateOne({_id : req.body.id},{$set : { likes: data.likes }}).then(res.json({status: true, new: data}));
             // console.log(newOne);
             // res.json({'newOne':data})
         }
@@ -160,7 +160,7 @@ router.post('/addComment',(req,res)=>{
         // let newOne = new Post(data);
         // console.log(data);
             data.comments.push({person:req.body.person,text:req.body.text});
-            Post.update({_id:req.body.post.id},{ $set : { comments : data.comments }}).then();
+            Post.updateOne({_id:req.body.post.id},{ $set : { comments : data.comments }}).then();
         // newOne.comments.push({person:req.body.person,text:req.body.text});
         // newOne.save().then();
         // console.log(newOne);

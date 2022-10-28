@@ -12,7 +12,7 @@ import { useState } from "react";
 function PostBlock(props){
 
     const [liked,setLiked]=useState(false);
-    const [likeArray,setLikeArray]=useState(props.postObj.likes);
+    const [likeArray, setLikeArray] = useState(props.postObj.likes);
     const [flag,setFlag]=useState(false);
 
 
@@ -21,20 +21,22 @@ function PostBlock(props){
     // },[]);
 
     
-    function clickLike(){
+    async function clickLike(){
         setLiked(true);
-        (async function(){
-            const req = await fetch('/posts/likePost',{
-                method :'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({owner:props.postObj.username,person:window.sessionStorage.getItem('username'),id:props.postObj.id}),
-            });
-            const res = await req.json();
-            setLikeArray(res.newOne.likes);
-        })();
+        const req = await fetch('/posts/likePost',{
+            method :'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                owner:props.postObj.username,
+                person:window.sessionStorage.getItem('username'),
+                id:props.postObj.id}),
+        });
+        const res = await req.json();
+        if(res.status == true)
+            setLikeArray([...likeArray, window.sessionStorage.getItem("username")]);
     }
 
     function addComment(){
@@ -42,9 +44,10 @@ function PostBlock(props){
     }
 
     useEffect(()=>{
-        const i = props.postObj.likes.findIndex((val)=>val.person===window.sessionStorage.getItem('username'));
+        const i = props.postObj.likes.indexOf(window.sessionStorage.getItem('username'));
         // console.log(props);
-        if(i!==-1){
+        if(i !== -1) {
+            setLiked(true);
             setFlag(true);
         }
     },[]);
@@ -76,7 +79,7 @@ function PostBlock(props){
                     <MdOutlineChatBubbleOutline color="black" size={23} onClick={addComment} style={{cursor: 'pointer'}}></MdOutlineChatBubbleOutline>
                 </div>
                 <div className="col-9 text-end" style={{color:'grey',fontFamily:'calibri'}}>
-                    <b>{props.postObj.likes.length} </b> Likes
+                    <b>{likeArray.length} </b> Likes
                     &nbsp;<GoPrimitiveDot color="grey"/>
                     &nbsp; <b>{props.postObj.comments.length}</b> Comments
                 </div>

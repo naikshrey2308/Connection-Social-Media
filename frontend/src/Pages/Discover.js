@@ -1,14 +1,21 @@
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useState ,useRef} from "react";
+import { useNavigate } from "react-router";
 import Navbar from "../Components/Navbar";
 import "../styles/discover.css";
 
 
 
 function FriendCard(props) {
+
+    const followBtn = useRef();
+
+    const [isFollowing, setIsFollowing] = useState(props.isFollowed);
+
+    const navigate = useNavigate();
     props = props.data;
 
     const  followevent = async (user)=> {
-        console.log("inside follow function"+window.sessionStorage.getItem('email'));
+        // console.log("inside follow function"+window.sessionStorage.getItem('email'));
         const req = await fetch("/user/follow",{
             method: "POST",
             headers : {
@@ -24,6 +31,73 @@ function FriendCard(props) {
         const res = await req.json();
     };
 
+    function viewProfileClicked(user){
+        // console.log(props);
+        navigate(`/users/${user.username}`);
+    }
+
+    const follow = async () => {
+        if(props.isMe || props.user == window.sessionStorage.getItem("username"))
+            return;
+
+        followBtn.current.innerHTML = "<span class='spinner-border text-base spinner-border-sm'></span>";
+        followBtn.current.disabled = true;
+        followBtn.current.style.opacity = 0.5;
+        
+        const req = await fetch("/user/follow", {
+            method: "POST",
+            headers : {
+                'Content-Type' : 'application/json',
+                'Accept':'application/json'
+            },
+            body:JSON.stringify({
+                email: props.user.email,
+                email_session: window.sessionStorage.getItem('email')
+            })
+        });
+
+        const res = await req.json();
+        console.log(res);
+        if(res.status != "true")
+            return;
+        setIsFollowing(true);
+
+        props.setTrigger(!props.trigger);
+        // setFollowers(followers + 1);
+        // followBtn.current.style.opacity = 1;
+        // followBtn.current.innerHTML = "<span class='text-base'>Unfollow</span>";        
+    }
+
+    const unfollowClicked = async () => {
+        if(props.isMe || props.user == window.sessionStorage.getItem("username"))
+            return;
+
+        const userEmail = window.sessionStorage.getItem('email');
+        const personEmail = props.user.email;
+        console.log("q");
+
+        const req = await fetch('/user/unfollow',{
+            method : 'POST',
+            headers :  {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body : JSON.stringify({
+                user : userEmail,
+                person : personEmail
+            })
+        });
+        
+        // console.log("ansdjnaslkdnaklsdnas");
+
+        const res = await req.json();       
+        // setFollowers(followers - 1); 
+
+        props.setTrigger(!props.trigger);
+        setIsFollowing(false);
+    }
+
+
     return (
         <>
             {/* Finder card for people */}
@@ -32,8 +106,15 @@ function FriendCard(props) {
                 <div className="card-body text-center">
                     <h3>{props.name}</h3>
                     <p>{props.subtitle}</p>
-                    <p className="text-center"><button className="btn btn-primary px-4 py-2" onClick={() => followevent(props)}>Follow</button></p>
-                    <p className="text-center"><button className="btn px-4 py-2">View Profile</button></p>
+                    { (!isFollowing) && 
+                        <button ref={followBtn} onClick={follow} className="btn follow-btn btn-light text-base">Follow</button>
+                    }
+                    { (isFollowing) && 
+                        <button ref={followBtn} className="btn follow-btn btn-light text-base" onClick={unfollowClicked}>
+                            Unfollow
+                        </button>
+                    }
+                    <p className="text-center"><button className="btn px-4 py-2" onClick={()=>{viewProfileClicked(props)}}>View Profile</button></p>
                 </div>
             </div>
         </>

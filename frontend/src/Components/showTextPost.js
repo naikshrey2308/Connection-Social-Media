@@ -14,7 +14,7 @@ function ShowTextPost(props) {
 
     useEffect(() => {
         
-    },[props.show, postComments]);
+    },[]);
 
     const comment = useRef();
 
@@ -79,8 +79,8 @@ function ShowTextPost(props) {
             <Modal.Body className="show-grid">
                 <Container >
                     <Row>
-                        <Col md={6} style={{wordWrap: 'break-word'}} className="textPost">
-                            {props.post.content.text}
+                        <Col dangerouslySetInnerHTML={{ __html: props.post.content.text}} md={6} style={{display: "inline-flex", overflowX: "scroll", wordWrap: 'break-all', wordBreak: "break-all", whiteSpace: "normal !important"}} className="textPost">
+                            
                         </Col>
                         <Col md={6}>
                             <Row className="comments">

@@ -15,6 +15,7 @@
     overflow-y: scroll;
 }
 
-::-webkit-scrollbar{
+
+.comments::-webkit-scrollbar{
     display : none;
 }

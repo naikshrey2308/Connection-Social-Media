@@ -10,6 +10,7 @@ function UserProfile(props) {
     const [isMe, setIsMe] = useState(true);
 
     const [editMode, setEditMode] = useState(false);
+    const [trigger, setTrigger] = useState(false);
 
     useEffect(() => {
         props.setNavbar(true);
@@ -59,10 +60,10 @@ function UserProfile(props) {
             (user) && 
             <div className="row min-vh-100 gx-0">
                 <div className="col-12 col-lg-4">
-                    <UserMainContent editMode={editMode} setEditMode={setEditMode} isMe={isMe} me={me} user={user} /> 
+                    <UserMainContent trigger={trigger} setTrigger={setTrigger} editMode={editMode} setEditMode={setEditMode} isMe={isMe} me={me} setUser={setUser} user={user} /> 
                 </div>
                 <div className="col-12 col-lg-8"> 
-                    <UserAdditionalContent editMode={editMode} setEditMode={setEditMode} isMe={isMe} me={me} user={user} />
+                    <UserAdditionalContent trigger={trigger} setTrigger={setTrigger} editMode={editMode} setEditMode={setEditMode} isMe={isMe} me={me} setUser={setUser} user={user} />
                 </div>
 
             </div>

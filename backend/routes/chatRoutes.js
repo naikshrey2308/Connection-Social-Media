@@ -134,6 +134,7 @@ router.post("/insertChat", (req, res) => {
                     timeUse : new Date()
                 });
                 chatObj.save().then();
+
             }
             else{
                 let flag = Indicator[1].sent;
@@ -147,7 +148,7 @@ router.post("/insertChat", (req, res) => {
                     flag : flag,
                     timeUse : new Date()
                 });
-                obj.save().then();
+                Chat.updateOne({ $or: [ { username : { uname1 : reciever , uname2 : sender } }  , { username : { uname1 : sender , uname2 : reciever } } ] } , { $set : obj}).then()
             }
         }
     )

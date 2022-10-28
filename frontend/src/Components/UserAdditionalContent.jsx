@@ -40,14 +40,14 @@ function AboutContent(props) {
             res = await res.json();
             setFollowing(res.following);
         })();
-    }, []);
+    }, [props.trigger]);
 
     const redirectToProfile = (username) => window.location.href = ("/users/" + username);
 
     return (
         <div className="row my-5 pt-3 mx-auto gx-0">
             <div style={{ maxHeight: "80vh", overflowY: "scroll" }} className="col-4 mx-auto text-center">
-                <h1 className="text-center">{props.user.followers.length}</h1>
+                <h1 className="text-center">{followers.length}</h1>
                 <h4 className="text-secondary">Followers</h4>
 
                 <div className="mt-5">
@@ -62,7 +62,7 @@ function AboutContent(props) {
                 </div>
             </div>
             <div style={{ maxHeight: "80vh", overflowY: "scroll" }} className="col-4 mx-auto text-center">
-                <h1 className="text-center">{props.user.following.length}</h1>
+                <h1 className="text-center">{following.length}</h1>
                 <h4 className="text-secondary">Following</h4>
 
                 <div className="mt-5">
@@ -107,7 +107,7 @@ function TextContent(props) {
     function textPostClicked(post){
         let obj = {
             id : post._id,
-            profilePic : props.user.profilePic.name,
+            profilePic : props.user.profilePic ? props.user.profilePic.name : 'default_.png',
             name : props.user.name,
             username : post.username,
             likes : post.likes,
@@ -132,13 +132,11 @@ function TextContent(props) {
             res = await res.json();
 
             setPosts(res);
+            
         })();
 
-        posts.forEach((post) => {
-            document.getElementById(post._id).innerHTML = post.content.text;
-        });
         
-    }, [posts]);
+    }, []);
 
 
     if (posts.length == 0) {
@@ -152,7 +150,6 @@ function TextContent(props) {
         );
     }
 
-
     return (
         <>
             <div className="container my-3">
@@ -160,29 +157,23 @@ function TextContent(props) {
                     posts.map((post) => {
                         return (
                             <>
-                                <div className="container text-post border my-3 border-1 p-3" style={{cursor:'pointer'}} onClick={()=>textPostClicked(post)}>
-                                    <div className="d-flex w-100">
-                                        <img src="https://st.depositphotos.com/1000423/2111/i/600/depositphotos_21114749-stock-photo-two-football-players-striking-the.jpg" width={25} height={25} style={{ borderRadius: "50%" }} />
+                                <div className="container text-post my-3" style={{cursor:'pointer', maxWidth: "75%"}} onClick={()=>textPostClicked(post)}>
+                                    <div className="d-flex border bg-light p-3 shadow w-100">
+                                        <img src={"/profilePics/" + (props.user.profilePic ? props.user.profilePic.name : "default_.png")} width={25} height={25} style={{ borderRadius: "50%" }} />
                                         <div className="px-3">{props.user.username}</div>
-                                        <div className="text-end w-100">
-                                            <button className="btn btn-light p-0">
-                                                <img src={process.env.PUBLIC_URL + "/media/icons/expand.svg"} className="mx-3" width={15} />
-                                            </button>
-                                        </div>
                                     </div>
-                                    <hr />
-                                    <div id={post._id} onClick={textPostClicked} style={{wordWrap:'break-word'}}>
 
+                                    <div id={post._id} dangerouslySetInnerHTML={{__html: post.content.text}} className="p-3 shadow bg-white border-start border-end" onClick={textPostClicked} style={{wordWrap:'break-word'}}>
                                     </div>
-                                    <hr />
-                                        <div className="text-start">
-                                            <button className="btn btn-white p-0">
-                                                <img src={process.env.PUBLIC_URL + "/media/icons/like.svg"} className="mx-3" width={15} />
-                                            </button>
-                                            <button className="btn btn-white p-0">
-                                                <img src={process.env.PUBLIC_URL + "/media/icons/comment.svg"} className="mx-3" width={15} />
-                                            </button>
-                                        </div>
+                                    
+                                    <div className="text-start shadow bg-white border py-3 px-2">
+                                        <button className="btn btn-white p-0">
+                                            <img src={process.env.PUBLIC_URL + "/media/icons/like.svg"} className="mx-3" width={15} />
+                                        </button>
+                                        <button className="btn btn-white p-0">
+                                            <img src={process.env.PUBLIC_URL + "/media/icons/comment.svg"} className="mx-3" width={15} />
+                                        </button>
+                                    </div>
                                 </div>
                             </>
                         );
@@ -353,7 +344,7 @@ function UserAdditionalContent(props) {
                 </div>
             </div>
 
-            {aboutActive && <AboutContent user={props.user} />}
+            {aboutActive && <AboutContent trigger={props.trigger} user={props.user} />}
             {imageActive && <ImageContent user={props.user}/>}
             {textActive && <TextContent user={props.user} />}
 

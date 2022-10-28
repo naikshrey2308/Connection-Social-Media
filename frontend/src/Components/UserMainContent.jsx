@@ -5,9 +5,13 @@ import "../styles/user-profile.css";
 function UserMainContent(props) {
 
     const followBtn = useRef();
+
     const [isFollowing, setIsFollowing] = useState(props.me.following.includes(props.user.email));
 
     const [posts, setPosts] = useState(0);
+
+    const [followers, setFollowers] = useState(props.user.followers.length);
+    const [following, setFollowing] = useState(props.user.following.length);
 
     const follow = async () => {
         if(props.isMe || props.user == window.sessionStorage.getItem("username"))
@@ -34,32 +38,44 @@ function UserMainContent(props) {
         if(res.status != "true")
             return;
         setIsFollowing(true);
-        followBtn.current.style.opacity = 1;
-        followBtn.current.innerHTML = "<span class='text-base'>Unfollow</span>";        
+
+        props.setTrigger(!props.trigger);
+        setFollowers(followers + 1);
+        // followBtn.current.style.opacity = 1;
+        // followBtn.current.innerHTML = "<span class='text-base'>Unfollow</span>";        
     }
 
-    function unfollowClicked(){
+    const unfollowClicked = async () => {
+        if(props.isMe || props.user == window.sessionStorage.getItem("username"))
+            return;
 
         const userEmail = window.sessionStorage.getItem('email');
         const personEmail = props.user.email;
-        (async function(){
-            const req = await fetch('/user/unfollow',{
-                method : 'POST',
-                headers :  {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body : JSON.stringify({
-                    user : userEmail,
-                    person : personEmail
-                })
-            });
-            const res = req.json();
-            setIsFollowing(false);
-        })();
+        console.log("q");
+
+        const req = await fetch('/user/unfollow',{
+            method : 'POST',
+            headers :  {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body : JSON.stringify({
+                user : userEmail,
+                person : personEmail
+            })
+        });
+        
+        console.log("ansdjnaslkdnaklsdnas");
+
+        const res = await req.json();       
+        setFollowers(followers - 1); 
+
+        props.setTrigger(!props.trigger);
+        setIsFollowing(false);
     }
 
     useEffect(() => {
+
         (async () => {
             // Load the user data from the server
             let res = await fetch(`/posts/text/${props.user.username}`, {
@@ -104,11 +120,11 @@ function UserMainContent(props) {
                             <p>Posts</p>
                         </div>
                         <div className="col text-center">
-                            <h3>{props.user.followers.length}</h3>
+                            <h3>{followers}</h3>
                             <p>Followers</p>
                         </div>
                         <div className="col text-center">
-                            <h3>{props.user.following.length}</h3>
+                            <h3>{following}</h3>
                             <p>Following</p>
                         </div>
                     </div>
