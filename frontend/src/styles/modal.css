@@ -34,6 +34,6 @@ form{
 .comments{
     flex: 1;
     height: 260px;
-  overflow-y: scroll;
-  /* background: lightgreen; */
+    overflow-y: scroll;
+    /* background: lightgreen; */
 }
