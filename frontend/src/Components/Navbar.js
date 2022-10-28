@@ -154,11 +154,11 @@ function Navbar(props) {
             <div className="position-absolute shadow searchResult">
                 {/* <h1>hello</h1> */}
                 { searchResult && searchResult.map( (value) => 
-                    <div className="row my-3" onClick={ () => {searchedUserSelected(value)} }>
-                        <div className = "col-4">
+                    <div className="row my-2 searchrow" style={{cursor:'pointer'}} onClick={ () => {searchedUserSelected(value)} }>
+                        <div className = "col-4 my-1">
                             <img alt="" src={`http://localhost:4000/static/profilePics/${value.profilePic}`} className="mx-4 border" width={30} height={30} style={{borderRadius: "50%"}} />
                         </div>
-                        <div className = "col-8 my-1">
+                        <div className = "col-8 my-2">
                             {value.name}
                         </div>
                     </div>

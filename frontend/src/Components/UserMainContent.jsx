@@ -5,7 +5,7 @@ import "../styles/user-profile.css";
 function UserMainContent(props) {
 
     const followBtn = useRef();
-    const isFollowing = props.me.following.includes(props.user.email);
+    const [isFollowing, setIsFollowing] = useState(props.me.following.includes(props.user.email));
 
     const [posts, setPosts] = useState(0);
 
@@ -33,9 +33,30 @@ function UserMainContent(props) {
         console.log(res);
         if(res.status != "true")
             return;
-
+        setIsFollowing(true);
         followBtn.current.style.opacity = 1;
-        followBtn.current.innerHTML = "<span class='text-base'>Following</span>";        
+        followBtn.current.innerHTML = "<span class='text-base'>Unfollow</span>";        
+    }
+
+    function unfollowClicked(){
+
+        const userEmail = window.sessionStorage.getItem('email');
+        const personEmail = props.user.email;
+        (async function(){
+            const req = await fetch('/user/unfollow',{
+                method : 'POST',
+                headers :  {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body : JSON.stringify({
+                    user : userEmail,
+                    person : personEmail
+                })
+            });
+            const res = req.json();
+            setIsFollowing(false);
+        })();
     }
 
     useEffect(() => {
@@ -64,7 +85,7 @@ function UserMainContent(props) {
 
             setPosts(res.length + res2.length);
         })();
-    }, []);
+    }, [isFollowing]);
 
     return (
             <div className="set-nav-align position-fixed col-lg-4 col-12 text-center bg-base py-5" style={{height: "100vh"}}>
@@ -93,14 +114,17 @@ function UserMainContent(props) {
                     </div>
 
                     {/* Follow button */}
-                    { (!props.isMe && !isFollowing) && 
-                        <button ref={followBtn} onClick={follow} className="btn follow-btn btn-light text-base">Follow</button>
-                    }
-                    { (!props.isMe && isFollowing) && 
-                        <button className="btn follow-btn btn-light text-base">
-                            <MdCheck className="text-base me-2" size={20}></MdCheck>
-                            Following
-                        </button>
+                    {(!props.isMe) && 
+                        <>
+                            { (!isFollowing) && 
+                                <button ref={followBtn} onClick={follow} className="btn follow-btn btn-light text-base">Follow</button>
+                            }
+                            { (isFollowing) && 
+                                <button ref={followBtn} className="btn follow-btn btn-light text-base" onClick={unfollowClicked}>
+                                    Unfollow
+                                </button>
+                            }
+                        </>
                     }
                     { (props.isMe) && 
                         <button onClick={() => props.setEditMode(true)} className="btn d-flexbox align-items-center follow-btn btn-light text-base">

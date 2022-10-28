@@ -205,7 +205,7 @@ router.get("/getUser/:username", (req, res) => {
 });
 
 router.post('/follow', (req, res) => {
-    console.log("in follow");
+    // console.log("in follow");
     const email_ = req.body.email;
     User.findOne({ email: email_ }).then(
         (data) => {
@@ -213,14 +213,14 @@ router.post('/follow', (req, res) => {
                 console.log("already present");
             } else {
                 data.followers.push(req.body.email_session);
-                console.log(data.followers);
+                // console.log(data.followers);
                 User.updateOne({ email: email_ }, { $set: { followers: data.followers } })
                     .then(msg => console.log(msg))
                     .catch(err => console.log(err));
             }
         }
     );
-    console.log("email " + req.body.email_session);
+    // console.log("email " + req.body.email_session);
     User.findOne({ email: req.body.email_session }).then(
         (data) => {
             if (data.following.indexOf(req.body.email) != -1) {
@@ -228,7 +228,7 @@ router.post('/follow', (req, res) => {
             } else {
                 // console.log("data"+data);
                 data.following.push(email_);
-                console.log(data.following);
+                // console.log(data.following);
                 User.updateOne({ email: req.body.email_session }, { $set: { following: data.following } })
                     .then(msg => console.log(msg))
                     .catch(err => console.log(err));
@@ -243,6 +243,9 @@ router.post('/unfollow', (req, res) => {
     var personToBeUnfollowed = req.body.person;
     var user = req.body.user;
 
+    // console.log(personToBeUnfollowed);
+    // console.log(user);
+
     User.findOne({ email: user }).then(
         (data) => {
             let index = data.following.findIndex((val) => val === personToBeUnfollowed);
@@ -251,7 +254,20 @@ router.post('/unfollow', (req, res) => {
             }
             else {
                 data.following.splice(index, 1);
-                User.update({ email: user }, { $set: { following: data.following } }).then();
+                User.updateOne({ email: user }, { $set: { following: data.following } }).then();
+            }
+        }
+    );
+
+    User.findOne({ email: personToBeUnfollowed }).then(
+        (data) => {
+            let index = data.followers.findIndex((val) => val === user);
+            if (index === -1) {
+                console.log("not in followers");
+            }
+            else {
+                data.followers.splice(index, 1);
+                User.updateOne({ email: personToBeUnfollowed }, { $set: { followers: data.followers } }).then();
             }
         }
     )
@@ -354,7 +370,7 @@ router.post('/getFollowersFollowing', async (req, res) => {
 })
 
 router.get('/searchedUser/:text', (req, res) => {
-    console.log(req.params.text);
+    // console.log(req.params.text);
     var result = [];
     User.find({ $or: [{ username: new RegExp('^' + req.params.text, 'ig') }, { name: new RegExp('^' + req.params.text, 'ig') }] }).then(
         (data) => {
@@ -364,7 +380,7 @@ router.get('/searchedUser/:text', (req, res) => {
                     name: i.name,
                     username: i.username
                 };
-                console.log(u);
+                // console.log(u);
                 result.push(u);
             }
             res.json({ 'result': result });

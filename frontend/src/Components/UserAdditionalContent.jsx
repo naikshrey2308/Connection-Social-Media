@@ -2,6 +2,8 @@ import { memo, useState, useEffect } from "react";
 import { MdEdit, MdOutlinePeopleOutline } from "react-icons/md";
 import { useNavigate } from "react-router";
 import "../styles/user-profile.css";
+import ShowWholePost from "../Components/showWholePost";
+import ShowTextPost from "../Components/showTextPost";
 
 function AboutContent(props) {
 
@@ -82,6 +84,40 @@ function TextContent(props) {
 
     const [posts, setPosts] = useState([]);
 
+    const [postForModal,setPostForModal]= useState({});
+    const [modalShow , setmodalShow] = useState(false);
+
+    
+    function changeComment(newComment,flag){
+        if(flag){
+            let index = posts.findIndex((val)=>val.id === postForModal.id);
+            posts[index].comments.push(newComment);
+            postForModal.comments.push(newComment);
+            flag = !flag;
+        }
+    }
+
+    function modalShow_(post){
+        // console.log("hello");
+
+        setmodalShow(true);
+        setPostForModal(post);
+    }
+
+    function textPostClicked(post){
+        let obj = {
+            id : post._id,
+            profilePic : props.user.profilePic.name,
+            name : props.user.name,
+            username : post.username,
+            likes : post.likes,
+            comments : post.comments,
+            type : post.type,
+            content : post.content
+        }
+       modalShow_(obj);
+    }
+
     useEffect(() => {
         (async () => {
             // Load the user data from the server
@@ -101,6 +137,7 @@ function TextContent(props) {
         posts.forEach((post) => {
             document.getElementById(post._id).innerHTML = post.content.text;
         });
+        
     }, [posts]);
 
 
@@ -114,6 +151,8 @@ function TextContent(props) {
             </>
         );
     }
+
+
     return (
         <>
             <div className="container my-3">
@@ -121,7 +160,7 @@ function TextContent(props) {
                     posts.map((post) => {
                         return (
                             <>
-                                <div className="container text-post border my-3 border-1 p-3">
+                                <div className="container text-post border my-3 border-1 p-3" style={{cursor:'pointer'}} onClick={()=>textPostClicked(post)}>
                                     <div className="d-flex w-100">
                                         <img src="https://st.depositphotos.com/1000423/2111/i/600/depositphotos_21114749-stock-photo-two-football-players-striking-the.jpg" width={25} height={25} style={{ borderRadius: "50%" }} />
                                         <div className="px-3">{props.user.username}</div>
@@ -132,11 +171,10 @@ function TextContent(props) {
                                         </div>
                                     </div>
                                     <hr />
-                                    <div id={post._id}>
+                                    <div id={post._id} onClick={textPostClicked} style={{wordWrap:'break-word'}}>
 
                                     </div>
                                     <hr />
-                                    <div className="d-flex w-100">
                                         <div className="text-start">
                                             <button className="btn btn-white p-0">
                                                 <img src={process.env.PUBLIC_URL + "/media/icons/like.svg"} className="mx-3" width={15} />
@@ -145,20 +183,57 @@ function TextContent(props) {
                                                 <img src={process.env.PUBLIC_URL + "/media/icons/comment.svg"} className="mx-3" width={15} />
                                             </button>
                                         </div>
-                                    </div>
                                 </div>
                             </>
                         );
                     })
                 }
             </div>
+
+            <ShowTextPost show={modalShow} onHide={() => setmodalShow(false)} post={postForModal} changecommentInUI={changeComment}/>
+
         </>
     );
 }
 
 function ImageContent(props) {
 
+    function openModalForPost(post){
+        let obj = {
+            id : post._id,
+            profilePic : props.user.profilePic.name,
+            name : props.user.name,
+            username : post.username,
+            likes : post.likes,
+            comments : post.comments,
+            type : post.type,
+            content : post.content
+        }
+       modalShow_(obj);
+    }
+
     const [posts, setPosts] = useState([]);
+
+    const [postForModal,setPostForModal]= useState({});
+    const [modalShow , setmodalShow] = useState(false);
+
+    
+    function changeComment(newComment,flag){
+        if(flag){
+            let index = posts.findIndex((val)=>val.id === postForModal.id);
+            posts[index].comments.push(newComment);
+            postForModal.comments.push(newComment);
+            flag = !flag;
+        }
+    }
+
+    function modalShow_(post){
+        // console.log("hello");
+
+        setmodalShow(true);
+        setPostForModal(post);
+    }
+
 
     useEffect(() => {
 
@@ -188,6 +263,8 @@ function ImageContent(props) {
             </>
         );
     }
+
+    
     return (
         <>
             <div className="container my-3">
@@ -196,13 +273,16 @@ function ImageContent(props) {
                         posts.map((post) => {
                             return (
                                 <>
-                                    <img src={"/posts/" + post.content.url} width={220} height={220} className="m-2 border" />
+                                    <img src={"/posts/" + post.content.url} width={220} height={220} className="m-2 border" style={{cursor:'pointer'}} onClick={() =>{openModalForPost(post)}}/>
                                 </>
                             );
                         })
                     }
                 </div>
             </div>
+            
+            <ShowWholePost show={modalShow} onHide={() => setmodalShow(false)} post={postForModal} changecommentInUI={changeComment}/>
+
         </>
     );
 }
@@ -252,6 +332,8 @@ function UserAdditionalContent(props) {
             makeEditActive();
     }, [props.editMode]);
 
+    
+
     return (
         <div className="position-relative">
             <div className="set-nav-align d-flex justify-content-evenly border-bottom border-3 w-100">
@@ -272,8 +354,10 @@ function UserAdditionalContent(props) {
             </div>
 
             {aboutActive && <AboutContent user={props.user} />}
-            {imageActive && <ImageContent user={props.user} />}
+            {imageActive && <ImageContent user={props.user}/>}
             {textActive && <TextContent user={props.user} />}
+
+
         </div>
     );
 }

@@ -47,3 +47,8 @@ nav {
 .searchResult::-webkit-scrollbar {
     display: none;
 }
+
+.searchrow:hover{
+    background-color: var(--grey-light);
+    height: 40px;
+}

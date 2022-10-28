@@ -1,8 +1,7 @@
 import { memo, useEffect, useState } from "react";
 import UserMainContent from "../Components/UserMainContent";
 import UserAdditionalContent from "../Components/UserAdditionalContent";
-import Navbar from "../Components/Navbar";
-import axios from "axios";
+
 
 function UserProfile(props) {
     
@@ -51,6 +50,8 @@ function UserProfile(props) {
 
     }, []);
 
+   
+
     return (
         <>
             {/* <Navbar /> */}
@@ -63,6 +64,7 @@ function UserProfile(props) {
                 <div className="col-12 col-lg-8"> 
                     <UserAdditionalContent editMode={editMode} setEditMode={setEditMode} isMe={isMe} me={me} user={user} />
                 </div>
+
             </div>
             }
         </>

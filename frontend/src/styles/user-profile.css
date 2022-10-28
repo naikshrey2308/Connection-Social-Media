@@ -52,3 +52,6 @@
 .hover-block:hover {
     background-color: var(--transparent-primary);
 }
+.image-post{
+    width:94%;
+}
