@@ -6,7 +6,7 @@ const router = express.Router();
 // const browserHistory=require('react-router').browserHistory;
 
 let baseURL = require("../index");
-baseURL = baseURL.baseURL; 
+baseURL = baseURL.baseURL;
 
 //image upload
 const path = require("path");
@@ -17,15 +17,15 @@ const { response } = require("express");
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, 'images/profilePics/')
+        cb(null, 'images/profilePics/')
     },
     filename: function (req, file, cb) {
-      req.body.fileType = path.extname(file.originalname);
-      cb(null, req.body.username + req.body.fileType) //Appending extension
+        req.body.fileType = path.extname(file.originalname);
+        cb(null, req.body.username + req.body.fileType) //Appending extension
     }
 });
 
-const upload = multer({storage: storage});
+const upload = multer({ storage: storage });
 
 //session 
 
@@ -38,25 +38,25 @@ const upload = multer({storage: storage});
 router.post("/login", (req, res) => {
     // find a user from the database
     // console.log(req);
-    var email_='x';
-    var profilePic_='x';
-    var name_='x';
+    var email_ = 'x';
+    var profilePic_ = 'x';
+    var name_ = 'x';
     User.findOne({
         username: req.body.username,
     }).then((data) => {
         // console.log("data in login"+ data);
-        email_= data.email;
+        email_ = data.email;
         profilePic_ = data.profilePic.name;
         name_ = data.name;
         isLoggedIn = false;
         // console.log(data);
         // if either username is incorrect
-        if(data == {} || data == null) {
+        if (data == {} || data == null) {
             data = "User not found! Create an account if you don't have one.";
             isLoggedIn = false;
         }
         // or the passwords don't match
-        else if(data.password != req.body.password) {
+        else if (data.password != req.body.password) {
             data = "Invalid username or password supplied.";
             isLoggedIn = false;
         }
@@ -64,26 +64,26 @@ router.post("/login", (req, res) => {
         else {
             data = "Logged in successfully!";
             isLoggedIn = true;
-            
+
             // create session for the current user
             // req.session.username=req.body.username;
             // console.log(req.session);
             // ...
         }
-        const user={
-            "data": data, 
+        const user = {
+            "data": data,
             "isLoggedIn": isLoggedIn,
-            "username":req.body.username,
-            "profilePic":profilePic_,
-            "name":name_,
-            "email":email_
+            "username": req.body.username,
+            "profilePic": profilePic_,
+            "name": name_,
+            "email": email_
         };
         // send the response back to the user
         // console.log("user"+user);
         res.json(user);
-        
+
     }).catch(err => {
-        res.json({"err": err});
+        res.json({ "err": err });
         console.log(err);
     });
 });
@@ -96,21 +96,21 @@ router.post("/register", (req, res) => {
 
     User.find({
         $or: [{ username: req.body.username }, { email: req.body.email }]
-            }).then((data) => {
-                if(data.length){
-                    var matched_data = "email";
-                    if(data.username == req.body.username){
-                        matched_data = "username";
-                    }
-                    error.error = matched_data + " already exists!";
-                    res.json({ "data" : error, "isRegistered" : false, "username":req.body.username });
-                } 
-                else {
-                    var location = {
-                        country:req.body.country,
-                        state:req.body.state,
-                        city:req.body.city
-                    }
+    }).then((data) => {
+        if (data.length) {
+            var matched_data = "email";
+            if (data.username == req.body.username) {
+                matched_data = "username";
+            }
+            error.error = matched_data + " already exists!";
+            res.json({ "data": error, "isRegistered": false, "username": req.body.username });
+        }
+        else {
+            var location = {
+                country: req.body.country,
+                state: req.body.state,
+                city: req.body.city
+            }
 
             var user = new User({
                 'name': req.body.name,
@@ -124,14 +124,14 @@ router.post("/register", (req, res) => {
             });
 
             user.save((err, resp) => {
-                if(err) {
+                if (err) {
                     console.log(err);
                     isRegistered = false;
                     res.json({ "isRegistered": false });
                 } else {
                     // console.log(resp);
                     isRegistered = true;
-                    res.json({ "isRegistered": true ,"username":req.body.username,"profilePic":req.body.profilePic,"name":req.body.name});
+                    res.json({ "isRegistered": true, "username": req.body.username, "profilePic": req.body.profilePic, "name": req.body.name });
                 }
             });
         }
@@ -141,21 +141,21 @@ router.post("/register", (req, res) => {
 router.get("/")
 
 router.post("/register/profilePic", upload.single("profilePic"), (req, res) => {
-    if(fs.existsSync(`${baseURL}/images/profilePics/${req.body.username}${req.body.fileType}`)) {
+    if (fs.existsSync(`${baseURL}/images/profilePics/${req.body.username}${req.body.fileType}`)) {
         User.findOne({
             username: req.body.username,
         }).then((data) => {
-            if(data == {})
+            if (data == {})
                 res.json({ isUploaded: false });
             else {
                 let user = new User(data);
-                
+
                 user.profilePic = { "name": req.body.username + req.body.fileType };
 
                 // console.log(user);
 
                 user.save((err, msg) => {
-                    if(err) {
+                    if (err) {
                         console.log(err);
                         res.json({ isUploaded: false });
                     } else {
@@ -184,17 +184,17 @@ router.get("/current", (req, res) => {
  */
 
 router.get("/getUser/:username", (req, res) => {
-    
+
     let isFound = false;
 
     User.findOne({
         "username": req.params.username
-    },{ password: false }).then((data) => {
+    }, { password: false }).then((data) => {
         // if the user is not found
-        if(data == null || data == {}) {
+        if (data == null || data == {}) {
             isFound = false;
             res.json({ "isFound": isFound });
-        } 
+        }
         // else if the user is found, send the details
         else {
             isFound = true;
@@ -204,68 +204,133 @@ router.get("/getUser/:username", (req, res) => {
 
 });
 
-router.post('/follow',(req,res)=>{
+router.post('/follow', (req, res) => {
     console.log("in follow");
     const email_ = req.body.email;
-    User.findOne({email:email_}).then(
+    User.findOne({ email: email_ }).then(
         (data) => {
-            if(data.followers.indexOf(req.body.email_session) != -1) {
+            if (data.followers.indexOf(req.body.email_session) != -1) {
                 console.log("already present");
             } else {
                 data.followers.push(req.body.email_session);
                 console.log(data.followers);
-                User.updateOne({email:email_},{$set: {followers: data.followers}})
-                .then(msg => console.log(msg))
-                .catch(err => console.log(err));
+                User.updateOne({ email: email_ }, { $set: { followers: data.followers } })
+                    .then(msg => console.log(msg))
+                    .catch(err => console.log(err));
             }
         }
     );
     console.log("email " + req.body.email_session);
-    User.findOne({email:req.body.email_session}).then(
-        (data)=>{
-            if(data.following.indexOf(req.body.email) != -1) {
+    User.findOne({ email: req.body.email_session }).then(
+        (data) => {
+            if (data.following.indexOf(req.body.email) != -1) {
                 console.log("already present");
             } else {
                 // console.log("data"+data);
                 data.following.push(email_);
                 console.log(data.following);
-                User.updateOne({email:req.body.email_session},{$set: {following: data.following}})
-                .then(msg => console.log(msg))
-                .catch(err => console.log(err));
+                User.updateOne({ email: req.body.email_session }, { $set: { following: data.following } })
+                    .then(msg => console.log(msg))
+                    .catch(err => console.log(err));
             }
         }
     );
+
+    res.json({ "status": "true" });
 });
+
+router.post('/unfollow', (req, res) => {
+    var personToBeUnfollowed = req.body.person;
+    var user = req.body.user;
+
+    User.findOne({ email: user }).then(
+        (data) => {
+            let index = data.following.findIndex((val) => val === personToBeUnfollowed);
+            if (index === -1) {
+                console.log("not in following");
+            }
+            else {
+                data.following.splice(index, 1);
+                User.update({ email: user }, { $set: { following: data.following } }).then();
+            }
+        }
+    )
+})
 
 router.post('/getRandomPeople', (req, res) => {
     // console.log("in server");
-    let array=[];
-    User.find({}).limit(5).then((data)=>{
+    let array = [];
+    User.find({}).limit(5).then((data) => {
         const default_ = 'default_.png';
-        for(var i of data){
-            if(i.email == req.body.email)
+        for (var i of data) {
+            if (i.email == req.body.email)
                 continue;
             // console.log(i);
-            if(i.profilePic.name===undefined)
-            {
+            if (i.profilePic.name === undefined) {
                 i.profilePic.name = default_;
             }
             array.push({
-                name : i.name,
-                profilePic : i.profilePic.name,
-                email : i.email,
-                subtitle : i.bio
+                name: i.name,
+                profilePic: i.profilePic.name,
+                email: i.email,
+                subtitle: i.bio
 
             })
         }
-        res.json({"people": array});
+        res.json({ "people": array });
     });
 });
 
-router.post('/getFollowersFollowing',async (req,res)=>{
-    var followers_ = [] , following_=[] , commonEmail_=[] , result_=[] , result_name = [];
-    await User.findOne({email:req.body.emailSession}).then(
-        (data)=>{
+router.post("/getFollowers", async (req, res) => {
+    let followers = [], result = [];
+    await User.findOne({ email: req.body.email }).then(
+        (data) => {
+            followers = data.followers;
+        }
+    );
+
+    for (let i of followers) {
+        await User.findOne({ email: i }).then(
+            (data) => {
+                result.push({
+                    username: data.username,
+                    name: data.name,
+                    profilePic: (data.profilePic.name ? data.profilePic.name : 'default_.png'),
+                });
+            }
+        );
+    }
+
+    res.json({ "followers": result });
+});
+
+router.post("/getFollowing", async (req, res) => {
+    let following = [], result = [];
+    await User.findOne({ email: req.body.email }).then(
+        (data) => {
+            following = data.following;
+        }
+    );
+
+    for (let i of following) {
+        await User.findOne({ email: i }).then(
+            (data) => {
+                result.push({
+                    username: data.username,
+                    name: data.name,
+                    profilePic: (data.profilePic.name ? data.profilePic.name : 'default_.png'),
+                });
+            }
+        );
+    }
+
+    res.json({ "following": result });
+});
+
+router.post('/getFollowersFollowing', async (req, res) => {
+    var followers_ = [], following_ = [], commonEmail_ = [], result_ = [], result_name = [];
+    await User.findOne({ email: req.body.emailSession }).then(
+        (data) => {
             followers_ = data.followers;
             following_ = data.following;
 
@@ -273,28 +338,36 @@ router.post('/getFollowersFollowing',async (req,res)=>{
         }
     )
 
-    for(var i of commonEmail_){
-        await User.findOne({email:i}).then((data)=>{
-            
+    for (var i of commonEmail_) {
+        await User.findOne({ email: i }).then((data) => {
+
             result_.push({
-                username : data.username,
-                name : data.name,
-                profilePic : (data.profilePic.name ? data.profilePic.name : 'default_.png')
+                username: data.username,
+                name: data.name,
+                profilePic: (data.profilePic.name ? data.profilePic.name : 'default_.png')
             })
             // result_name.push(data.name);
         })
     }
     // console.log(result_);
-    res.json({ result:result_});
+    res.json({ result: result_ });
 })
 
-router.post('/searchedUser',(req,res)=>{
-
-
-    User.find().then(
-        (data)=>{
-            res.json(data);
-            console.log(data);
+router.get('/searchedUser/:text', (req, res) => {
+    console.log(req.params.text);
+    var result = [];
+    User.find({ $or: [{ username: new RegExp('^' + req.params.text, 'ig') }, { name: new RegExp('^' + req.params.text, 'ig') }] }).then(
+        (data) => {
+            for (var i of data) {
+                let u = {
+                    profilePic: i.profilePic.name ? i.profilePic.name : 'default_.png',
+                    name: i.name,
+                    username: i.username
+                };
+                console.log(u);
+                result.push(u);
+            }
+            res.json({ 'result': result });
         }
     )
 

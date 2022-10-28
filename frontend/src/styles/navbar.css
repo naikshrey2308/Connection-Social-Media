@@ -31,3 +31,19 @@ nav {
     border-radius: 0;
     border-color: grey;
 }
+
+.searchResult{
+    left:30%;
+    top:55px;
+    background: white !important ;
+    z-index:100;
+    width:17%;
+    max-height: 500px;
+    overflow-y: scroll;
+    flex: 1;
+    opacity:1;
+}
+
+.searchResult::-webkit-scrollbar {
+    display: none;
+}

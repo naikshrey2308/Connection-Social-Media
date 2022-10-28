@@ -43,3 +43,12 @@
 .btn-white {
     border: none !important;
 }
+.hover-block {
+    padding-left: 20px;
+    transition: 0.3s all;
+    border-radius: 10px;
+}
+
+.hover-block:hover {
+    background-color: var(--transparent-primary);
+}

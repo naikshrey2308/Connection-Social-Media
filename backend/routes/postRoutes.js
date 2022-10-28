@@ -83,6 +83,7 @@ router.get("/images/:username", (req, res) => {
         username: req.params.username,
         type: "pic"
     }).then((data) => {
+        console.log(data);
         res.json(data);
     });
 
@@ -96,12 +97,13 @@ router.get("/imageForShow/:username", async (req, res) => {
     await User.findOne({username:req.params.username}).then((data)=>{
         name = data.name;
         profilePic = data.profilePic ? data.profilePic.name : profilePic ;
+        // console.log(data);
     })
-
     await Post.find({
         username: req.params.username,
         type: "pic"
     }).limit(3).then((data) => {
+        console.log(data);
         for(var i of data){
             let obj = {
                 id : i._id,
@@ -136,13 +138,17 @@ router.get("/text/:username", (req, res) => {
 router.post('/likePost',(req,res)=>{
     Post.findOne({_id : req.body.id}).then((data)=>{
         // console.log(data.likes.findIndex(value => value===req.body.person));
+
         if(data.likes.findIndex(value => value===req.body.person) === -1)
         {
-            let newOne = new Post(data);
-            newOne.likes.push(req.body.person);
-            newOne.save().then();
+            // let newOne = new Post(data);
+            // newOne.likes.push(req.body.person);
+            // newOne.save().then();
+            data.likes.push(req.body.person);
+
+            Post.update({_id : req.body.id},{$set : data.likes}).then();
             // console.log(newOne);
-            res.json({'newOne':data})
+            // res.json({'newOne':data})
         }
     })
 })
@@ -151,15 +157,18 @@ router.post('/addComment',(req,res)=>{
     console.log("inside comment");
     Post.findOne({_id:req.body.post.id}).then((data)=>{
         // console.log(data.likes.findIndex(value => value===req.body.person));
-        let newOne = new Post(data);
-        console.log(data);
-
-        newOne.comments.push({person:req.body.person,text:req.body.text});
-        newOne.save().then();
-        console.log(newOne);
+        // let newOne = new Post(data);
+        // console.log(data);
+            data.comments.push({person:req.body.person,text:req.body.text});
+            Post.update({_id:req.body.post.id},{ $set : { comments : data.comments }}).then();
+        // newOne.comments.push({person:req.body.person,text:req.body.text});
+        // newOne.save().then();
+        // console.log(newOne);
         res.json({'newOne':data})
         
     })
 })
+
+router.post('/')
 
 module.exports = router;

@@ -24,14 +24,14 @@ function HomePage(props) {
             });
             const res = await req.json();
             setCommonObject_(res.result);
-            console.log(res);
             
             // console.log("inside function....");
-
+            
             var posts = [];
             for(var i of res.result){
                 const username = i.username;
-                // console.log(`/posts/imageForShow/${username}`);
+
+                console.log(`/posts/imageForShow/${username}`);
                 const req_ = await fetch(`/posts/imageForShow/${username}`,{
                     method: "GET",
                     headers: {
@@ -41,6 +41,7 @@ function HomePage(props) {
                 });
                 
                 const res_ = await req_.json();
+                console.log(res_);
                 // console.log(res_.result);
                 posts = posts.concat(res_.result);
             }

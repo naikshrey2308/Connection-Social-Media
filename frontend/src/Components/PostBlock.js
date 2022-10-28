@@ -42,7 +42,8 @@ function PostBlock(props){
     }
 
     useEffect(()=>{
-        const i = props.postObj.comments.findIndex((val)=>val.person===window.sessionStorage.getItem('username'));
+        const i = props.postObj.likes.findIndex((val)=>val.person===window.sessionStorage.getItem('username'));
+        // console.log(props);
         if(i!==-1){
             setFlag(true);
         }

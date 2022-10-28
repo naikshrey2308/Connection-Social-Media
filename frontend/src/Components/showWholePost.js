@@ -91,14 +91,14 @@ function ShowWholePost(props) {
                         <Col md={6}>
                             <Row className="comments">
                                 {(props.post.comments) && props.post.comments.map((ele)=> <>
-                                    <Row className="my-1">
-                                        <Col md={5}><b>{ele.person}</b></Col>
-                                        <Col>{ele.text}</Col>
+                                    <Row className="my-auto">
+                                        <Col><b>{ele.person}</b>&nbsp;{ele.text}</Col>
+                                        
                                     </Row>
                                 </> )}
                             </Row>
                             
-                            <Row>
+                            <Row className="bottom-0">
                             <hr/>
                                 <form className="d-flex" onSubmit={(e) => e.preventDefault()} >
                                     <input ref={comment} onChange={commentChange} type="text" className="input-control form-control px-3" placeholder="Comment Here" />

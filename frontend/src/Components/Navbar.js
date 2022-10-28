@@ -1,5 +1,5 @@
 import { memo, useCallback, useEffect} from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useRef,useState } from "react";
 import { MdAdd, MdChat, MdComment, MdHome, MdOutlineChatBubble, MdOutlineChatBubbleOutline, MdOutlineHome, MdOutlinePersonAdd, MdPersonAdd } from "react-icons/md";
 import { IoCompass, IoCompassOutline, IoPersonCircle, IoPersonCircleOutline, IoPersonCircleSharp } from "react-icons/io5";
@@ -16,6 +16,13 @@ function Navbar(props) {
     const [Post, setPost] = useState(false);
     const [Discover, setDiscover] = useState(false);
     const [Profile, setProfile] = useState(false);
+    const [searchedText , setSearchedText] = useState('');
+    const [searchResult, setSearchResult] = useState([]);
+
+    const searchRef = useRef();
+
+    var navigate= useNavigate();
+
 
     const activateIcon = useCallback((callback) => {
         // callback(true);
@@ -39,37 +46,26 @@ function Navbar(props) {
 
     }, []);
 
-    //for modal show and hide purpose
-    // const [showPost, setShowPost] = useState(false);
-    // const closePostPage = () => setShowPost(false);
-    // const showPostPage = () => setShowPost(true);
+    function searchTextChanged(){
+        setSearchedText(searchRef.current.value);
+        console.log(searchRef.current.value);
+        (async function(){
+            const req = await fetch(`/user/searchedUser/${searchRef.current.value}`,{
+                method : 'GET',
+                header : {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'   
+                },
+            });
+            const res =await req.json();
+            console.log(res);
+            setSearchResult(res.result);
+        })();
+    }   
 
-    
-    // const showPostRef = useRef();
-    // const picRef = useRef();
-    // const captionRef = useRef();
-    // const locationRef = useRef();
-
-    // // post.picture = picRef;
-
-    // const onLocation = () =>{
-
-    // }
-    
-    // const onPostPic = async() => {
-    //     showPostRef.current.src = await URL.createObjectURL(picRef.current.files[0]);
-    //     setPost({...post, postPic: showPostRef.current.src});
-        
-    // };
-    // const onCaption = ()=>{
-
-    // }
-
-    // const handleSubmit = ()=>{
-
-    // }
-
-    
+    function searchedUserSelected(user){
+        navigate(`/users/${user.username}`);
+    }
 
     return (
         <>
@@ -82,8 +78,8 @@ function Navbar(props) {
                     </button>
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <form className="d-flex mx-auto" role="search">
-                            <input className="form-control me-0 searchbox" type="search" placeholder="Search" aria-label="Search"/>
-                            <button className="btn border-1 btn-light search" type="submit"><img src={process.env.PUBLIC_URL + "/media/icons/search.svg"} className="p-1 nav_img"></img></button>
+                            <input className="form-control me-0" ref={searchRef} onChange={searchTextChanged} type="search" placeholder="Search" aria-label="Search"/>
+                            <button className="btn border-0 btn-light" type="submit"><img src={process.env.PUBLIC_URL + "/media/icons/search.svg"} className="p-1 nav_img"></img></button>
                         </form>
 
                         <ul className="navbar-nav mx-auto me-0 mb-2 mb-lg-0">
@@ -152,9 +148,24 @@ function Navbar(props) {
                     </div>
                 </div>
             </nav>
-
-            
         }
+
+        { (searchedText) && 
+            <div className="position-absolute shadow searchResult">
+                {/* <h1>hello</h1> */}
+                { searchResult && searchResult.map( (value) => 
+                    <div className="row my-3" onClick={ () => {searchedUserSelected(value)} }>
+                        <div className = "col-4">
+                            <img alt="" src={`http://localhost:4000/static/profilePics/${value.profilePic}`} className="mx-4 border" width={30} height={30} style={{borderRadius: "50%"}} />
+                        </div>
+                        <div className = "col-8 my-1">
+                            {value.name}
+                        </div>
+                    </div>
+                )}
+            </div>
+        }
+        
         </>
     );
 
