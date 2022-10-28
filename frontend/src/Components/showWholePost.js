@@ -98,7 +98,7 @@ function ShowWholePost(props) {
                                 </> )}
                             </Row>
                             
-                            <Row style={{bottom:20,position:'absolute'}}>
+                            <Row>
                             <hr/>
                                 <form className="d-flex" onSubmit={(e) => e.preventDefault()} >
                                     <input ref={comment} onChange={commentChange} type="text" className="input-control form-control px-3" placeholder="Comment Here" />

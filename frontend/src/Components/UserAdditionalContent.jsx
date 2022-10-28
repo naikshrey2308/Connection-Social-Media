@@ -20,7 +20,7 @@ function TextContent(props) {
     useEffect(() => {
         (async () => {
             // Load the user data from the server
-            let res = await fetch(`/posts/text/${encodeURIComponent("shrey.23")}`, {
+            let res = await fetch(`/posts/text/${encodeURIComponent(window.sessionStorage.getItem("username"))}`, {
                 method: "GET",
                 headers: {
                     "Accept": "application/json",
@@ -88,7 +88,7 @@ function ImageContent(props) {
 
         (async () => {
             // Load the user data from the server
-            let res = await fetch(`/posts/images/${encodeURIComponent("shrey.23")}`, {
+            let res = await fetch(`/posts/images/${encodeURIComponent(window.sessionStorage.getItem("username"))}`, {
                 method: "GET",
                 headers: {
                     "Accept": "application/json",

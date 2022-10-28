@@ -183,7 +183,7 @@ router.get("/current", (req, res) => {
  * This request is for getting any other user
  */
 
-router.get("getUser/:username", (req, res) => {
+router.get("/getUser/:username", (req, res) => {
     
     let isFound = false;
 

@@ -60,7 +60,7 @@ function ImagePostRenderer(props) {
         alert(caption);
 
         let data = new FormData();
-        data.set("username", "shrey.23");
+        data.set("username", window.sessionStorage.getItem("username"));
         data.set("type", "pic");
         data.set("caption", caption);
         data.append("postPic", post);
@@ -196,7 +196,7 @@ function TextPostRenderer(props) {
         // console.log(text);
 
         let data = new FormData();
-        data.set("username", "shrey.23");
+        data.set("username", window.sessionStorage.getItem("username"));
         data.set("type", "text");
         data.set("text", textContentRef.current.innerHTML);
 

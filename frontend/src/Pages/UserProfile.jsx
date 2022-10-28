@@ -10,10 +10,9 @@ function UserProfile(props) {
 
     useEffect(() => {
         props.setNavbar(true);
-        
         (async () => {
             // Load the user data from the server
-            let user1 = await fetch(`/user/getUser/${encodeURIComponent("shrey.23")}`, {
+            let user1 = await fetch(`/user/getUser/${encodeURIComponent(window.sessionStorage.getItem("username"))}`, {
                 method: "GET",
                 headers: {
                     "Accept": "application/json",
