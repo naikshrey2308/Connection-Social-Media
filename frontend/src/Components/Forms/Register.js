@@ -257,15 +257,8 @@ function Form(props) {
                             <img src= {process.env.PUBLIC_URL + "/media/svgs/birthday.svg"} className="w-50 mx-auto mt-3 mb-5" />
                             <input ref={dobRef} type="date" name="birthdate" id="birthdate" className="input-control form-control my-3" value={user.birthdate} onChange={checkDOB} required />
                         </>}
-                        
-                        {(curr == 3) && <>
-                            <h6>Your mobile number helps us verify your profile. This won't be displayed in your profile.</h6>
-                            <img src= {process.env.PUBLIC_URL + "/media/svgs/mobile.svg"} className="w-50 mx-auto mt-3 mb-5" />
-                            <input ref={mobRef} type="text" value={user.mobile} onChange={checkMob} name="mobile_number" id="mobile_number" className="input-control form-control" placeholder="+91 12345 67890" />
-                            <p className="text-start" style={{fontSize: 12}} id="mobileNumberCorrector"></p>
-                        </>}
 
-                        {(curr == 4) && <>
+                        {(curr == 3) && <>
                             <h6>Your location helps us find friends near your area</h6>
                             <img src= {process.env.PUBLIC_URL + "/media/svgs/world-location.svg"} className="w-50 mx-auto mt-3 mb-5" />
                             <div className="d-flex justdiy-content-evenly">
@@ -276,26 +269,25 @@ function Form(props) {
                             <p className="text-center my-3"><button ref={locGetterBtnRef} type="button" onClick={getLocation} className="btn btn-primary text-light">Find My Location</button></p>
                         </>}
 
-                        {(curr == 5) && <>
+                        {(curr == 4) && <>
                             <h6>A picture to impress the community. Add a profile photo.</h6>
                             <img ref={picDisplayRef} src={(user.profilePic == undefined) ? process.env.PUBLIC_URL + "/media/svgs/profile.svg" : user.profilePic} height={200} className="w-50 mx-auto mt-3 mb-5 p-3" style={{borderRadius: "50%"}} />
                             <input ref={picRef} type="file" onChange={setProfilePic} name="profile_pic" id="profile_pic" accept="image/*" className="input-control form-control" />
                         </>}
 
-                        {(curr == 6) && <>
+                        {(curr == 5) && <>
                             <h6>Ahhhh! Finally. We're just there. Finish setting up your profile with a great bio.</h6>
                             <textarea ref={bioRef} id="bio" value={user.bio} onChange={setBio} name="bio" className="d-none"></textarea>
                             <div contentEditable="true" id="bio-para" className="border p-3"></div>
                         </>} 
 
-                        {(curr == 7) && <>
+                        {(curr == 6) && <>
                             <center>
                                 <img src={process.env.PUBLIC_URL + "/media/gifs/success.gif" } />
                                 <button onClick={()=>navigate('/home')}>Continue</button>
                             </center>
                         </>}
                         
-
                         <input type="button" className="btn btn-base btn-light float-end mr-3 mt-5 px-4 submit" value={(curr == 6) ? "Register" : "Next >"} onClick={(curr != 6) ? nextPage : handleSubmit} />
                         
                         {(curr > 1) && <><input type="button" className="btn btn-secondary border btn-light float-end mx-1 mt-5 px-4 submit border" value="< Prev" onClick={prevPage} /></>}

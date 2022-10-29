@@ -396,4 +396,36 @@ router.get('/searchedUser/:text', (req, res) => {
 
 })
 
+router.get('/usernameAvailable/:username', (req, res) => {
+    
+    User.find({username : req.params.username}).then(
+        (data)=>{
+            if(data.length === 0){
+                res.json({flag : true});
+            }
+            else{
+                res.json({flag : false});
+            }
+        }
+    )
+
+})
+
+router.post('/updateUser',(req,res) => {
+
+    User.updateOne( { email : req.body.email } , { $set : req.body.user  }).then(
+        ()=>{
+            res.json({"status":true});
+        }
+    );
+})
+
+router.post('/changePassword',(req,res) =>{
+    User.updateOne( {email : req.body.email} , { $set : {password: req.body.password } } ).then(
+        ()=>{
+            res.json({status:true});
+        }
+    )
+})
+
 module.exports = router;

@@ -1,9 +1,12 @@
-import { memo, useState, useEffect } from "react";
+import { memo, useState, useEffect, useRef } from "react";
 import { MdEdit, MdOutlinePeopleOutline } from "react-icons/md";
+import { BsExclamationCircleFill, BsCheckCircleFill} from "react-icons/bs"
 import { useNavigate } from "react-router";
 import "../styles/user-profile.css";
 import ShowWholePost from "../Components/showWholePost";
 import ShowTextPost from "../Components/showTextPost";
+import axios from "axios";
+
 
 function AboutContent(props) {
 
@@ -278,6 +281,281 @@ function ImageContent(props) {
     );
 }
 
+
+function EditProfile(props){
+
+    const profilePicRef = useRef();
+    const nameRef = useRef();
+    const usernameRef = useRef();
+    const bioRef = useRef();
+    const profilePicShowRef = useRef();
+    const currPasswordRef = useRef();
+    const newPasswordRef = useRef();
+    const confirmPasswordRef = useRef();
+
+    const [username , setUsername ] = useState('');
+    const [name , setName ] = useState('');
+    const [bio , setBio ] = useState('');
+
+    const [usernameFlag,setUsernameFlag] = useState(true);
+    const [submitEnable,setSubmitEnable] = useState(true);
+    const [userWindowShow,setUserWindowShow] = useState(true);
+    const [changePasswordBtnEnable,setChangePasswordBtnEnable] = useState(false);
+    const [currPasswordCorrect,setCurrPasswordCorrect] = useState(false);
+    const [confirmPasswodMatched,setConfirmPasswordMatched] = useState(false);
+
+    // console.log(user);
+
+    function profilePicChanged(){
+        (async function(){
+            profilePicShowRef.current.src =  await URL.createObjectURL(profilePicRef.current.files[0]); 
+        })();
+    }
+
+    function usernameChanged(){
+        setUsername(usernameRef.current.value);
+        if(usernameRef.current.value===''){
+            setUsernameFlag(false);
+            setSubmitEnable(false);
+        }
+        if(usernameRef.current.value !== window.sessionStorage.getItem('username')){
+            (async function(){
+                const req = await fetch(`/user/usernameAvailable/${usernameRef.current.value}`,{
+                    method : 'GET',
+                    headers : {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                });
+                const res = await req.json();
+                if(res.flag === true){
+                    setUsernameFlag(true);
+                }
+                else{
+                    setUsernameFlag(false);
+                    setSubmitEnable(false);
+                }
+            })();
+        }
+        else {
+            setUsernameFlag(true);
+        }
+    }
+
+    function formSubmitted(){
+
+        (async function(){
+            const picData = new FormData();
+            picData.append("username", usernameRef.current.value);
+            picData.append("profilePic", profilePicRef.current.files[0], profilePicRef.current.files[0].name);
+            const res = await axios.post("/user/register/profilePic", picData, {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+            });
+        })();
+        
+
+        var objUpdate = {
+            name : nameRef.current.value,
+            username : usernameRef.current.value,
+            bio : bioRef.current.value,
+            profilePic : {
+                name : profilePicRef.current.file[0].name
+            }
+        }
+
+        (async function(){
+            const req = await fetch('/user/updateUser',{
+                method : 'POST',
+                headers : {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body : JSON.stringify({
+                    email : window.sessionStorage.getItem('email'),
+                    user : objUpdate
+                })
+            })
+            if(req.json().status){
+                window.sessionStorage.setItem('username',objUpdate.username);
+                window.sessionStorage.setItem('name',objUpdate.name);
+                window.sessionStorage.setItem('profilePic',profilePicRef.current.file[0].name);
+
+            }
+        })();
+    }
+
+    function changePasswordWindow(){
+        setUserWindowShow(false);
+    }
+
+    function changeUserWindow(){
+        setUserWindowShow(true);
+    }
+
+    function changePassword(){
+        (async function(){
+            const req = await fetch('/user/changePassword',{
+                method : 'POST',
+                headers : {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body : JSON.stringify({
+                    email : window.sessionStorage.getItem('email'),
+                    password : newPasswordRef.current.value
+                })
+            })
+            const res = req.json();
+            if(res.status===true){
+                setUserWindowShow(true);
+                window.sessionStorage.setItem('password',newPasswordRef.current.value);
+            }
+        })();
+    }
+
+    function currPasswordChanged(){
+        if(currPasswordRef.current.value === window.sessionStorage.getItem('password')){
+            setCurrPasswordCorrect(true);
+            if(confirmPasswodMatched===true){
+                setChangePasswordBtnEnable(true);
+            }
+        }
+        else{
+            setCurrPasswordCorrect(false);
+            setChangePasswordBtnEnable(false);
+        }
+    }
+
+    function confirmPasswordChanged(){
+        if(confirmPasswordRef.current.value === newPasswordRef.current.value){
+            setConfirmPasswordMatched(true);
+            if(currPasswordCorrect===true){
+                setChangePasswordBtnEnable(true);
+            }
+        }
+        else{
+            setConfirmPasswordMatched(false);
+            setChangePasswordBtnEnable(false);
+        }
+
+    }
+
+    var temp=props.user.profilePic.name;
+    useEffect(()=>{
+        setUserWindowShow(true);
+        setChangePasswordBtnEnable(false);
+        setConfirmPasswordMatched(false);
+        setCurrPasswordCorrect(false);
+        setUsernameFlag(true);
+        temp = props.user.profilePic ? props.user.profilePic.name : "default_.png";
+        (async function(){
+            const req = await fetch(`/user/getUser/${window.sessionStorage.getItem('username')}`,{
+                method : 'GET',
+                headers : {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            });
+            const res = await req.json();
+            setUsername(res.user.username);
+            setName(res.user.name);
+            setBio(res.user.bio);
+            // user.profilePic = temp ;
+
+        })();
+    },[])
+
+    return(
+        <>
+            { userWindowShow && <div className="mx-5 my-4">
+                    <img ref={profilePicShowRef} src={`http://localhost:4000/static/profilePics/${temp}`} width={120} height={120} className="profile-image d-block mx-auto my-2" />
+                    <center><input ref={profilePicRef} type="file" onChange={profilePicChanged} name="profile_pic" id="profile_pic" accept="image/*" className="input input-control form-control my-1" /></center>
+                    <div className="row my-5">
+                        <div className="col-2 my-2">
+                            <b>Name : </b>
+                        </div>
+                        <div className="col-5">
+                            <input ref={nameRef} type="text" name="name" id="name" value={name} className=" input-control form-control" />
+                        </div>
+                    </div> 
+
+                    <div className="row my-5">
+                        <div className="col-2 my-2">
+                            <b>Username : </b>
+                        </div>
+                        <div className="col-5 d-flex">
+                            <input ref={usernameRef} type="text" name="usename" id="username" value={username} className=" input-control form-control" onChange={usernameChanged}/>
+                            { (usernameFlag ) &&
+                                <BsCheckCircleFill color='green' size={30} className="mx-2 my-1"/>
+                            }
+                            { (!usernameFlag ) &&
+                                <BsExclamationCircleFill color='red' size={30} className="mx-2 my-1"/>
+                            }
+                        </div>
+                    </div>    
+
+                    <div className="row my-5">
+                        <div className="col-2 my-2">
+                            <b>Bio : </b>
+                        </div>
+                        <div className="col-5">
+                            <input ref={bioRef} type="text" name="bio" id="bio" value={bio} className=" input-control form-control" onChange={usernameChanged}/>
+                        </div>
+                    </div>  
+
+                    <center><div className="row my-5">
+                        <div className="col-11 mx-5" >
+                            <button className="btn btn-base" onClick={formSubmitted} disabled={!submitEnable}>Update</button>
+                                            
+                            <button onClick={changePasswordWindow} className="btn btn-danger mx-5">Change Password</button> 
+                        </div>
+                    </div> </center>
+            </div>}
+
+            {!userWindowShow && <div className="my-5">
+            
+                <center><div style={{width:40+'%'}}>
+                    <div className="d-flex">
+                        <input ref={currPasswordRef} onChange={currPasswordChanged} type="password" name="bio" placeholder = 'Enter Current Password' className="my-2 input-control form-control" />
+                        { (currPasswordCorrect ) &&
+                            <BsCheckCircleFill color='green' size={30} className="mx-2 my-3"/>
+                        }
+                        { (!currPasswordCorrect ) &&
+                            <BsExclamationCircleFill color='red' size={30} className="mx-2 my-3"/>
+                        }
+                    </div>
+                    
+                    <div className="d-flex">
+                        <input ref={newPasswordRef} type="password" name="bio" placeholder = 'Enter New Password' className="my-4 input-control form-control" />
+                        <BsExclamationCircleFill color='white' size={30} className="mx-2 my-3"/>
+                    </div>
+                                    
+                    <div className="d-flex">
+                        <input ref={confirmPasswordRef} onChange={confirmPasswordChanged} type="password" name="bio" placeholder = 'Enter Confirm Password' className="my-2 input-control form-control" />
+                        { (confirmPasswodMatched ) &&
+                            <BsCheckCircleFill color='green' size={30} className="mx-2 my-3"/>
+                        }
+                        { (!confirmPasswodMatched ) &&
+                            <BsExclamationCircleFill color='red' size={30} className="mx-2 my-3"/>
+                        }
+                    </div>
+                </div></center>
+
+                <center><div className="row my-5">
+                        <div className="col-11 mx-5" >
+                            <button className="btn btn-base " onClick={changeUserWindow} disabled={!submitEnable} >Update Profile</button>
+                                            
+                            <button onClick={changePassword} className="btn btn-danger mx-5" disabled={!changePasswordBtnEnable}>Change Password</button> 
+                        </div>
+                    </div> </center>
+
+            </div>}
+        </>
+    );
+}
+
 function UserAdditionalContent(props) {
 
     const [editActive, setEditActive] = useState(false);
@@ -344,6 +622,7 @@ function UserAdditionalContent(props) {
                 </div>
             </div>
 
+            {editActive && <EditProfile trigger={props.trigger} user = {props.user}/>}    
             {aboutActive && <AboutContent trigger={props.trigger} user={props.user} />}
             {imageActive && <ImageContent user={props.user}/>}
             {textActive && <TextContent user={props.user} />}
