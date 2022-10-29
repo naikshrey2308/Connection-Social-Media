@@ -76,9 +76,9 @@ function ImagePostRenderer(props) {
 
     return (
         <div className="shadow">
-            <div className="d-flex bg-white shadow p-2 border-bottom">
-                <img className="br-50p" src={process.env.PUBLIC_URL + "/media/profilePics/S.png"} width={30} />
-                <p className="w-100 px-3 m-0">Shrey Naik</p>
+            <div className="d-flex align-items-center bg-white shadow p-2 border-bottom">
+                <img className="br-50p" src={process.env.PUBLIC_URL + `/profilePics/${window.sessionStorage.getItem("profilePic")}`} width={30} />
+                <p className="w-100 px-3 m-0">{window.sessionStorage.getItem("name")}</p>
                 <div className="mx-2">
                     <FiMoreVertical></FiMoreVertical>
                 </div>
@@ -123,7 +123,7 @@ function ImagePostRenderer(props) {
                     (post) &&
                     <p>
                         <p style={{ fontSize: "14px" }} className="px-3 bg-white">
-                            <strong>shrey.23</strong>
+                            <strong>{window.sessionStorage.getItem("username")}</strong>
                             &nbsp;
                             <div className="d-inline span-editable" ref={captionRef} contentEditable={(post) ? true : false}>
                                 Write a caption
@@ -215,8 +215,8 @@ function TextPostRenderer(props) {
                 <p style={{fontSize: 14}} className="px-2 alert alert-danger text-danger">{error}</p>
             }
             <div className="d-flex bg-white p-2 border-bottom">
-                <img className="br-50p" src={process.env.PUBLIC_URL + "/media/profilePics/S.png"} width={30} />
-                <p className="w-100 px-3 m-0">Shrey Naik</p>
+                <img className="br-50p" src={process.env.PUBLIC_URL + `/profilePics/${window.sessionStorage.getItem("profilePic")}`} width={30} />
+                <p className="w-100 px-3 m-0">{window.sessionStorage.getItem("name")}</p>
                 <div className="mx-2">
                     <FiMoreVertical></FiMoreVertical>
                 </div>

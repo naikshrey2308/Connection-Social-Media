@@ -47,6 +47,7 @@ function UserProfile(props) {
 
             setUser(user1.user);
             setMe(me.user);
+            console.log(user1.user.location);
         })();
 
     }, []);

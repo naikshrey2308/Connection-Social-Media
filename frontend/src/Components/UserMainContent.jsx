@@ -1,10 +1,13 @@
 import { memo, useEffect, useRef, useState } from "react";
-import { MdCheck, MdEdit } from "react-icons/md";
+import { MdCheck, MdEdit, MdLogout, MdOutlineLogout } from "react-icons/md";
+import { useNavigate } from "react-router";
 import "../styles/user-profile.css";
 
 function UserMainContent(props) {
 
     const followBtn = useRef();
+
+    const navigate = useNavigate();
 
     const [isFollowing, setIsFollowing] = useState(props.me.following.includes(props.user.email));
 
@@ -103,9 +106,20 @@ function UserMainContent(props) {
         })();
     }, [isFollowing]);
 
+    const logout = () => {
+        window.sessionStorage.clear();
+        window.location.href = '/';
+    }
+
     return (
             <div className="set-nav-align position-fixed col-lg-4 col-12 text-center bg-base py-5" style={{height: "100vh"}}>
                 
+                    { (props.isMe) && 
+                        <div style={{cursor: "pointer"}} className="position-absolute top-0 end-0 m-3">
+                        <MdOutlineLogout onClick={logout} size={25} color="white" />
+                        </div>
+                    }
+
                     {/* Basic information section */}
                     <img src={ "/profilePics/" + ((props.user.profilePic) ? (props.user.profilePic.name) : "default_.png") } width={200} height={200} className="profile-image d-block mx-auto" />
                     <h4 className="text-light mt-4 mb-2">@{props.user.username}</h4>

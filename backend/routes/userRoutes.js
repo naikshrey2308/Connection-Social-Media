@@ -123,22 +123,22 @@ router.post("/register", (req, res) => {
                 'bio': req.body.bio,
             });
 
-            user.save((err, resp) => {
-                if (err) {
-                    console.log(err);
-                    isRegistered = false;
-                    res.json({ "isRegistered": false });
-                } else {
-                    // console.log(resp);
-                    isRegistered = true;
-                    res.json({ "isRegistered": true, "username": req.body.username, "profilePic": req.body.profilePic, "name": req.body.name });
-                }
-            });
+            console.log(user);
+
+            // user.save((err, resp) => {
+            //     if (err) {
+            //         console.log(err);
+            //         isRegistered = false;
+            //         res.json({ "isRegistered": false });
+            //     } else {
+            //         // console.log(resp);
+            //         isRegistered = true;
+            //         res.json({ "isRegistered": true, "username": req.body.username, "profilePic": req.body.profilePic, "name": req.body.name });
+            //     }
+            // });
         }
     });
 });
-
-router.get("/")
 
 router.post("/register/profilePic", upload.single("profilePic"), (req, res) => {
     if (fs.existsSync(`${baseURL}/images/profilePics/${req.body.username}${req.body.fileType}`)) {
@@ -360,7 +360,7 @@ router.post('/getFollowersFollowing', async (req, res) => {
             commonEmail_ = followers_.filter(value => following_.includes(value));
         }
     )
-
+        console.log
     for (var i of commonEmail_) {
         await User.findOne({ email: i }).then((data) => {
 
@@ -372,7 +372,7 @@ router.post('/getFollowersFollowing', async (req, res) => {
             // result_name.push(data.name);
         })
     }
-    // console.log(result_);
+    console.log('insidde' + result_);
     res.json({ result: result_ });
 })
 
@@ -421,8 +421,8 @@ router.post('/updateUser',(req,res) => {
 })
 
 router.post('/changePassword',(req,res) =>{
-    User.updateOne( {email : req.body.email} , { $set : {password: req.body.password } } ).then(
-        ()=>{
+    User.updateOne( {email : req.body.email} , { $set : { password: req.body.password } } ).then(
+        () => {
             res.json({status:true});
         }
     )

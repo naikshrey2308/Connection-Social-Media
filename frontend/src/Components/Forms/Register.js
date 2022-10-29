@@ -147,7 +147,7 @@ function Form(props) {
                 }
                 break;
             default:
-                setCurr((curr == 6) ? curr : ++curr);
+                setCurr((curr == 5) ? curr : ++curr);
                 break;
           }
     }
@@ -158,6 +158,8 @@ function Form(props) {
     }
     let navigate= useNavigate();
     const handleSubmit = async () => {
+
+        console.log(user);
 
         let formdata = new FormData();
         formdata.name = user.name;
@@ -181,12 +183,11 @@ function Form(props) {
         let res = await req.json();
         if(res.isRegistered){
             // ReactSession.set("username", res.username);
-            window.sessionStorage.setItem("username", res.username);
-            window.sessionStorage.setItem("profilePic", res.profilePic);
-            window.sessionStorage.setItem("password", res.password);
-            window.sessionStorage.setItem("email", res.email);
+            window.sessionStorage.setItem("username", user.username);
+            window.sessionStorage.setItem("profilePic", pic.name);
+            window.sessionStorage.setItem("password", user.password);
+            window.sessionStorage.setItem("email", user.email);
 
-            setCurr(7);
         }
         if(res.isRegistered === false) {
             // handle error
@@ -207,6 +208,7 @@ function Form(props) {
             return;
         } else {
             // registered message
+            window.location.href = '/home';
         }
 
         // // ReactSession.set("username", res.username);
@@ -280,15 +282,8 @@ function Form(props) {
                             <textarea ref={bioRef} id="bio" value={user.bio} onChange={setBio} name="bio" className="d-none"></textarea>
                             <div contentEditable="true" id="bio-para" className="border p-3"></div>
                         </>} 
-
-                        {(curr == 6) && <>
-                            <center>
-                                <img src={process.env.PUBLIC_URL + "/media/gifs/success.gif" } />
-                                <button onClick={()=>navigate('/home')}>Continue</button>
-                            </center>
-                        </>}
                         
-                        <input type="button" className="btn btn-base btn-light float-end mr-3 mt-5 px-4 submit" value={(curr == 6) ? "Register" : "Next >"} onClick={(curr != 6) ? nextPage : handleSubmit} />
+                        <input type="button" className="btn btn-base btn-light float-end mr-3 mt-5 px-4 submit" value={(curr == 5) ? "Register" : "Next >"} onClick={(curr != 5) ? nextPage : handleSubmit} />
                         
                         {(curr > 1) && <><input type="button" className="btn btn-secondary border btn-light float-end mx-1 mt-5 px-4 submit border" value="< Prev" onClick={prevPage} /></>}
 

@@ -4,6 +4,7 @@ import '../styles/home.css';
 import {  MdComment,MdOutlineChatBubbleOutline } from "react-icons/md";
 import {  BiFlag, BiHeart } from "react-icons/bi";
 import {  BsSuitHeartFill } from "react-icons/bs";
+import {  AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { GoPrimitiveDot } from "react-icons/go";
 
 import { useState } from "react";
@@ -40,7 +41,7 @@ function PostBlock(props){
     }
 
     function addComment(){
-        props.modalShow(props.postObj);
+        props.modalShow(props.postObj,props.postObj.type);
     }
 
     useEffect(()=>{
@@ -50,12 +51,14 @@ function PostBlock(props){
             setLiked(true);
             setFlag(true);
         }
+
+        console.log(props.postObj);
     },[]);
     return(
         <center><div className="my-4 block shadow" >
             <div className="row">
                 <div className="col-1">
-                    <img alt="" src={`http://localhost:4000/static/profilePics/${props.postObj.profilePic}`} className="mx-4 border" width={30} height={30} style={{borderRadius: "50%"}} />
+                    <img alt="" src={`http://localhost:4000/static/profilePics/${(props.postObj.profilePic) ? props.postObj.profilePic : "default_.png"}`} className="mx-4 border" width={30} height={30} style={{borderRadius: "50%"}} />
                 </div>
                 <div className="col-3 my-2">
                     <h6>{props.postObj.name}</h6>
@@ -64,15 +67,22 @@ function PostBlock(props){
                 
             </div>
             <hr style={{marginTop:-1}}/>
-            <div className="row" >
+            {
+                (props.postObj.type == "pic") &&
+                <div className="row" >
                 <img alt="" src={`http://localhost:4000/static/posts/${props.postObj.content.url}`} className="mx-3 image-post"  />
-            </div>
+                </div>
+            }
+            {
+                (props.postObj.type == "text") &&
+                <div className="text-start px-3" style={{"wordWrap": "break-word"}} dangerouslySetInnerHTML={{__html: props.postObj.content.text}}></div>
+            }
             <hr />
             <div className="row w-100 mx-3 my-3">
                 <div className="col-1">
 
-                    {!(liked || flag) && <BiHeart color="black" size={25} onClick={clickLike} style={{cursor: 'pointer'}}></BiHeart>}
-                    {(liked || flag) && <BsSuitHeartFill color="red" size={25} onClick={clickLike} ></BsSuitHeartFill>}
+                    {!(liked || flag) && <AiOutlineHeart color="black" size={25} onClick={clickLike} style={{cursor: 'pointer'}}></AiOutlineHeart>}
+                    {(liked || flag) && <AiFillHeart color="red" size={25} onClick={clickLike} ></AiFillHeart>}
 
                 </div>
                 <div className="col-1">
@@ -85,9 +95,11 @@ function PostBlock(props){
                 </div>
             </div>
 
-            <div className="row my-2 mx-3">
-                {/* {props.postObj.content.caption ? props.postObj.content.caption : <></>} */}
-            </div>
+            { (props.postObj.content.caption && props.postObj.content.caption != "null") &&
+                <div className="my-3 text-start px-3 mx-3">
+                    <strong>{props.postObj.username}</strong> &nbsp; {props.postObj.content.caption}
+                </div>
+            }
         </div></center>
     );
 }

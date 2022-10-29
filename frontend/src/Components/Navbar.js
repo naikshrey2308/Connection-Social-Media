@@ -1,7 +1,7 @@
 import { memo, useCallback, useEffect} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useRef,useState } from "react";
-import { MdAdd, MdChat, MdComment, MdHome, MdOutlineChatBubble, MdOutlineChatBubbleOutline, MdOutlineHome, MdOutlinePersonAdd, MdPersonAdd } from "react-icons/md";
+import { MdAdd, MdChat, MdComment, MdHome, MdOutlineChatBubble, MdOutlineChatBubbleOutline, MdOutlineHome, MdOutlinePersonAdd, MdPersonAdd, MdSearch } from "react-icons/md";
 import { IoCompass, IoCompassOutline, IoPersonCircle, IoPersonCircleOutline, IoPersonCircleSharp } from "react-icons/io5";
 
 import "../styles/navbar.css";
@@ -77,9 +77,9 @@ function Navbar(props) {
                         <span className="navbar-toggler-icon"></span>
                     </button>
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                        <form className="d-flex mx-auto" role="search">
-                            <input className="form-control me-0" ref={searchRef} onChange={searchTextChanged} type="search" placeholder="Search" aria-label="Search"/>
-                            <button className="btn border-0 btn-light" type="submit"><img src={process.env.PUBLIC_URL + "/media/icons/search.svg"} className="p-1 nav_img"></img></button>
+                        <form className="d-flex align-items-center bg-white border border-2 mx-auto" role="search">
+                            <input className="form-control border-0 searchbox me-0" ref={searchRef} onChange={searchTextChanged} type="search" placeholder="Search" aria-label="Search"/>
+                            <MdSearch size={25} color="var(--primary)" className="me-2" />
                         </form>
 
                         <ul className="navbar-nav mx-auto me-0 mb-2 mb-lg-0">

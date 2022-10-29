@@ -1,5 +1,5 @@
 import { memo, useState, useEffect, useRef } from "react";
-import { MdEdit, MdOutlinePeopleOutline } from "react-icons/md";
+import { MdCheck, MdCheckCircle, MdClose, MdEdit, MdOutlinePeopleOutline } from "react-icons/md";
 import { BsExclamationCircleFill, BsCheckCircleFill} from "react-icons/bs"
 import { useNavigate } from "react-router";
 import "../styles/user-profile.css";
@@ -317,6 +317,8 @@ function EditProfile(props){
         if(usernameRef.current.value===''){
             setUsernameFlag(false);
             setSubmitEnable(false);
+        } else {
+            setSubmitEnable(usernameFlag);
         }
         if(usernameRef.current.value !== window.sessionStorage.getItem('username')){
             (async function(){
@@ -330,6 +332,7 @@ function EditProfile(props){
                 const res = await req.json();
                 if(res.flag === true){
                     setUsernameFlag(true);
+                    setSubmitEnable((usernameRef.current.value != ''));
                 }
                 else{
                     setUsernameFlag(false);
@@ -344,16 +347,18 @@ function EditProfile(props){
 
     function formSubmitted(){
 
-        (async function(){
-            const picData = new FormData();
-            picData.append("username", usernameRef.current.value);
-            picData.append("profilePic", profilePicRef.current.files[0], profilePicRef.current.files[0].name);
-            const res = await axios.post("/user/register/profilePic", picData, {
-                headers: {
-                    "Content-Type": "multipart/form-data"
-                }
-            });
-        })();
+        if(profilePicRef.current.files.length != 0) {
+            (async function(){
+                const picData = new FormData();
+                picData.append("username", usernameRef.current.value);
+                picData.append("profilePic", profilePicRef.current.files[0], profilePicRef.current.files[0].name);
+                const res = await axios.post("/user/register/profilePic", picData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data"
+                    }
+                });
+            })();
+        }
         
 
         var objUpdate = {
@@ -361,9 +366,9 @@ function EditProfile(props){
             username : usernameRef.current.value,
             bio : bioRef.current.value,
             profilePic : {
-                name : profilePicRef.current.file[0].name
+                name : (profilePicRef.current.files.length != 0) ? profilePicRef.current.files[0].name : props.user.profilePic.name
             }
-        }
+        };
 
         (async function(){
             const req = await fetch('/user/updateUser',{
@@ -377,11 +382,12 @@ function EditProfile(props){
                     user : objUpdate
                 })
             })
-            if(req.json().status){
+            const res = await req.json();
+            if(res.status){
                 window.sessionStorage.setItem('username',objUpdate.username);
                 window.sessionStorage.setItem('name',objUpdate.name);
-                window.sessionStorage.setItem('profilePic',profilePicRef.current.file[0].name);
-
+                window.sessionStorage.setItem('profilePic', objUpdate.profilePic.name);
+                window.location.reload();
             }
         })();
     }
@@ -407,7 +413,7 @@ function EditProfile(props){
                     password : newPasswordRef.current.value
                 })
             })
-            const res = req.json();
+            const res = await req.json();
             if(res.status===true){
                 setUserWindowShow(true);
                 window.sessionStorage.setItem('password',newPasswordRef.current.value);
@@ -465,43 +471,64 @@ function EditProfile(props){
             // user.profilePic = temp ;
 
         })();
-    },[])
+    },[]);
+
+    const nameChanged = () => {
+        setName(nameRef.current.value);
+        if(nameRef.current.value === ''){
+            setSubmitEnable(false);
+        } else {
+            setSubmitEnable(usernameFlag);
+        }
+    }
+
+    const bioChanged = () => setBio(bioRef.current.value);
 
     return(
         <>
-            { userWindowShow && <div className="mx-5 my-4">
+            { userWindowShow && <div className="mx-auto my-4">
                     <img ref={profilePicShowRef} src={`http://localhost:4000/static/profilePics/${temp}`} width={120} height={120} className="profile-image d-block mx-auto my-2" />
                     <center><input ref={profilePicRef} type="file" onChange={profilePicChanged} name="profile_pic" id="profile_pic" accept="image/*" className="input input-control form-control my-1" /></center>
                     <div className="row my-5">
+                        <p className="col-2">&nbsp;</p>
                         <div className="col-2 my-2">
                             <b>Name : </b>
                         </div>
-                        <div className="col-5">
-                            <input ref={nameRef} type="text" name="name" id="name" value={name} className=" input-control form-control" />
+                        <div className="col-5 border ms-2 ps-0 border-2">
+                            <input ref={nameRef} type="text" name="name" id="name" value={name} className=" input-control border-0 form-control" onChange={nameChanged} />
                         </div>
                     </div> 
 
-                    <div className="row my-5">
+                    <div className={"row mt-5 " + (usernameFlag ? "mb-5" : "mb-3")}>
+                        <p className="col-2">&nbsp;</p>
                         <div className="col-2 my-2">
                             <b>Username : </b>
                         </div>
-                        <div className="col-5 d-flex">
-                            <input ref={usernameRef} type="text" name="usename" id="username" value={username} className=" input-control form-control" onChange={usernameChanged}/>
-                            { (usernameFlag ) &&
-                                <BsCheckCircleFill color='green' size={30} className="mx-2 my-1"/>
+                        <div className="col-5 d-flex ms-2 ps-0 align-items-center border-2 border">
+                            <input ref={usernameRef} type="text" name="usename" id="username" value={username} className=" input-control border-0 ms-0 form-control" onChange={usernameChanged} />
+                            { (usernameFlag) &&
+                                <BsCheckCircleFill color='green' size={20} className="me-2 my-1"/>
                             }
-                            { (!usernameFlag ) &&
-                                <BsExclamationCircleFill color='red' size={30} className="mx-2 my-1"/>
+                            { (!usernameFlag) &&
+                                <MdClose color='red' size={20} className="me-2 my-1"/>
                             }
                         </div>
+                        { (!usernameFlag) &&
+                        <div className="row mb-0 pb-0 gx-0">
+                            <p className="col-2">&nbsp;</p>
+                            <p className="col-2">&nbsp;</p>
+                            <p className="col-5 mb-0 text-danger ms-2">This username is already taken.</p>
+                        </div>
+                        }
                     </div>    
 
-                    <div className="row my-5">
+                    <div className="row mb-5 pt-0">
+                        <p className="col-2">&nbsp;</p>
                         <div className="col-2 my-2">
                             <b>Bio : </b>
                         </div>
-                        <div className="col-5">
-                            <input ref={bioRef} type="text" name="bio" id="bio" value={bio} className=" input-control form-control" onChange={usernameChanged}/>
+                        <div className="col-5 ps-0 ms-2 border border-2">
+                            <input onChange={bioChanged} ref={bioRef} type="text" name="bio" id="bio" value={bio} className=" input-control border-0 form-control" />
                         </div>
                     </div>  
 
@@ -545,7 +572,7 @@ function EditProfile(props){
 
                 <center><div className="row my-5">
                         <div className="col-11 mx-5" >
-                            <button className="btn btn-base " onClick={changeUserWindow} disabled={!submitEnable} >Update Profile</button>
+                            <button className="btn btn-base " onClick={changeUserWindow} >Update Profile</button>
                                             
                             <button onClick={changePassword} className="btn btn-danger mx-5" disabled={!changePasswordBtnEnable}>Change Password</button> 
                         </div>

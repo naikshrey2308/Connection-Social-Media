@@ -19,6 +19,7 @@ router.post('/getPeopleForChat',(req,res)=>{
             if(data != null){
                 // console.log("inside chat");
                 arrayPeople = data.people;
+                console.log(data.people);
                 // console.log(arrayPeople);
                 res.json({'people' : arrayPeople});
             }
@@ -167,7 +168,7 @@ router.post("/insertChat", (req, res) => {
             }
             else{
                 // console.log(data.people.findIndex(val => val==req.body.user));
-                if(data.people.findIndex(val => val.username===req.body.user.username)!==-1){
+                if(data.people.findIndex(val => val.username === req.body.user.username)!==-1){
 
                 }
                 else{
@@ -175,7 +176,7 @@ router.post("/insertChat", (req, res) => {
                     console.log(data.people);
                     
                     let obj = new People(data);
-                    obj.save().then();
+                    People.updateOne({email:req.body.email_},{$set:data}).then();
                 }
             }
         }
@@ -198,7 +199,7 @@ router.post("/insertChat", (req, res) => {
                         obj.save().then();
                     }
                     else{
-                        if(data_.people.findIndex(val => val==req.body.user)!==-1){
+                        if(data_.people.findIndex(val => val.username === req.body.user.username) !== -1){
 
                         }
                         else{
@@ -207,7 +208,7 @@ router.post("/insertChat", (req, res) => {
                             username : req.body.username,
                             profilePic : req.body.profilePic ? req.body.profilePic : 'default.png'
                         });
-                        data_.save().then();
+                        People.updateOne({email:email_},{$set : data}).then();
                     }
                     }
                 }

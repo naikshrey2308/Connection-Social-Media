@@ -102,7 +102,7 @@ router.get("/imageForShow/:username", async (req, res) => {
     await Post.find({
         username: req.params.username,
         type: "pic"
-    }).limit(3).then((data) => {
+    }).limit(25).then((data) => {
         console.log(data);
         for(var i of data){
             let obj = {
@@ -133,6 +133,40 @@ router.get("/text/:username", (req, res) => {
         res.json(data);
     });
 
+});
+
+router.get("/textForShow/:username", async (req, res) => {
+
+    const result = []
+    var name='';
+    var profilePic='default_.png';
+
+    await User.findOne({username:req.params.username}).then((data)=>{
+        name = data.name;
+        profilePic = data.profilePic ? data.profilePic.name : profilePic ;
+        // console.log(data);
+    })
+    await Post.find({
+        username: req.params.username,
+        type: "text"
+    }).limit(25).then((data) => {
+        console.log(data);
+        for(var i of data){
+            let obj = {
+                id : i._id,
+                profilePic : profilePic,
+                name : name,
+                username : i.username,
+                likes : i.likes,
+                comments : i.comments,
+                type : i.type,
+                content : i.content
+            }
+            result.push(obj);
+        }
+        // console.log(result);
+        res.json({ "result" : result });
+    });
 });
 
 router.post('/likePost',(req,res)=>{
