@@ -27,4 +27,9 @@
 
 .btn {
     border-radius: 50px;
+    outline: none;
+}
+
+.btn:hover {
+    border-color: transparent;
 }

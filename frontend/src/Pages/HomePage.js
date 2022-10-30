@@ -100,7 +100,7 @@ function HomePage(props) {
 
                 <ShowTextPost show={textModalShow} onHide={() => setmodalShow(false)} post={postForModal} changecommentInUI={changeComment}/>
                
-               <ShowWholePost show={modalShow} onHide={() => setmodalShow(false)} post={postForModal} changecommentInUI={changeComment}/>
+               <ShowWholePost showLike={false} show={modalShow} onHide={() => setmodalShow(false)} post={postForModal} changecommentInUI={changeComment}/>
 
             </>}
         </div>

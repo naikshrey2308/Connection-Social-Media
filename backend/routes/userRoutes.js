@@ -275,13 +275,15 @@ router.post('/unfollow', (req, res) => {
 })
 
 router.post('/getRandomPeople', async (req, res) => {
-    // console.log("in server");
+
     let array = [];
     let followings = [];
+
     await User.findOne({email : req.body.email}).then((data)=>{
         following= data.following;
     });
-    await User.find({}).limit(5).then((data) => {
+
+    await User.find({ email : { $nin : following }}).limit(5).then((data) => {
         const default_ = 'default_.png';
         for (var i of data) {
             if (i.email == req.body.email)

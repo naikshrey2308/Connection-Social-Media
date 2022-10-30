@@ -1,4 +1,5 @@
 import { memo, useEffect, useState ,useRef} from "react";
+import { MdCheck } from "react-icons/md";
 import { useNavigate } from "react-router";
 import Navbar from "../Components/Navbar";
 import "../styles/discover.css";
@@ -101,15 +102,19 @@ function FriendCard(props) {
                 <div className="card-body text-center">
                     <h3>{props.name}</h3>
                     <p>{props.subtitle}</p>
+                    <hr />
                     { (!isFollowing) && 
-                        <button ref={followBtn} onClick={follow} className="btn follow-btn btn-light text-base">Follow</button>
+                        <button ref={followBtn} onClick={follow} className="btn follow-btn btn-base text-light px-4">Follow</button>
                     }
                     { (isFollowing) && 
-                        <button ref={followBtn} className="btn follow-btn btn-light text-base" onClick={unfollowClicked}>
-                            Unfollow
+                        <button ref={followBtn} className="btn border border-primary px-4 follow-btn btn-light text-base" onClick={unfollowClicked}>
+                            <MdCheck className="me-2" />
+                            Following
                         </button>
                     }
-                    <p className="text-center"><button className="btn px-4 py-2" onClick={()=>{viewProfileClicked(props)}}>View Profile</button></p>
+                    <p className="text-center my-2">
+                        <button style={{fontSize: 14}} className="btn btn-transparent px-4 py-2" onClick={()=>{viewProfileClicked(props)}}>View Profile</button>
+                    </p>
                 </div>
             </div>
         </>
@@ -185,15 +190,18 @@ function FriendRow(props) {
         <>
             <div className="d-flex px-3 justify-content-start">
                 <img src={`http://localhost:4000/static/profilePics/${props.data.profilePic}`} width={40} height={40} className="border p-1 me-5" style={{borderRadius: "50%"}} />
-                <p className="fs-7 my-auto w-100">{props.data.name}</p>
-                <button className="btn btn-sm btn-light text-base m-0 px-4" >Follow</button>
+                <p className="fs-7 my-auto">{props.data.name}</p>
+                {
+                    (!props.user.following.includes(props.data.email)) &&
+                    <button className="btn btn-sm btn-base text-light mx-3 px-4">Follow</button>
+                }
             </div>
             <br />
         </>
     );
 }
 
-function FriendRows() {
+function FriendRows(props) {
 
     // fetchRandomPeople();
     // let suggestedFriends = suggestions;
@@ -253,7 +261,7 @@ function FriendRows() {
                 {
                     suggestedFriends.filter((ele, ind) => ind % 2 == 0).map((ele, ind) => {
                         return (
-                            <FriendRow data={ele} />
+                            <FriendRow user={props.user} data={ele} />
                         );
                     })
                 }
@@ -262,7 +270,7 @@ function FriendRows() {
                 {
                     suggestedFriends.filter((ele, ind) => ind % 2 == 1).map((ele, ind) => {
                         return (
-                            <FriendRow data={ele} />
+                            <FriendRow user={props.user} data={ele} />
                         );
                     })
                 }

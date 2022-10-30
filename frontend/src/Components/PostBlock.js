@@ -15,12 +15,6 @@ function PostBlock(props){
     const [liked,setLiked]=useState(false);
     const [likeArray, setLikeArray] = useState(props.postObj.likes);
     const [flag,setFlag]=useState(false);
-
-
-    // useEffect(()=>{
-    //     console.log(props);
-    // },[]);
-
     
     async function clickLike(){
         setLiked(true);
@@ -55,14 +49,14 @@ function PostBlock(props){
         console.log(props.postObj);
     },[]);
     return(
-        <center><div className="my-4 block shadow" >
-            <div className="row">
-                <div className="col-1">
-                    <img alt="" src={`http://localhost:4000/static/profilePics/${(props.postObj.profilePic) ? props.postObj.profilePic : "default_.png"}`} className="mx-4 border" width={30} height={30} style={{borderRadius: "50%"}} />
+        <center><div className="my-4 block pt-0 border shadow" >
+            <div className="d-flex pt-0 align-items-center">
+                <div className="mx-2">
+                    <img alt="" width={40} src={`http://localhost:4000/static/profilePics/${(props.postObj.profilePic) ? props.postObj.profilePic : "default_.png"}`} className="mx-4 border" height={40} style={{borderRadius: "50%"}} />
                 </div>
-                <div className="col-3 my-2">
-                    <h6>{props.postObj.name}</h6>
-                    
+                <div className="text-start w-100">
+                    <p style={{fontSize: 16}} className="my-1">{props.postObj.name}</p>
+                    <p style={{fontSize: 14}} className=" my-1 text-secondary">{props.postObj.username}</p>
                 </div>
                 
             </div>
