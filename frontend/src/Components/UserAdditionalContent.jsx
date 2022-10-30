@@ -366,7 +366,7 @@ function EditProfile(props){
             username : usernameRef.current.value,
             bio : bioRef.current.value,
             profilePic : {
-                name : (profilePicRef.current.files.length != 0) ? profilePicRef.current.files[0].name : props.user.profilePic.name
+                name : (profilePicRef.current.files.length != 0) ? profilePicRef.current.files[0].name : (props.user.profilePic ? props.user.profilePic.name : "default_.png")
             }
         };
 
@@ -448,7 +448,7 @@ function EditProfile(props){
 
     }
 
-    var temp=props.user.profilePic.name;
+    var temp = (props.user.profilePic) ? props.user.profilePic.name : "default_.png";
     useEffect(()=>{
         setUserWindowShow(true);
         setChangePasswordBtnEnable(false);

@@ -45,9 +45,9 @@ router.post("/login", (req, res) => {
         username: req.body.username,
     }).then((data) => {
         // console.log("data in login"+ data);
-        email_ = data.email;
-        profilePic_ = data.profilePic.name;
-        name_ = data.name;
+        email_ = data ? data.email : 'x';
+        profilePic_ = data ? data.profilePic.name : 'x';
+        name_ = data ? data.name : 'x';
         isLoggedIn = false;
         // console.log(data);
         // if either username is incorrect
@@ -116,26 +116,24 @@ router.post("/register", (req, res) => {
                 'name': req.body.name,
                 'username': req.body.username,
                 'mobileNumber': req.body.mobileNumber,
-                'location': location,
+                'location': req.body.location,
                 'dob': req.body.dob,
                 'password': req.body.password,
                 'email': req.body.email,
                 'bio': req.body.bio,
             });
 
-            console.log(user);
-
-            // user.save((err, resp) => {
-            //     if (err) {
-            //         console.log(err);
-            //         isRegistered = false;
-            //         res.json({ "isRegistered": false });
-            //     } else {
-            //         // console.log(resp);
-            //         isRegistered = true;
-            //         res.json({ "isRegistered": true, "username": req.body.username, "profilePic": req.body.profilePic, "name": req.body.name });
-            //     }
-            // });
+            user.save((err, resp) => {
+                if (err) {
+                    console.log(err);
+                    isRegistered = false;
+                    res.json({ "isRegistered": false });
+                } else {
+                    // console.log(resp);
+                    isRegistered = true;
+                    res.json({ "isRegistered": true, "username": req.body.username, "profilePic": req.body.profilePic, "name": req.body.name });
+                }
+            });
         }
     });
 });
@@ -210,6 +208,7 @@ router.post('/follow', (req, res) => {
     User.findOne({ email: email_ }).then(
         (data) => {
             if (data.followers.indexOf(req.body.email_session) != -1) {
+                console.log(data.followers);
                 console.log("already present");
             } else {
                 data.followers.push(req.body.email_session);

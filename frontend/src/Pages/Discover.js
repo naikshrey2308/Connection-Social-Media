@@ -9,7 +9,7 @@ function FriendCard(props) {
 
     const followBtn = useRef();
 
-    const [isFollowing, setIsFollowing] = useState(props.isFollowed);
+    const [isFollowing, setIsFollowing] = useState(props.data.user.following.indexOf(props.data.email) != -1);
 
     const navigate = useNavigate();
     props = props.data;
@@ -51,30 +51,26 @@ function FriendCard(props) {
                 'Accept':'application/json'
             },
             body:JSON.stringify({
-                email: props.user.email,
-                email_session: window.sessionStorage.getItem('email')
+                email: props.email,
+                email_session: props.user.email,
             })
         });
 
         const res = await req.json();
-        console.log(res);
-        if(res.status != "true")
-            return;
-        setIsFollowing(true);
-
-        props.setTrigger(!props.trigger);
-        // setFollowers(followers + 1);
-        // followBtn.current.style.opacity = 1;
-        // followBtn.current.innerHTML = "<span class='text-base'>Unfollow</span>";        
+        if(res.status == "true") {
+            setIsFollowing(true);
+            // setFollowers(followers + 1);
+            // followBtn.current.style.opacity = 1;
+            // followBtn.current.innerHTML = "<span class='text-base'>Unfollow</span>";
+        }        
     }
 
     const unfollowClicked = async () => {
         if(props.isMe || props.user == window.sessionStorage.getItem("username"))
             return;
 
-        const userEmail = window.sessionStorage.getItem('email');
-        const personEmail = props.user.email;
-        console.log("q");
+        const userEmail = props.user.email;
+        const personEmail = props.email;
 
         const req = await fetch('/user/unfollow',{
             method : 'POST',
@@ -93,7 +89,6 @@ function FriendCard(props) {
         const res = await req.json();       
         // setFollowers(followers - 1); 
 
-        props.setTrigger(!props.trigger);
         setIsFollowing(false);
     }
 
@@ -161,7 +156,7 @@ function FriendCarousel(props) {
                     suggestedFriends.map((ele, ind) => {
                         return (
                             <div className={((ind == 0) ? "active " : "") + "carousel-item"}>
-                                <FriendCard data={ele} />
+                                <FriendCard data={{...ele, ...props}} />
                             </div>
                         );
                     })
@@ -277,19 +272,18 @@ function FriendRows() {
     );
 }
 
-function Finder() {
+function Finder(props) {
     return (
         <>
             <div className="friend-finder-base bg-base position-relative container">
                 <div className="friend-finder-main position-absolute top-50 start-50">
                     <h3 className="text-light fw-bold">Hello <u>{window.sessionStorage.getItem('username')}</u>, looking for more connections?</h3>
                     <p className="text-center text-light">Here are some top picks for you!</p>
-                
-                    <FriendCarousel />
+                    <FriendCarousel user={props.user} />
                 </div>
             </div>
 
-            <FriendRows />
+            <FriendRows user={props.user} />
 
         </>
     );
@@ -298,28 +292,31 @@ function Finder() {
 function Discover(props) {
 
     const [temp, setTemp] = useState("Shrey");
+    const [user, setUser] = useState(null);
 
     useEffect(() => {
         props.setNavbar(true);
 
-        // async function getData() {
-        //     try {
-        //         let resText = await fetch("/user/current");
-        //         resText = await resText.json();
-        //         console.log(resText);
-        //         setTemp(resText);
-        //     } catch(err) {
-        //         console.log("error: ", err);
-        //     }
-        // }
-        // getData();
+        (async function() {
+            let req = await fetch(`/user/getUser/${encodeURIComponent(window.sessionStorage.getItem("username"))}`, {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                },
+            });
+
+            let res = await req.json();
+            setUser(res.user);
+
+        })();
     }, []);
 
-    return (
+    return ( user &&
         <>
             {/* <Navbar /> */}
             {/* Find friends that near you and match your vibes */}
-            <Finder />
+            <Finder user={user} />
         </>
     );
 }

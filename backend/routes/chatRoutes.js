@@ -115,6 +115,8 @@ router.post("/insertChat", (req, res) => {
 
     // make object passed according to this{body:{sender: , reciever: , chat: { text: ,time: ,flag:}}}
 
+    console.log(1);
+
     let sender = req.body.chat.sender;
     let reciever = req.body.chat.reciever;
     Chat.findOne( { $or: [ { username : { uname1 : reciever , uname2 : sender } }  , { username : { uname1 : sender , uname2 : reciever } } ] }).then(
@@ -154,6 +156,8 @@ router.post("/insertChat", (req, res) => {
         }
     )
 
+    console.log(2);
+
     People.findOne({email:req.body.email_}).then(
         (data)=>{
             console.log("Inside people find");
@@ -182,9 +186,14 @@ router.post("/insertChat", (req, res) => {
         }
     )
 
+    console.log(3);
+
     User.findOne({username:reciever}).then(
         (data)=>{
             const email_ = data.email;
+            
+    console.log(4);
+            
             People.findOne({email:email_}).then(
                 (data_)=>{
                     if(data_===null){
@@ -203,13 +212,17 @@ router.post("/insertChat", (req, res) => {
 
                         }
                         else{
+    console.log(5);
+
                         data_.people.push({
                             name : req.body.name,
                             username : req.body.username,
                             profilePic : req.body.profilePic ? req.body.profilePic : 'default.png'
                         });
-                        People.updateOne({email:email_},{$set : data}).then();
+                        People.updateOne({email:email_},{$set : data}).then(res.json({}));
                     }
+    console.log(6);
+
                     }
                 }
             )
