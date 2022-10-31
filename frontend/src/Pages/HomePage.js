@@ -98,7 +98,7 @@ function HomePage(props) {
                 return <PostBlock postObj={value} modalShow={modalShow_}/>
                }) }
 
-                <ShowTextPost show={textModalShow} onHide={() => setmodalShow(false)} post={postForModal} changecommentInUI={changeComment}/>
+                <ShowTextPost show={textModalShow} onHide={() => setTextModalShow(false)} post={postForModal} changecommentInUI={changeComment}/>
                
                <ShowWholePost showLike={false} show={modalShow} onHide={() => setmodalShow(false)} post={postForModal} changecommentInUI={changeComment}/>
 
