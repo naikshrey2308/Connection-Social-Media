@@ -121,16 +121,32 @@ function UserMainContent(props) {
                     }
 
                     {/* Basic information section */}
-                    <img src={ "/profilePics/" + ((props.user.profilePic) ? (props.user.profilePic.name) : "default_.png") } width={200} height={200} className="profile-image d-block mx-auto" />
+                    <img style={{objectFit: "cover"}} src={ "/profilePics/" + ((props.user.profilePic) ? (props.user.profilePic.name) : "default_.png") } width={200} height={200} className="profile-image d-block mx-auto" />
                     <h4 className="text-light mt-4 mb-2">@{props.user.username}</h4>
                     <h5 className="text-light mb-4">{props.user.name}</h5>
                     <p className="my-2 text-light">{props.user.bio}</p>
-                    { (props.user.location) && 
+                    { (props.user.location && 
+                        (props.user.location.city.trim() != '') &&
+                        (props.user.location.state.trim() != '') &&
+                        (props.user.location.country.trim() != '')
+                        ) && 
                         <p className="my-2 text-light">
                             <MdLocationPin className="me-3" size={25} />
-                            {props.user.location.city ?? ""},&nbsp;
-                            {props.user.location.state ?? ""},&nbsp;
-                            {props.user.location.country}
+                            { (props.user.location.city.trim() != '') &&
+                                <>
+                                    {props.user.location.city},&nbsp;
+                                </>
+                            }
+                            { (props.user.location.state.trim() != '') &&
+                                <>
+                                    {props.user.location.state},&nbsp;
+                                </>
+                            }
+                            { (props.user.location.country.trim() != '') &&
+                                <>
+                                    {props.user.location.country}
+                                </>
+                            }
                         </p>
                     }
                     <hr className="text-light" />

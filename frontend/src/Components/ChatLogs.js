@@ -45,7 +45,7 @@ function SearchChatLog(props) {
         setSearch(searchBar.current.value);
         // console.log(search);
         if(searchBar.current.value!==''){
-            var regex_ = new RegExp("^"+searchBar.current.value,'g');
+            var regex_ = new RegExp("^"+searchBar.current.value,'ig');
             console.log(regex_);
 
             // const commonName = commonNames_.filter(value => regex_.test(value));

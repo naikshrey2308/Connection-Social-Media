@@ -4,6 +4,7 @@ import PostBlock from "../Components/PostBlock";
 import { memo, useEffect,useState } from "react";
 import ShowWholePost from "../Components/showWholePost";
 import ShowTextPost from "../Components/showTextPost";
+import { Link } from "react-router-dom";
 
 
 function HomePage(props) {
@@ -90,6 +91,14 @@ function HomePage(props) {
 
     return(
         <div style={{marginTop:4+'em'}} >
+            {
+                (!AllPosts || AllPosts.length == 0) && 
+                <div className="position-absolute bg-transparent-circle top-50 start-50" style={{transform: "translate(-50%, -50%)"}}>
+                    <img src={process.env.PUBLIC_URL + "/media/svgs/no-home.svg"} width="300" />
+                    <h3 className="text-center my-3">Nothing to show</h3>
+                    <p><Link style={{textDecoration: "none"}} to={"/discover"}>Follow</Link> people to see their updates here.</p>
+                </div>
+            }
             { AllPosts && <>
 
 

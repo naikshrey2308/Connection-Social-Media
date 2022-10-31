@@ -116,7 +116,7 @@ function ShowWholePost(props) {
                         <Col md={6} className="position-relative text-center">
                             <img alt="" src={`http://localhost:4000/static/posts/${props.post.content.url}`} className="image-post" />
                             {(props.showLike) &&
-                                <Row className="bottom-0 w-100 m-3 position-absolute">
+                                <Row className="bottom-0 bg-white w-100 p-3 position-absolute">
                                     <Col className="col-3">
                                         <div>
                                             {likesLength}&nbsp;Likes
@@ -131,7 +131,17 @@ function ShowWholePost(props) {
                                 </Row>
                             }
                         </Col>
-                        <Col md={6}>
+                        <Col md={6} className="position-relative">
+                            {
+                                (props.post.content && props.post.content.caption) &&
+                                <Row>
+                                    <p>
+                                        <b>{props.post.username}</b>&nbsp;
+                                        <span dangerouslySetInnerHTML={{__html: props.post.content.caption}}></span>    
+                                    </p>
+                                    <hr/>
+                                </Row>
+                            }
                             <Row className="comments">
                                 {(props.post.comments) && props.post.comments.map((ele) => <Row>
                                     <Row className="my-auto">
@@ -141,7 +151,7 @@ function ShowWholePost(props) {
                                 </Row>)}
                             </Row>
 
-                            <Row className="bottom-0">
+                            <Row className="bottom-0 position-absolute">
                                 <hr />
                                 <form className="d-flex" onSubmit={(e) => e.preventDefault()} >
                                     <input ref={comment} onChange={commentChange} type="text" className="input-control form-control px-3" placeholder="Comment Here" />

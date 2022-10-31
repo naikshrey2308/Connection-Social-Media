@@ -1,5 +1,5 @@
 import { memo, useCallback, useEffect} from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useRef,useState } from "react";
 import { MdAdd, MdChat, MdComment, MdHome, MdOutlineChatBubble, MdOutlineChatBubbleOutline, MdOutlineHome, MdOutlinePersonAdd, MdPersonAdd, MdSearch } from "react-icons/md";
 import { IoCompass, IoCompassOutline, IoPersonCircle, IoPersonCircleOutline, IoPersonCircleSharp } from "react-icons/io5";
@@ -23,14 +23,7 @@ function Navbar(props) {
 
     var navigate= useNavigate();
 
-
-    const activateIcon = useCallback((callback) => {
-        // callback(true);
-    }, []);
-
-    const blurIcon = useCallback((callback) => {
-        // callback(false);
-    }, []);
+    let location = useLocation();
 
     const activate = useCallback((callback) => {
         setHome(false);
@@ -43,8 +36,17 @@ function Navbar(props) {
     }, []);
 
     useEffect(() => {
-
-    }, []);
+        if(location.pathname.includes("home"))
+            activate(setHome);
+        else if(location.pathname.includes("chat"))
+            activate(setChat);
+        else if(location.pathname.includes("post"))
+            activate(setPost);
+        else if(location.pathname.includes("discover"))
+            activate(setDiscover);
+        else if(location.pathname.includes("users"))
+            activate(setProfile);
+    }, [location]);
 
     function searchTextChanged(){
         setSearchedText(searchRef.current.value);
@@ -84,7 +86,7 @@ function Navbar(props) {
 
                         <ul className="navbar-nav mx-auto me-0 mb-2 mb-lg-0">
                             <li className="nav-item">
-                                <Link onMouseEnter={() => activateIcon(setHome)} onMouseLeave={() => blurIcon(setHome)} onClick={() => activate(setHome)} className="nav-link active ml-3" aria-current="page" to="/home">
+                                <Link className="nav-link active ml-3" aria-current="page" to="/home">
                                     {
                                         (!Home) &&
                                         <MdOutlineHome color="black" size={25}></MdOutlineHome>
@@ -96,7 +98,7 @@ function Navbar(props) {
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link onMouseEnter={() => activateIcon(setChat)} onMouseLeave={() => blurIcon(setChat)} onClick={() => activate(setChat)} className="nav-link" to="/chat">
+                                <Link className="nav-link" to="/chat">
                                 {
                                     (!Chat) &&
                                     <MdOutlineChatBubbleOutline color="black" size={20}></MdOutlineChatBubbleOutline>
@@ -109,7 +111,7 @@ function Navbar(props) {
                             </li>
                             <li className="nav-item">
 
-                                <Link onMouseEnter={() => activateIcon(setPost)} onMouseLeave={() => blurIcon(setPost)} onClick={() => activate(setPost)} className="nav-link" to="/post">
+                                <Link className="nav-link" to="/post">
                                 {
                                     (!Post) &&
                                     <MdAdd color="black" size={25}></MdAdd>
@@ -121,7 +123,7 @@ function Navbar(props) {
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link onMouseEnter={() => activateIcon(setDiscover)} onMouseLeave={() => blurIcon(setDiscover)} onClick={() => activate(setDiscover)} className="nav-link" to="/discover">
+                                <Link className="nav-link" to="/discover">
                                 {
                                     (!Discover) &&
                                     <IoCompassOutline color="black" size={25}></IoCompassOutline>
@@ -133,7 +135,7 @@ function Navbar(props) {
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link onMouseEnter={() => activateIcon(setProfile)} onMouseLeave={() => blurIcon(setProfile)} onClick={() => activate(setProfile)} className="nav-link float-end" to="/users/">
+                                <Link className="nav-link float-end" to="/users/">
                                 {
                                     (!Profile) &&
                                     <IoPersonCircleOutline color="black" size={25}></IoPersonCircleOutline>

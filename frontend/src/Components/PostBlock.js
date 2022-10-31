@@ -64,7 +64,7 @@ function PostBlock(props){
             {
                 (props.postObj.type == "pic") &&
                 <div className="row" >
-                <img alt="" src={`http://localhost:4000/static/posts/${props.postObj.content.url}`} className="mx-3 image-post"  />
+                <img alt="" src={`http://localhost:4000/static/posts/${props.postObj.content.url}`} className="mx-auto image-post" style={{width: "auto", maxHeight: "500px"}}  />
                 </div>
             }
             {
@@ -91,7 +91,8 @@ function PostBlock(props){
 
             { (props.postObj.content.caption && props.postObj.content.caption != "null") &&
                 <div className="my-3 text-start px-3 mx-3">
-                    <strong>{props.postObj.username}</strong> &nbsp; {props.postObj.content.caption}
+                    <strong>{props.postObj.username}</strong> &nbsp; 
+                    <span dangerouslySetInnerHTML={{__html: props.postObj.content.caption}}></span>
                 </div>
             }
         </div></center>

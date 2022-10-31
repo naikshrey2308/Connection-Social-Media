@@ -1,6 +1,6 @@
 import { memo, useState, useEffect, useRef } from "react";
 import { MdCheck, MdCheckCircle, MdClose, MdEdit, MdFollowTheSigns, MdOutlinePeopleOutline } from "react-icons/md";
-import { BsExclamationCircleFill, BsCheckCircleFill} from "react-icons/bs"
+import { BsExclamationCircleFill, BsCheckCircleFill} from "react-icons/bs";
 import { useNavigate } from "react-router";
 import "../styles/user-profile.css";
 import ShowWholePost from "../Components/showWholePost";
@@ -57,7 +57,7 @@ function AboutContent(props) {
                     {
                         followers.map(ele => {
                             return <div style={{ cursor: "pointer" }} onClick={() => redirectToProfile(ele.username)} className="hover-block py-1 border-bottom border-top py-3 d-flex align-items-center">
-                                <img style={{ "borderRadius": "50%" }} src={"/profilePics/" + ele.profilePic} width={40} className="border border-2" />
+                                <img style={{ "borderRadius": "50%", objectFit: "cover" }} src={"/profilePics/" + ele.profilePic} width={40} height={40} className="border border-2" />
                                 <p className="w-100 my-auto">
                                     {ele.name}<br/>
                                     <span style={{fontSize: 14}} className="text-secondary">
@@ -77,7 +77,7 @@ function AboutContent(props) {
                     {
                         following.map(ele => {
                             return <div style={{ cursor: "pointer" }} onClick={() => redirectToProfile(ele.username)} className="hover-block py-1 border-bottom border-top py-3 d-flex align-items-center">
-                                <img style={{ "borderRadius": "50%" }} src={"/profilePics/" + ele.profilePic} width={40} className="border border-2" />
+                                <img style={{ "borderRadius": "50%", objectFit: "cover" }} src={"/profilePics/" + ele.profilePic} width={40} height={40} className="border border-2" />
                                 <p className="w-100 my-auto">
                                     {ele.name}<br/>
                                     <span style={{fontSize: 14}} className="text-secondary">
@@ -267,17 +267,16 @@ function ImageContent(props) {
             </>
         );
     }
-
     
     return (
         <>
             <div className="container my-3">
-                <div className="d-flex justify-content-center w-100 image-flex">
+                <div className="d-flex w-100 image-flex">
                     {
                         posts.map((post) => {
                             return (
                                 <>
-                                    <img src={"/posts/" + post.content.url} width={220} height={220} className="m-2 border" style={{cursor:'pointer'}} onClick={() =>{openModalForPost(post)}}/>
+                                    <img src={"/posts/" + post.content.url} width={220} className="m-2 border" style={{cursor:'pointer', aspectRatio: "1/1", objectFit: "cover"}} onClick={() =>{openModalForPost(post)}}/>
                                 </>
                             );
                         })
@@ -376,7 +375,7 @@ function EditProfile(props){
             username : usernameRef.current.value,
             bio : bioRef.current.value,
             profilePic : {
-                name : (profilePicRef.current.files.length != 0) ? profilePicRef.current.files[0].name : (props.user.profilePic ? props.user.profilePic.name : "default_.png")
+                name : (profilePicRef.current.files.length != 0) ? (usernameRef.current.value + "." + profilePicRef.current.files[0].name.split(".")[profilePicRef.current.files[0].name.split(".").length-1]) : window.sessionStorage.getItem("profilePic")
             }
         };
 
@@ -396,7 +395,7 @@ function EditProfile(props){
             if(res.status){
                 window.sessionStorage.setItem('username',objUpdate.username);
                 window.sessionStorage.setItem('name',objUpdate.name);
-                window.sessionStorage.setItem('profilePic', objUpdate.profilePic.name);
+                window.sessionStorage.setItem("profilePic", objUpdate.username + "." + objUpdate.profilePic.name.split(".")[objUpdate.profilePic.name.split(".").length-1]);
                 window.location.reload();
             }
         })();
@@ -515,7 +514,7 @@ function EditProfile(props){
                             <b>Username : </b>
                         </div>
                         <div className="col-5 d-flex ms-2 ps-0 align-items-center border-2 border">
-                            <input ref={usernameRef} type="text" name="usename" id="username" value={username} className=" input-control border-0 ms-0 form-control" onChange={usernameChanged} />
+                            <input ref={usernameRef} disabled = {true} type="text" name="usename" id="username" value={username} className=" input-control border-0 ms-0 form-control" onChange={usernameChanged} />
                             { (usernameFlag) &&
                                 <BsCheckCircleFill color='green' size={20} className="me-2 my-1"/>
                             }

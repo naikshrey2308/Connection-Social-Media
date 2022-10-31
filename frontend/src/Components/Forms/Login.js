@@ -15,7 +15,7 @@ function Form(props) {
     const [loginMessage, setLoginMessage] = useState(null);
     const { IsLoggedIn, setIsLoggedIn } = useContext(LoginStatusContext);
 
-    const { isLoginFormEnabled, setIsLoginFormEnabled } = useContext(LoginContext);
+    const { isLoginFormEnabled: isLoginFormEnabled, setIsLoginFormEnabled: setIsLoginFormEnabled } = useContext(LoginContext);
 
     const usernameInput = useRef();
     const passwordInput = useRef();

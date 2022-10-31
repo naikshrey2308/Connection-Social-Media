@@ -57,12 +57,13 @@ function ImagePostRenderer(props) {
     async function handleSubmit() {
         changeCaption();
 
-        alert(caption);
+        // console.log(captionRef.current.innerHTML);
+        // return;
 
         let data = new FormData();
         data.set("username", window.sessionStorage.getItem("username"));
         data.set("type", "pic");
-        data.set("caption", caption);
+        data.set("caption", captionRef.current.innerHTML);
         data.append("postPic", post);
 
         let res = await axios.post("/posts/create", data, {
@@ -77,7 +78,7 @@ function ImagePostRenderer(props) {
     return (
         <div className="shadow">
             <div className="d-flex align-items-center bg-white shadow p-2 border-bottom">
-                <img className="br-50p" src={process.env.PUBLIC_URL + `/profilePics/${window.sessionStorage.getItem("profilePic")}`} width={30} />
+            <img className="br-50p border" src={process.env.PUBLIC_URL + `/profilePics/${window.sessionStorage.getItem("profilePic")}`} width={30} style={{height: "30px", objectFit: "cover"}} />
                 <p className="w-100 px-3 m-0">{window.sessionStorage.getItem("name")}</p>
                 <div className="mx-2">
                     <FiMoreVertical></FiMoreVertical>
@@ -204,7 +205,6 @@ function TextPostRenderer(props) {
 
         console.log(res);
 
-        alert("Done");
         navigate("/home");
     }
 
@@ -215,7 +215,7 @@ function TextPostRenderer(props) {
                 <p style={{fontSize: 14}} className="px-2 alert alert-danger text-danger">{error}</p>
             }
             <div className="d-flex bg-white p-2 border-bottom">
-                <img className="br-50p" src={process.env.PUBLIC_URL + `/profilePics/${window.sessionStorage.getItem("profilePic")}`} width={30} />
+                <img className="br-50p border" src={process.env.PUBLIC_URL + `/profilePics/${window.sessionStorage.getItem("profilePic")}`} width={30} style={{height: "30px", objectFit: "cover"}} />
                 <p className="w-100 px-3 m-0">{window.sessionStorage.getItem("name")}</p>
                 <div className="mx-2">
                     <FiMoreVertical></FiMoreVertical>

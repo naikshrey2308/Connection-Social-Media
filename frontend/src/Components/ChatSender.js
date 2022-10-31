@@ -8,11 +8,12 @@ function Chat(props) {
 
     console.log(props);
 
+    const date = new Date(props.timeUse);
     return (
         <>
             <div className={(props.indicator_.sent===props.flag ? "right " : "left ") + "bg-grey chat my-2 px-3 pt-2"}>
                 <p className="mb-0">{props.text}</p>
-                <p className="text-end text-secondary mb-0" style={{fontSize: 14}}>{props.time}</p>
+                <p className="text-end text-secondary mb-0" style={{fontSize: 14}}>{[date.getDate(), date.getMonth(), date.getFullYear()].join("/") + ` ${date.getHours()}:${date.getMinutes()}`}</p>
             </div>
         </>
     );
@@ -107,7 +108,14 @@ function ChatSender(props) {
                 </div>
                 {props.chats && <div className="chat_container">
                     {
-                         props.chats.map(ele => <Chat indicator_={props.indicator} flag={ele.flag} time={ele.time} text={ele.text} />) 
+                        props.chats.map((ele, ind) => {
+                            
+                            return (
+                                <>
+                                <Chat indicator_={props.indicator} flag={ele.flag} timeUse={ele.timeUse} time={ele.time} text={ele.text} />
+                                </>
+                            ) 
+                        })
                     }
                 </div>}
                 <div className="position-absolute py-3 container-fluid bottom-0">

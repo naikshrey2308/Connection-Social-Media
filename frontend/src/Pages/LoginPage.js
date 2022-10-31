@@ -7,10 +7,6 @@ import LoginContext from "../Contexts/loginContext";
 function LoginPage(props) {
     const { isLoginFormEnabled, setIsLoginFormEnabled } = useContext(LoginContext);
 
-    function transitionForm() {
-        setIsLoginFormEnabled(!isLoginFormEnabled);
-    }
-
     useEffect(() => {}, [isLoginFormEnabled]);
 
     return (

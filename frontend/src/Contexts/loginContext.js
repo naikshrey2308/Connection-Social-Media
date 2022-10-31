@@ -7,7 +7,8 @@ export const LoginProvider = ({children}) => {
 
     return (
         <LoginContext.Provider value = {{
-            isLoginFormEnabled, setIsLoginFormEnabled
+            "isLoginFormEnabled": isLoginFormEnabled, 
+            'setIsLoginFormEnabled': setIsLoginFormEnabled,
         }}>
         {children}
         </LoginContext.Provider>

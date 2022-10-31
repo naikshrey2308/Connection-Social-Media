@@ -112,7 +112,7 @@ function ShowTextPost(props) {
             <Modal.Body className="show-grid">
                 <Container >
                     <Row>
-                        <Col dangerouslySetInnerHTML={{ __html: props.post.content.text }} md={6} style={{ display: "inline-flex", wordWrap: 'break-all', wordBreak: "break-all", whiteSpace: "normal !important" }} className="textPost">
+                        <Col dangerouslySetInnerHTML={{ __html: props.post.content.text }} md={6} style={{ display: "inline", wordWrap: 'break-all', wordBreak: "break-all", whiteSpace: "normal !important" }} className="textPost">
 
                         </Col>
                         <Col md={6}>

@@ -98,7 +98,7 @@ function FriendCard(props) {
         <>
             {/* Finder card for people */}
             <div className="friend-finder-card card border-0 container">
-                <img src={`http://localhost:4000/static/profilePics/${props.profilePic}`} className="p-3 card-img-circled" />
+                <img style={{objectFit: "cover"}} src={`http://localhost:4000/static/profilePics/${props.profilePic}`} className="p-3 card-img-circled" />
                 <div className="card-body text-center">
                     <h3>{props.name}</h3>
                     <p>{props.subtitle}</p>
@@ -190,7 +190,7 @@ function FriendRow(props) {
         <>
             <div className="d-flex px-3 justify-content-start">
                 <img src={`http://localhost:4000/static/profilePics/${props.data.profilePic}`} width={40} height={40} className="border p-1 me-5" style={{borderRadius: "50%"}} />
-                <p className="fs-7 my-auto">{props.data.name}</p>
+                <p className="fs-7 w-100 my-auto">{props.data.name}</p>
                 {
                     (!props.user.following.includes(props.data.email)) &&
                     <button className="btn btn-sm btn-base text-light mx-3 px-4">Follow</button>

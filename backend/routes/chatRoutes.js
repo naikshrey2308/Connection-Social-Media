@@ -111,14 +111,14 @@ router.post("/getChat",async (req,res)=>{
     
 })
 
-router.post("/insertChat", (req, res) => {
+router.post("/insertChat", async (req, res) => {
 
     // make object passed according to this{body:{sender: , reciever: , chat: { text: ,time: ,flag:}}}
     console.log(req.body);
 
     let sender = req.body.chat.sender;
     let reciever = req.body.chat.reciever;
-    Chat.findOne( { $or: [ { username : { uname1 : reciever , uname2 : sender } }  , { username : { uname1 : sender , uname2 : reciever } } ] }).then(
+    await Chat.findOne( { $or: [ { username : { uname1 : reciever , uname2 : sender } }  , { username : { uname1 : sender , uname2 : reciever } } ] }).then(
         (data)=>{
             // console.log(data);
             if(data===null){
@@ -185,6 +185,7 @@ router.post("/insertChat", (req, res) => {
     )
 
 
+
     User.findOne({username:reciever}).then(
         (data)=>{
             const email_ = data.email;
@@ -204,7 +205,6 @@ router.post("/insertChat", (req, res) => {
                         obj.save().then();
                     }
                     else{
-                        console.log(data_.people.findIndex(val => val.username === req.body.username));
                         if(data_.people.findIndex(val => val.username === req.body.username) !== -1){
 
                         }

@@ -101,3 +101,9 @@ html {
 .btn:hover {
     outline: none !important;
 }
+
+.bg-transparent-circle {
+    background: #045DE916;
+    padding: 90px 120px;
+    border-radius: 50%;
+}

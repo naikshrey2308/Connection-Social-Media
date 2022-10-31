@@ -4,7 +4,8 @@ import validate from "../Reusables/Validator";
 import LoginContext from "../../Contexts/loginContext";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
-import { ReactSession } from 'react-client-session';
+import { MdClose } from "react-icons/md";
+import { BsExclamationCircleFill, BsCheckCircleFill} from "react-icons/bs";
 
 
 function Form(props) {
@@ -13,6 +14,8 @@ function Form(props) {
     const [user, setUser] = useState({});
     const [nextDisabled, setNextDisabled] = useState(false);
     const [pic, setPic] = useState(null);
+    const [usernameFlag,setUsernameFlag] = useState(false);
+
 
     const { isLoginFormEnabled, setIsLoginFormEnabled } = useContext(LoginContext);
 
@@ -80,6 +83,26 @@ function Form(props) {
 
     const checkUsername = () => {
         validate("username", /^[a-zA-Z0-9_.]+$/, "usernameCorrector", "&cross; Username can only contain alphabets, numbers, underscore and period", true);
+        if(usernameRef.current.value===''){
+            setUsernameFlag(false);
+        }
+        (async function(){
+            const req = await fetch(`/user/usernameAvailable/${usernameRef.current.value}`,{
+                method : 'GET',
+                headers : {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            });
+            const res = await req.json();
+            if(res.flag === true){
+                setUsernameFlag(true);
+            }
+            else{
+                setUsernameFlag(false);
+            }
+        })();
+        
         setUser({ ...user, username: document.getElementById("username").value });
     };
 
@@ -115,6 +138,7 @@ function Form(props) {
     const setBio = () => {
         bioRef.current.value = document.getElementById("bio-para").innerHTML;
         setUser({ ...user, bio: bioRef.current.value });
+        console.log(bioRef.current.value, user.bio);
     };
 
     const setProfilePic = async () => {
@@ -158,10 +182,13 @@ function Form(props) {
         if (curr == 0) return;
         setCurr(--curr);
     }
-    let navigate = useNavigate();
-    const handleSubmit = async () => {
 
-        console.log(user);
+    let navigate = useNavigate();
+
+    const handleSubmit = async () => {
+        // setBio();
+        // console.log("profilePic", user.username + "." + pic.name.split(".")[pic.name.split(".").length-1]);
+        // return; 
 
         let formdata = new FormData();
         formdata.name = user.name;
@@ -171,7 +198,7 @@ function Form(props) {
         formdata.dob = user.birthdate;
         formdata.mobileNumber = user.mobile;
         formdata.location = user.location;
-        formdata.bio = user.bio;
+        formdata.bio = bioRef.current.value;
 
         const req = await fetch("/user/register", {
             method: "POST",
@@ -186,9 +213,10 @@ function Form(props) {
         if (res.isRegistered) {
             // ReactSession.set("username", res.username);
             window.sessionStorage.setItem("username", user.username);
+            window.sessionStorage.setItem("name", user.name);
             window.sessionStorage.setItem("password", user.password);
             window.sessionStorage.setItem("email", user.email);
-            window.sessionStorage.setItem("profilePic", null);       
+            window.sessionStorage.setItem("profilePic", "default_.png");       
         }
         if (res.isRegistered === false) {
             // handle error
@@ -209,7 +237,7 @@ function Form(props) {
                 // handle error for picture upload
                 return;
             } else {
-                window.sessionStorage.setItem("profilePic", pic.name);
+                window.sessionStorage.setItem("profilePic", user.username + "." + pic.name.split(".")[pic.name.split(".").length-1]);
                 // registered message
             }
         }
@@ -249,7 +277,15 @@ function Form(props) {
                                 <input ref={emailRef} id="email" spellCheck="false" type="email" size="30" name="email" className="form-control" placeholder="Enter your Email" value={user.email} onChange={checkEmail} required />
                                 <p className="text-start" style={{ fontSize: 12 }} id="emailCorrector"></p>
 
+                                <div className="d-flex">
                                 <input ref={usernameRef} id="username" spellCheck="false" type="text" size="30" name="username" className="form-control" placeholder="Choose your Username" value={user.username} onChange={checkUsername} required />
+                                { (usernameFlag) &&
+                                    <BsCheckCircleFill color='green' size={25} className="me-2 my-1 mx-2"/>
+                                }
+                                { (!usernameFlag) &&
+                                    <MdClose color='red' size={25} className="me-2 my-1 mx-2"/>
+                                }
+                                </div>
                                 <p className="text-start" style={{ fontSize: 12 }} id="usernameCorrector"></p>
 
                                 <input ref={passwordRef} id="password" type="password" size="30" name="password" className="form-control" placeholder="Set Password" value={user.password} onChange={setPassword} required />
@@ -277,7 +313,7 @@ function Form(props) {
 
                             {(curr == 4) && <>
                                 <h6>A picture to impress the community. Add a profile photo.</h6>
-                                <img ref={picDisplayRef} src={(user.profilePic == undefined) ? process.env.PUBLIC_URL + "/media/svgs/profile.svg" : user.profilePic} height={200} className="w-50 mx-auto mt-3 mb-5 p-3" style={{ borderRadius: "50%" }} />
+                                <img ref={picDisplayRef} src={(user.profilePic == undefined) ? process.env.PUBLIC_URL + "/media/svgs/profile.svg" : user.profilePic} height={200} className="w-50 mx-auto mt-3 mb-5 p-3" style={{ borderRadius: "50%", objectFit: "cover"}} />
                                 <input ref={picRef} type="file" onChange={setProfilePic} name="profile_pic" id="profile_pic" accept="image/*" className="input-control form-control" />
                             </>}
 
