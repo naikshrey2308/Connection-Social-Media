@@ -55,7 +55,7 @@ function Form(props) {
             window.sessionStorage.setItem("username", res.username);
             window.sessionStorage.setItem("email", res.email);
             window.sessionStorage.setItem("password", loginParams.password);
-            window.sessionStorage.setItem("profilePic", res.profilePic);
+            window.sessionStorage.setItem("profilePic", res.profilePic ?? "default_.png");
             window.sessionStorage.setItem("name", res.name);
         
             navigate('/home');
