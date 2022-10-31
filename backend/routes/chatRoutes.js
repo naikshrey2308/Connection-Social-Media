@@ -111,13 +111,13 @@ router.post("/getChat",async (req,res)=>{
     
 })
 
-router.post("/insertChat", (req, res) => {
+router.post("/insertChat", async (req, res) => {
 
     // make object passed according to this{body:{sender: , reciever: , chat: { text: ,time: ,flag:}}}
 
     let sender = req.body.chat.sender;
     let reciever = req.body.chat.reciever;
-    Chat.findOne( { $or: [ { username : { uname1 : reciever , uname2 : sender } }  , { username : { uname1 : sender , uname2 : reciever } } ] }).then(
+    await Chat.findOne( { $or: [ { username : { uname1 : reciever , uname2 : sender } }  , { username : { uname1 : sender , uname2 : reciever } } ] }).then(
         (data)=>{
             // console.log(data);
             if(data===null){
@@ -154,7 +154,7 @@ router.post("/insertChat", (req, res) => {
         }
     )
 
-    People.findOne({email:req.body.email_}).then(
+    await People.findOne({email:req.body.email_}).then(
         (data)=>{
             console.log("Inside people find");
             
@@ -181,8 +181,9 @@ router.post("/insertChat", (req, res) => {
             }
         }
     )
-
-    User.findOne({username:reciever}).then(
+    var email;
+    
+    await User.findOne({username:reciever}).then(
         (data)=>{
             const email_ = data.email;
             People.findOne({email:email_}).then(
@@ -199,7 +200,7 @@ router.post("/insertChat", (req, res) => {
                         obj.save().then();
                     }
                     else{
-                        if(data_.people.findIndex(val => val.username === req.body.user.username) !== -1){
+                        if(data_.people.findIndex(val => val.username === req.body.username) !== -1){
 
                         }
                         else{
