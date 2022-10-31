@@ -21,16 +21,16 @@ function ShowWholePost(props) {
     const [postComments, setPostComments] = useState(true);
     const [liked, setLiked] = useState(false);
     const [likesLength, setLikesLength] = useState(0);
-    
+
     useEffect(() => {
-        if(props.post.likes) {
+        if (props.post.likes) {
             setLiked(props.post.likes.indexOf(window.sessionStorage.getItem("username")) != -1);
             setLikesLength(props.post.likes.length);
         }
     }, [props.show, postComments]);
-    
+
     const comment = useRef();
-    
+
     function commentChange() {
         if (comment.current.value !== '') {
             setBtnState(true);
@@ -39,16 +39,16 @@ function ShowWholePost(props) {
             setBtnState(false);
         }
     };
-    
+
     function sendComment() {
-        
+
         props.changecommentInUI({
             person: window.sessionStorage.getItem('username'),
             text: comment.current.value
         })
-        
+
         console.log(comment.current.value);
-        
+
         (async function () {
             const req = await fetch('/posts/addComment', {
                 method: 'POST',
@@ -69,9 +69,9 @@ function ShowWholePost(props) {
         })();
     }
 
-    async function clickLike(){
-        const req = await fetch('/posts/likePost',{
-            method :'POST',
+    async function clickLike() {
+        const req = await fetch('/posts/likePost', {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
@@ -79,10 +79,11 @@ function ShowWholePost(props) {
             body: JSON.stringify({
                 owner: props.post.username,
                 person: window.sessionStorage.getItem('username'),
-                id: props.post.id}),
-            });
-            const res = await req.json();
-        if(res.status == true) {
+                id: props.post.id
+            }),
+        });
+        const res = await req.json();
+        if (res.status == true) {
             setLiked(true);
             setLikesLength(likesLength + 1);
         }
@@ -114,21 +115,21 @@ function ShowWholePost(props) {
                     <Row>
                         <Col md={6} className="position-relative text-center">
                             <img alt="" src={`http://localhost:4000/static/posts/${props.post.content.url}`} className="image-post" />
-                            <Row className="bottom-0 w-100 m-3 position-absolute">
-                                <Col className="col-3">
-                                    <div>
-                                        {likesLength}&nbsp;Likes
-                                    </div>
-                                </Col>
-                                <Col className="col"></Col>
-                                { (props.showLike) &&
-                                <Col className="col-3 text-start me-4">
-                                    {/* <AiOutlineHeart style={{cursor: "pointer"}} size={25} /> */}
-                                    {!(liked) && <AiOutlineHeart color="black" size={25} onClick={clickLike} style={{ cursor: 'pointer' }}></AiOutlineHeart>}
-                                    {(liked) && <AiFillHeart color="red" size={25} onClick={clickLike} ></AiFillHeart>}
-                                </Col>
-                                }
-                            </Row>
+                            {(props.showLike) &&
+                                <Row className="bottom-0 w-100 m-3 position-absolute">
+                                    <Col className="col-3">
+                                        <div>
+                                            {likesLength}&nbsp;Likes
+                                        </div>
+                                    </Col>
+                                    <Col className="col"></Col>
+                                    <Col className="col-3 text-start me-4">
+                                        {/* <AiOutlineHeart style={{cursor: "pointer"}} size={25} /> */}
+                                        {!(liked) && <AiOutlineHeart color="black" size={25} onClick={clickLike} style={{ cursor: 'pointer' }}></AiOutlineHeart>}
+                                        {(liked) && <AiFillHeart color="red" size={25} onClick={clickLike} ></AiFillHeart>}
+                                    </Col>
+                                </Row>
+                            }
                         </Col>
                         <Col md={6}>
                             <Row className="comments">

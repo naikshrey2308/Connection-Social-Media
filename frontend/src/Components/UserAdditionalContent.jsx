@@ -194,7 +194,7 @@ function TextContent(props) {
                 }
             </div>
 
-            <ShowTextPost show={modalShow} onHide={() => setmodalShow(false)} post={postForModal} changecommentInUI={changeComment} />
+            <ShowTextPost showLike={true} show={modalShow} onHide={() => setmodalShow(false)} post={postForModal} changecommentInUI={changeComment} />
 
         </>
     );

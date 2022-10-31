@@ -92,25 +92,27 @@ function ShowTextPost(props) {
             <Modal.Header closeButton style={{ paddingBottom: 0 }}>
                 <div className="row w-100 g-0">
                     <div className="col-1">
-                        <img alt="" src={`http://localhost:4000/static/profilePics/${props.post.profilePic}`} className="mx-4 border" width={30} height={30} style={{ borderRadius: "50%" }} />
+                        <img alt="" src={`http://localhost:4000/static/profilePics/${props.post.profilePic ?? "default_.png"}`} className="mx-4 border" width={30} height={30} style={{ borderRadius: "50%" }} />
                     </div>
                     <div className="col mx-3 my-2">
                         <h6>{props.post.name}</h6>
                     </div>
-                    <div className="col-2 d-flex align-items-center">
-                        <p>
-                            {!(liked) && <AiOutlineHeart className="me-2" color="black" size={25} onClick={clickLike} style={{ cursor: 'pointer' }}></AiOutlineHeart>}
-                            {(liked) && <AiFillHeart className="me-2" color="red" size={25} ></AiFillHeart>}
-                            {likes} Likes
-                        </p>
-                    </div>
-
+                    {
+                        (props.showLike) &&
+                        <div className="col-2 d-flex align-items-center">
+                            <p>
+                                {!(liked) && <AiOutlineHeart className="me-2" color="black" size={25} onClick={clickLike} style={{ cursor: 'pointer' }}></AiOutlineHeart>}
+                                {(liked) && <AiFillHeart className="me-2" color="red" size={25} ></AiFillHeart>}
+                                {likes} Likes
+                            </p>
+                        </div>
+                    }
                 </div>
             </Modal.Header>
             <Modal.Body className="show-grid">
                 <Container >
                     <Row>
-                        <Col dangerouslySetInnerHTML={{ __html: props.post.content.text }} md={6} style={{ display: "inline-flex", overflowX: "scroll", wordWrap: 'break-all', wordBreak: "break-all", whiteSpace: "normal !important" }} className="textPost">
+                        <Col dangerouslySetInnerHTML={{ __html: props.post.content.text }} md={6} style={{ display: "inline-flex", wordWrap: 'break-all', wordBreak: "break-all", whiteSpace: "normal !important" }} className="textPost">
 
                         </Col>
                         <Col md={6}>
