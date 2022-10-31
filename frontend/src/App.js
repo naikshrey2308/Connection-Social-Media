@@ -75,37 +75,47 @@ function App() {
 				<Route path="home" element={
 					<Suspense fallback={<Loader/>}>
 					{/* { setShow(true) } */}
-					<HomePage setNavbar={setNavbarFlag}/>
+					{IsLoggedIn ? <HomePage setNavbar={setNavbarFlag}/>: <LoginPage /> } 
 					</Suspense>
 				} />
 				<Route path="chat" element={
 					<Suspense fallback={<Loader/>}>
+					<LoginProvider>
 					{/* { setShow(true) } */}
-					<ChattingPage setNavbar={setNavbarFlag}/>
+					{IsLoggedIn ? <ChattingPage setNavbar={setNavbarFlag}/>: <LoginPage /> } 
+					</LoginProvider>
 					</Suspense>
 				} />
 				<Route path="discover" element={
 					<Suspense fallback={<Loader/>}>
+					<LoginProvider>
 					{/* { setShow(true) } */}
-					<Discover setNavbar={setNavbarFlag}/>
+					{IsLoggedIn ? <Discover setNavbar={setNavbarFlag}/>: <LoginPage /> } 
+					</LoginProvider>
 					</Suspense>
 				} />
 				<Route path="post" element={
 					<Suspense fallback={<Loader/>}>
+					<LoginProvider>
 					{/* { setShow(true) } */}
-					<Post setNavbar={setNavbarFlag}/>
+					{IsLoggedIn ? <Post setNavbar={setNavbarFlag}/>: <LoginPage /> } 
+					</LoginProvider>
 					</Suspense>
 				} />
 				<Route path="users/*" element={
 					<Suspense fallback={<Loader/>}>
+					<LoginProvider>
 					{/* { setShow(true) } */}
-					<UserProfile setNavbar={setNavbarFlag}/>
+					{IsLoggedIn ? <UserProfile setNavbar={setNavbarFlag}/>: <LoginPage /> }
+					</LoginProvider> 
 					</Suspense>
 				} />
 				<Route path="updateProfile" element={
 					<Suspense fallback={<Loader/>}>
+					<LoginProvider>
 					{/* { setShow(true) } */}
-					<UserProfileUpdate setNavbar={setNavbarFlag}/>
+					{IsLoggedIn ? <UserProfileUpdate setNavbar={setNavbarFlag}/>: <LoginPage /> } 
+					</LoginProvider>
 					</Suspense>
 				} />
 				</Route>

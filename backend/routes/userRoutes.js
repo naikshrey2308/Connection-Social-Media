@@ -45,9 +45,9 @@ router.post("/login", (req, res) => {
         username: req.body.username,
     }).then((data) => {
         // console.log("data in login"+ data);
-        email_ = data.email;
-        profilePic_ = data.profilePic.name;
-        name_ = data.name;
+        email_ = data ? data.email : 'x';
+        profilePic_ = data ? data.profilePic.name : 'x';
+        name_ = data ? data.name : 'x';
         isLoggedIn = false;
         // console.log(data);
         // if either username is incorrect
@@ -116,26 +116,24 @@ router.post("/register", (req, res) => {
                 'name': req.body.name,
                 'username': req.body.username,
                 'mobileNumber': req.body.mobileNumber,
-                'location': location,
+                'location': req.body.location,
                 'dob': req.body.dob,
                 'password': req.body.password,
                 'email': req.body.email,
                 'bio': req.body.bio,
             });
 
-            console.log(user);
-
-            // user.save((err, resp) => {
-            //     if (err) {
-            //         console.log(err);
-            //         isRegistered = false;
-            //         res.json({ "isRegistered": false });
-            //     } else {
-            //         // console.log(resp);
-            //         isRegistered = true;
-            //         res.json({ "isRegistered": true, "username": req.body.username, "profilePic": req.body.profilePic, "name": req.body.name });
-            //     }
-            // });
+            user.save((err, resp) => {
+                if (err) {
+                    console.log(err);
+                    isRegistered = false;
+                    res.json({ "isRegistered": false });
+                } else {
+                    // console.log(resp);
+                    isRegistered = true;
+                    res.json({ "isRegistered": true, "username": req.body.username, "profilePic": req.body.profilePic, "name": req.body.name });
+                }
+            });
         }
     });
 });
@@ -210,6 +208,7 @@ router.post('/follow', (req, res) => {
     User.findOne({ email: email_ }).then(
         (data) => {
             if (data.followers.indexOf(req.body.email_session) != -1) {
+                // console.log(data.followers);
                 console.log("already present");
             } else {
                 data.followers.push(req.body.email_session);
@@ -276,13 +275,15 @@ router.post('/unfollow', (req, res) => {
 })
 
 router.post('/getRandomPeople', async (req, res) => {
-    // console.log("in server");
+
     let array = [];
     let followings = [];
+
     await User.findOne({email : req.body.email}).then((data)=>{
         following= data.following;
     });
-    await User.find({}).limit(5).then((data) => {
+
+    await User.find({ email : { $nin : following }}).limit(5).then((data) => {
         const default_ = 'default_.png';
         for (var i of data) {
             if (i.email == req.body.email)
@@ -360,7 +361,6 @@ router.post('/getFollowersFollowing', async (req, res) => {
             commonEmail_ = followers_.filter(value => following_.includes(value));
         }
     )
-        console.log
     for (var i of commonEmail_) {
         await User.findOne({ email: i }).then((data) => {
 
@@ -372,7 +372,7 @@ router.post('/getFollowersFollowing', async (req, res) => {
             // result_name.push(data.name);
         })
     }
-    console.log('insidde' + result_);
+    // console.log('insidde' + result_);
     res.json({ result: result_ });
 })
 
@@ -411,13 +411,71 @@ router.get('/usernameAvailable/:username', (req, res) => {
 
 })
 
-router.post('/updateUser',(req,res) => {
+router.post('/updateUser',async (req,res) => {
+
+    var arrayEmail = [];
+    var arrayUsername = [];
+    const pic = req.body.user.profilePic;
+    const name = req.body.user.name;
+    var username;
+    var flag = false; 
+
+    await User.findOne({ email : req.body.email}).then(
+        (data) => {
+            username = data.username;
+            if(pic !== data.profilePic.name || name !== data.name){
+                flag = true;
+            }
+        }
+    );
+
+    console.log("flag" + flag);
+
+    if(flag){
+    
+        await People.findOne( { email : req.body.email } ).then(
+            (data)=>{
+                arrayUsername = data.people;
+            }
+        );
+
+        for(let i of arrayUsername){
+            await User.findOne({username : i.username}).then(
+                (data) => {
+                    arrayEmail.push(data.email);
+                }
+            )
+        }
+
+        console.log(arrayEmail);
+
+        for(let i of arrayEmail){
+
+            let people = [];
+            await People.findOne( { email : i } ).then(
+                (data)=>{
+                    let index = data.people.findIndex( (val) => val.username === username );
+                    people = data.people;
+                    people[index] = {
+                        username : username,
+                        name : name,
+                        profilePic : pic
+                    }
+                }
+            )
+            console.log(people);
+            People.updateOne( { email : i } , { $set : { people : people } } ).then();
+
+        }
+
+    }
 
     User.updateOne( { email : req.body.email } , { $set : req.body.user  }).then(
         ()=>{
             res.json({"status":true});
         }
     );
+
 })
 
 router.post('/changePassword',(req,res) =>{

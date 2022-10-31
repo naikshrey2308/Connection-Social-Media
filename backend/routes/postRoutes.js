@@ -30,14 +30,14 @@ var storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.post("/create", upload.single("postPic"), async (req, res) => {
-    console.log(req.body);
+    // console.log(req.body);
 
     let isPosted = false;
 
     // if the post is not a text post, check image status
     if (req.body.type != "text" && !fs.existsSync(`${baseURL}/images/posts/${req.body.url}`)) {
         isPosted = false;
-        console.log(`/images/posts/${req.body.url}`);
+        // console.log(`/images/posts/${req.body.url}`);
         return res.json({ "isPosted": isPosted });
     }
 
@@ -65,7 +65,7 @@ router.post("/create", upload.single("postPic"), async (req, res) => {
             isPosted = false;
             res.json({ "isPosted": isPosted });
         } else {
-            console.log(data);
+            // console.log(data);
             isPosted = true;
             res.json({ "isPosted": true });
             return;
@@ -83,7 +83,7 @@ router.get("/images/:username", (req, res) => {
         username: req.params.username,
         type: "pic"
     }).then((data) => {
-        console.log(data);
+        // console.log(data);
         res.json(data);
     });
 
@@ -103,7 +103,7 @@ router.get("/imageForShow/:username", async (req, res) => {
         username: req.params.username,
         type: "pic"
     }).limit(25).then((data) => {
-        console.log(data);
+        // console.log(data);
         for(var i of data){
             let obj = {
                 id : i._id,
@@ -150,7 +150,7 @@ router.get("/textForShow/:username", async (req, res) => {
         username: req.params.username,
         type: "text"
     }).limit(25).then((data) => {
-        console.log(data);
+        // console.log(data);
         for(var i of data){
             let obj = {
                 id : i._id,
@@ -188,7 +188,7 @@ router.post('/likePost',(req,res)=>{
 })
 
 router.post('/addComment',(req,res)=>{
-    console.log("inside comment");
+    // console.log("inside comment");
     Post.findOne({_id:req.body.post.id}).then((data)=>{
         // console.log(data.likes.findIndex(value => value===req.body.person));
         // let newOne = new Post(data);

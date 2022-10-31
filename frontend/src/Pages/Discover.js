@@ -1,4 +1,5 @@
 import { memo, useEffect, useState ,useRef} from "react";
+import { MdCheck } from "react-icons/md";
 import { useNavigate } from "react-router";
 import Navbar from "../Components/Navbar";
 import "../styles/discover.css";
@@ -9,7 +10,7 @@ function FriendCard(props) {
 
     const followBtn = useRef();
 
-    const [isFollowing, setIsFollowing] = useState(props.isFollowed);
+    const [isFollowing, setIsFollowing] = useState(props.data.user.following.indexOf(props.data.email) != -1);
 
     const navigate = useNavigate();
     props = props.data;
@@ -51,30 +52,26 @@ function FriendCard(props) {
                 'Accept':'application/json'
             },
             body:JSON.stringify({
-                email: props.user.email,
-                email_session: window.sessionStorage.getItem('email')
+                email: props.email,
+                email_session: props.user.email,
             })
         });
 
         const res = await req.json();
-        console.log(res);
-        if(res.status != "true")
-            return;
-        setIsFollowing(true);
-
-        props.setTrigger(!props.trigger);
-        // setFollowers(followers + 1);
-        // followBtn.current.style.opacity = 1;
-        // followBtn.current.innerHTML = "<span class='text-base'>Unfollow</span>";        
+        if(res.status == "true") {
+            setIsFollowing(true);
+            // setFollowers(followers + 1);
+            // followBtn.current.style.opacity = 1;
+            // followBtn.current.innerHTML = "<span class='text-base'>Unfollow</span>";
+        }        
     }
 
     const unfollowClicked = async () => {
         if(props.isMe || props.user == window.sessionStorage.getItem("username"))
             return;
 
-        const userEmail = window.sessionStorage.getItem('email');
-        const personEmail = props.user.email;
-        console.log("q");
+        const userEmail = props.user.email;
+        const personEmail = props.email;
 
         const req = await fetch('/user/unfollow',{
             method : 'POST',
@@ -93,7 +90,6 @@ function FriendCard(props) {
         const res = await req.json();       
         // setFollowers(followers - 1); 
 
-        props.setTrigger(!props.trigger);
         setIsFollowing(false);
     }
 
@@ -106,15 +102,19 @@ function FriendCard(props) {
                 <div className="card-body text-center">
                     <h3>{props.name}</h3>
                     <p>{props.subtitle}</p>
+                    <hr />
                     { (!isFollowing) && 
-                        <button ref={followBtn} onClick={follow} className="btn follow-btn btn-light text-base">Follow</button>
+                        <button ref={followBtn} onClick={follow} className="btn follow-btn btn-base text-light px-4">Follow</button>
                     }
                     { (isFollowing) && 
-                        <button ref={followBtn} className="btn follow-btn btn-light text-base" onClick={unfollowClicked}>
-                            Unfollow
+                        <button ref={followBtn} className="btn border border-primary px-4 follow-btn btn-light text-base" onClick={unfollowClicked}>
+                            <MdCheck className="me-2" />
+                            Following
                         </button>
                     }
-                    <p className="text-center"><button className="btn px-4 py-2" onClick={()=>{viewProfileClicked(props)}}>View Profile</button></p>
+                    <p className="text-center my-2">
+                        <button style={{fontSize: 14}} className="btn btn-transparent px-4 py-2" onClick={()=>{viewProfileClicked(props)}}>View Profile</button>
+                    </p>
                 </div>
             </div>
         </>
@@ -161,7 +161,7 @@ function FriendCarousel(props) {
                     suggestedFriends.map((ele, ind) => {
                         return (
                             <div className={((ind == 0) ? "active " : "") + "carousel-item"}>
-                                <FriendCard data={ele} />
+                                <FriendCard data={{...ele, ...props}} />
                             </div>
                         );
                     })
@@ -190,15 +190,18 @@ function FriendRow(props) {
         <>
             <div className="d-flex px-3 justify-content-start">
                 <img src={`http://localhost:4000/static/profilePics/${props.data.profilePic}`} width={40} height={40} className="border p-1 me-5" style={{borderRadius: "50%"}} />
-                <p className="fs-7 my-auto w-100">{props.data.name}</p>
-                <button className="btn btn-sm btn-light text-base m-0 px-4" >Follow</button>
+                <p className="fs-7 my-auto">{props.data.name}</p>
+                {
+                    (!props.user.following.includes(props.data.email)) &&
+                    <button className="btn btn-sm btn-base text-light mx-3 px-4">Follow</button>
+                }
             </div>
             <br />
         </>
     );
 }
 
-function FriendRows() {
+function FriendRows(props) {
 
     // fetchRandomPeople();
     // let suggestedFriends = suggestions;
@@ -258,7 +261,7 @@ function FriendRows() {
                 {
                     suggestedFriends.filter((ele, ind) => ind % 2 == 0).map((ele, ind) => {
                         return (
-                            <FriendRow data={ele} />
+                            <FriendRow user={props.user} data={ele} />
                         );
                     })
                 }
@@ -267,7 +270,7 @@ function FriendRows() {
                 {
                     suggestedFriends.filter((ele, ind) => ind % 2 == 1).map((ele, ind) => {
                         return (
-                            <FriendRow data={ele} />
+                            <FriendRow user={props.user} data={ele} />
                         );
                     })
                 }
@@ -277,19 +280,18 @@ function FriendRows() {
     );
 }
 
-function Finder() {
+function Finder(props) {
     return (
         <>
             <div className="friend-finder-base bg-base position-relative container">
                 <div className="friend-finder-main position-absolute top-50 start-50">
                     <h3 className="text-light fw-bold">Hello <u>{window.sessionStorage.getItem('username')}</u>, looking for more connections?</h3>
                     <p className="text-center text-light">Here are some top picks for you!</p>
-                
-                    <FriendCarousel />
+                    <FriendCarousel user={props.user} />
                 </div>
             </div>
 
-            <FriendRows />
+            <FriendRows user={props.user} />
 
         </>
     );
@@ -298,28 +300,31 @@ function Finder() {
 function Discover(props) {
 
     const [temp, setTemp] = useState("Shrey");
+    const [user, setUser] = useState(null);
 
     useEffect(() => {
         props.setNavbar(true);
 
-        // async function getData() {
-        //     try {
-        //         let resText = await fetch("/user/current");
-        //         resText = await resText.json();
-        //         console.log(resText);
-        //         setTemp(resText);
-        //     } catch(err) {
-        //         console.log("error: ", err);
-        //     }
-        // }
-        // getData();
+        (async function() {
+            let req = await fetch(`/user/getUser/${encodeURIComponent(window.sessionStorage.getItem("username"))}`, {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                },
+            });
+
+            let res = await req.json();
+            setUser(res.user);
+
+        })();
     }, []);
 
-    return (
+    return ( user &&
         <>
             {/* <Navbar /> */}
             {/* Find friends that near you and match your vibes */}
-            <Finder />
+            <Finder user={user} />
         </>
     );
 }

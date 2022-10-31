@@ -1,6 +1,7 @@
 /* @import url('http://fonts.cdnfonts.com/css/earnest-harlley'); */
 @import url('https://fonts.googleapis.com/css2?family=Meow+Script&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Arima&family=IBM+Plex+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Allura&display=swap');
 @import url("animate.css");
 
 /* --primary: #FFFC00; */
@@ -95,4 +96,8 @@ html {
 
 .br-50p {
     border-radius: 50%;
+}
+
+.btn:hover {
+    outline: none !important;
 }

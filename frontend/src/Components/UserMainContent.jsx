@@ -1,5 +1,5 @@
 import { memo, useEffect, useRef, useState } from "react";
-import { MdCheck, MdEdit, MdLogout, MdOutlineLogout } from "react-icons/md";
+import { MdCheck, MdEdit, MdLocationPin, MdLogout, MdOutlineLogout } from "react-icons/md";
 import { useNavigate } from "react-router";
 import "../styles/user-profile.css";
 
@@ -112,7 +112,7 @@ function UserMainContent(props) {
     }
 
     return (
-            <div className="set-nav-align position-fixed col-lg-4 col-12 text-center bg-base py-5" style={{height: "100vh"}}>
+            <div className="set-nav-align position-fixed col-lg-4 col-12 text-center bg-base py-3" style={{height: "100vh"}}>
                 
                     { (props.isMe) && 
                         <div style={{cursor: "pointer"}} className="position-absolute top-0 end-0 m-3">
@@ -125,6 +125,14 @@ function UserMainContent(props) {
                     <h4 className="text-light mt-4 mb-2">@{props.user.username}</h4>
                     <h5 className="text-light mb-4">{props.user.name}</h5>
                     <p className="my-2 text-light">{props.user.bio}</p>
+                    { (props.user.location) && 
+                        <p className="my-2 text-light">
+                            <MdLocationPin className="me-3" size={25} />
+                            {props.user.location.city ?? ""},&nbsp;
+                            {props.user.location.state ?? ""},&nbsp;
+                            {props.user.location.country}
+                        </p>
+                    }
                     <hr className="text-light" />
                     
                     {/* Followers section */}

@@ -1,6 +1,6 @@
 import { memo, useState, useEffect, useRef } from "react";
-import { MdCheck, MdCheckCircle, MdClose, MdEdit, MdOutlinePeopleOutline } from "react-icons/md";
-import { BsExclamationCircleFill, BsCheckCircleFill} from "react-icons/bs"
+import { MdCheck, MdCheckCircle, MdClose, MdEdit, MdFollowTheSigns, MdOutlinePeopleOutline } from "react-icons/md";
+import { BsExclamationCircleFill, BsCheckCircleFill} from "react-icons/bs";
 import { useNavigate } from "react-router";
 import "../styles/user-profile.css";
 import ShowWholePost from "../Components/showWholePost";
@@ -49,31 +49,41 @@ function AboutContent(props) {
 
     return (
         <div className="row my-5 pt-3 mx-auto gx-0">
-            <div style={{ maxHeight: "80vh", overflowY: "scroll" }} className="col-4 mx-auto text-center">
+            <div className="col-4 mx-auto text-center">
                 <h1 className="text-center">{followers.length}</h1>
                 <h4 className="text-secondary">Followers</h4>
 
-                <div className="mt-5">
+                <div className="mt-5" style={{maxHeight: "50vh", overflowY: "scroll"}}>
                     {
                         followers.map(ele => {
                             return <div style={{ cursor: "pointer" }} onClick={() => redirectToProfile(ele.username)} className="hover-block py-1 border-bottom border-top py-3 d-flex align-items-center">
-                                <img style={{ "borderRadius": "50%" }} src={"/profilePics/" + ele.profilePic} width={30} className="border border-2" />
-                                <p className="w-100 my-auto">{ele.username}</p>
+                                <img style={{ "borderRadius": "50%" }} src={"/profilePics/" + ele.profilePic} width={40} className="border border-2" />
+                                <p className="w-100 my-auto">
+                                    {ele.name}<br/>
+                                    <span style={{fontSize: 14}} className="text-secondary">
+                                        {ele.username}
+                                    </span>
+                                </p>
                             </div>
                         })
                     }
                 </div>
             </div>
-            <div style={{ maxHeight: "80vh", overflowY: "scroll" }} className="col-4 mx-auto text-center">
+            <div className="col-4 mx-auto text-center">
                 <h1 className="text-center">{following.length}</h1>
                 <h4 className="text-secondary">Following</h4>
 
-                <div className="mt-5">
+                <div className="mt-5" style={{maxHeight: "50vh", overflowY: "scroll"}}>
                     {
                         following.map(ele => {
                             return <div style={{ cursor: "pointer" }} onClick={() => redirectToProfile(ele.username)} className="hover-block py-1 border-bottom border-top py-3 d-flex align-items-center">
-                                <img style={{ "borderRadius": "50%" }} src={"/profilePics/" + ele.profilePic} width={30} className="border border-2" />
-                                <p className="w-100 my-auto">{ele.username}</p>
+                                <img style={{ "borderRadius": "50%" }} src={"/profilePics/" + ele.profilePic} width={40} className="border border-2" />
+                                <p className="w-100 my-auto">
+                                    {ele.name}<br/>
+                                    <span style={{fontSize: 14}} className="text-secondary">
+                                        {ele.username}
+                                    </span>
+                                </p>
                             </div>
                         })
                     }
@@ -166,17 +176,17 @@ function TextContent(props) {
                                         <div className="px-3">{props.user.username}</div>
                                     </div>
 
-                                    <div id={post._id} dangerouslySetInnerHTML={{__html: post.content.text}} className="p-3 shadow bg-white border-start border-end" onClick={textPostClicked} style={{wordWrap:'break-word'}}>
+                                    <div id={post._id} dangerouslySetInnerHTML={{__html: post.content.text}} className="p-3 shadow bg-white border-start border-end" style={{wordWrap:'break-word'}}>
                                     </div>
                                     
-                                    <div className="text-start shadow bg-white border py-3 px-2">
+                                    {/* <div className="text-start shadow bg-white border py-3 px-2">
                                         <button className="btn btn-white p-0">
                                             <img src={process.env.PUBLIC_URL + "/media/icons/like.svg"} className="mx-3" width={15} />
                                         </button>
                                         <button className="btn btn-white p-0">
                                             <img src={process.env.PUBLIC_URL + "/media/icons/comment.svg"} className="mx-3" width={15} />
                                         </button>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </>
                         );
@@ -184,7 +194,7 @@ function TextContent(props) {
                 }
             </div>
 
-            <ShowTextPost show={modalShow} onHide={() => setmodalShow(false)} post={postForModal} changecommentInUI={changeComment}/>
+            <ShowTextPost show={modalShow} onHide={() => setmodalShow(false)} post={postForModal} changecommentInUI={changeComment} />
 
         </>
     );
@@ -275,7 +285,7 @@ function ImageContent(props) {
                 </div>
             </div>
             
-            <ShowWholePost show={modalShow} onHide={() => setmodalShow(false)} post={postForModal} changecommentInUI={changeComment}/>
+            <ShowWholePost showLike={true} show={modalShow} onHide={() => setmodalShow(false)} post={postForModal} changecommentInUI={changeComment}/>
 
         </>
     );
@@ -366,7 +376,7 @@ function EditProfile(props){
             username : usernameRef.current.value,
             bio : bioRef.current.value,
             profilePic : {
-                name : (profilePicRef.current.files.length != 0) ? profilePicRef.current.files[0].name : props.user.profilePic.name
+                name : (profilePicRef.current.files.length != 0) ? profilePicRef.current.files[0].name : (props.user.profilePic ? props.user.profilePic.name : "default_.png")
             }
         };
 
@@ -448,7 +458,7 @@ function EditProfile(props){
 
     }
 
-    var temp=props.user.profilePic.name;
+    var temp = (props.user.profilePic) ? props.user.profilePic.name : "default_.png";
     useEffect(()=>{
         setUserWindowShow(true);
         setChangePasswordBtnEnable(false);
@@ -505,7 +515,7 @@ function EditProfile(props){
                             <b>Username : </b>
                         </div>
                         <div className="col-5 d-flex ms-2 ps-0 align-items-center border-2 border">
-                            <input ref={usernameRef} type="text" name="usename" id="username" value={username} className=" input-control border-0 ms-0 form-control" onChange={usernameChanged} />
+                            <input ref={usernameRef} disabled = {true} type="text" name="usename" id="username" value={username} className=" input-control border-0 ms-0 form-control" onChange={usernameChanged} />
                             { (usernameFlag) &&
                                 <BsCheckCircleFill color='green' size={20} className="me-2 my-1"/>
                             }

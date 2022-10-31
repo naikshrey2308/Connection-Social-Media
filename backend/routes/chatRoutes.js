@@ -114,6 +114,7 @@ router.post("/getChat",async (req,res)=>{
 router.post("/insertChat", async (req, res) => {
 
     // make object passed according to this{body:{sender: , reciever: , chat: { text: ,time: ,flag:}}}
+    console.log(req.body);
 
     let sender = req.body.chat.sender;
     let reciever = req.body.chat.reciever;
@@ -154,11 +155,12 @@ router.post("/insertChat", async (req, res) => {
         }
     )
 
-    await People.findOne({email:req.body.email_}).then(
+
+    People.findOne({email:req.body.email_}).then(
         (data)=>{
-            console.log("Inside people find");
+            // console.log("Inside people find");
             
-            console.log(data);
+            // console.log(data);
             if(data===null){
                 let obj = new People({
                     email : req.body.email_,
@@ -167,7 +169,7 @@ router.post("/insertChat", async (req, res) => {
                 obj.save().then();
             }
             else{
-                // console.log(data.people.findIndex(val => val==req.body.user));
+                console.log(data.people.findIndex(val => val.username===req.body.user.username));
                 if(data.people.findIndex(val => val.username === req.body.user.username)!==-1){
 
                 }
@@ -181,13 +183,16 @@ router.post("/insertChat", async (req, res) => {
             }
         }
     )
-    var email;
-    
-    await User.findOne({username:reciever}).then(
+
+
+
+    User.findOne({username:reciever}).then(
         (data)=>{
             const email_ = data.email;
             People.findOne({email:email_}).then(
+                
                 (data_)=>{
+                    console.log(data_);
                     if(data_===null){
                         let obj = new People({
                             email : email_,
@@ -204,13 +209,13 @@ router.post("/insertChat", async (req, res) => {
 
                         }
                         else{
-                        data_.people.push({
-                            name : req.body.name,
-                            username : req.body.username,
-                            profilePic : req.body.profilePic ? req.body.profilePic : 'default.png'
-                        });
-                        People.updateOne({email:email_},{$set : data}).then();
-                    }
+                            data_.people.push({
+                                name : req.body.name,
+                                username : req.body.username,
+                                profilePic : req.body.profilePic ? req.body.profilePic : 'default.png'
+                            });
+                            People.updateOne({email:email_},{$set : data_}).then(res.json({}));
+                        }
                     }
                 }
             )

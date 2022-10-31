@@ -9,7 +9,7 @@ nav {
 }
 
 .logonav {
-    font-family: "Meow Script", "Times New Roman", Calibri;
+    font-family: "Allura", "Times New Roman", Calibri;
     color: var(--primary);
     font-size: 40px;
 }
@@ -34,7 +34,7 @@ nav {
 
 .searchResult{
     left:30%;
-    top:55px;
+    top:56px;
     background: white !important ;
     z-index:100;
     width:17%;
@@ -50,5 +50,4 @@ nav {
 
 .searchrow:hover{
     background-color: var(--grey-light);
-    height: 40px;
 }

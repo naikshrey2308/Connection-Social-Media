@@ -45,7 +45,7 @@ function SearchChatLog(props) {
         setSearch(searchBar.current.value);
         // console.log(search);
         if(searchBar.current.value!==''){
-            var regex_ = new RegExp("^"+searchBar.current.value,'g');
+            var regex_ = new RegExp("^"+searchBar.current.value,'ig');
             console.log(regex_);
 
             // const commonName = commonNames_.filter(value => regex_.test(value));
@@ -77,6 +77,7 @@ function SearchChatLog(props) {
 function UserChatBlock(props) {
     function activateChat() {
         props.caller(props.user);
+        console.log(props.user);
     }
 
     return (
@@ -92,7 +93,7 @@ function UserChatBlock(props) {
 function ChatList(props) {
     console.log("inside chatlist");
     // props.setPeople_(props.people_);
-    console.log(props);
+    // console.log(props);
     return (
         <>
             {
@@ -118,6 +119,7 @@ function ChatLogs(props) {
             let res = await req.json();
             // console.log(res);
             setPeople(res.people);
+            console.log(res.people);
             // people__ = res.people;
         })();
     },[])
