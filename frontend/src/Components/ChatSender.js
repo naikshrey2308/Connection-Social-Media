@@ -6,9 +6,8 @@ import { memo, useState, useRef, useEffect } from "react";
 
 function Chat(props) {
 
-    console.log(props);
+    const date = props.timeUse ? new Date(props.timeUse) : new Date();
 
-    const date = new Date(props.timeUse);
     return (
         <>
             <div className={(props.indicator_.sent===props.flag ? "right " : "left ") + "bg-grey chat my-2 px-3 pt-2"}>
